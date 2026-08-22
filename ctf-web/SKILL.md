@@ -9,50 +9,51 @@ metadata:
 
 # CTF Web — V2 Router
 
-This file is a **router, not an encyclopedia**. Start with the application evidence and load only the smallest relevant reference set.
-
-Use `ctf-solve` alongside this skill for workspace/progress/stuck-recovery lifecycle behavior.
+This file is a **router, not an encyclopedia**. Use `ctf-solve` for workspace, progress, triage, stuck recovery and multi-category lifecycle behavior. This skill owns only the web-domain decision tree.
 
 ## First pass
 
-1. Read supplied source, dependency files, Docker/proxy config and bot runner before broad fuzzing.
-2. Capture one normal request/response for each major feature.
-3. Map trust boundaries: browser -> proxy/CDN -> app -> parser/template -> DB/filesystem/internal service.
-4. Identify where user-controlled data crosses a boundary.
-5. Choose one technique family below and load only its references.
-6. Build a small primitive before chaining to flag access.
-7. Test browser/parser/version-dependent behavior on the **exact target version** when possible.
+1. Read supplied source, dependencies, Docker/proxy config, templates, bot runner and JS bundles before broad fuzzing.
+2. Capture one normal request/response for every major feature.
+3. Map trust boundaries: browser -> CDN/WAF -> proxy -> app/router -> parser/template -> DB/filesystem/internal service.
+4. Identify exactly where attacker-controlled data crosses a boundary.
+5. Load **one focused reference** below from observed evidence.
+6. Prove the smallest useful primitive before chaining to the flag.
+7. Reproduce parser/browser/version-dependent claims on the exact target version whenever possible.
 
 ## Technique router
 
-| Signal / primitive | Load first | Add only if needed |
+| Evidence / primitive | Load first | Add only if needed |
 |---|---|---|
 | SQL syntax/error/order/DB state | `sql-injection.md` | `field-notes.md` |
-| Mongo/NoSQL operators or regex oracle | `server-side-advanced-4.md` | specialist NoSQL migration reference when available |
-| JWT/JWE/JWKS/kid/jku/x5u | `references/jwt.md` | `auth-and-access.md`, `auth-infra.md` |
-| OAuth/OIDC/SAML/CORS/IdP flow | `auth-infra.md` | `auth-and-access.md` |
-| Login/session/IDOR/role/object auth | `auth-and-access.md` | `auth-and-access-2.md` |
-| SSTI/template expression/rendering | `server-side.md` | `server-side-exec.md`, hard-pattern refs |
-| SSRF/internal fetch/URL resolver | `server-side.md` | `server-side-advanced*.md` |
-| XXE/XML/SVG/DOCX/parser | `server-side-2.md` | `server-side-advanced*.md` |
-| Deserialization/object reconstruction | `server-side-deser.md` | `server-side-exec.md` |
-| Traversal/LFI/wrapper/archive/path parser | `server-side-advanced.md` | `server-side*.md` |
-| Upload -> parser/storage/execution | `server-side-exec.md` | `server-side-exec-2.md`, `server-side-advanced*.md` |
-| Command/code execution | `server-side-exec.md` | `server-side-2.md` |
-| GraphQL schema/resolver/auth path | `server-side-2.md` | hard-pattern/modern-chain refs |
+| Mongo/NoSQL operators, object-vs-string input, regex/$where oracle | `references/nosql-injection.md` | `server-side-advanced-4.md` |
+| JWT/JWE/JWKS/kid/jku/x5u | `references/jwt.md` | `auth-and-access.md` |
+| OAuth/OIDC/SSO/PKCE/state/redirect URI | `references/oauth-oidc.md` | `auth-and-access.md`, `auth-infra.md` |
+| Login/session/IDOR/BOLA/role/object authorization | `auth-and-access.md` | `auth-and-access-2.md` |
+| SSTI/template expression/rendering | `references/ssti.md` | relevant `server-side*.md` only after engine fingerprint |
+| SSRF/internal fetch/URL resolver | `server-side.md` | one matching `server-side-advanced*.md`, modern chains |
+| XXE/XML/SVG/DOCX/SOAP/parser | `references/xxe-xml.md` | relevant advanced XML/parser note |
+| Deserialization/object reconstruction | `references/deserialization.md` | `server-side-deser.md` for historical CTF patterns |
+| Traversal/LFI/file include/path canonicalization | `references/path-traversal-lfi.md` | one relevant `server-side-advanced*.md` |
+| Upload -> parser/storage/execution | `server-side-exec.md` | `server-side-exec-2.md` / relevant advanced note |
+| Command/code execution through backend parser | `server-side-exec.md` | `server-side-2.md` |
+| GraphQL schema/resolver/auth path | `references/graphql.md` | modern chains for alternate resolver paths |
+| WebSocket/Socket.IO/SignalR | `references/websockets.md` | auth/injection/race ref matching the message primitive |
 | XSS/CSRF/DOM/admin bot | `client-side.md` | `client-side-advanced.md`, bot refs |
-| CSP/XSSI/CSS/postMessage/browser quirks | `client-side-advanced.md` | `references/modern-xs-leaks-patterns.md` |
-| XS-Leak/admin-bot side channel | `references/modern-xs-leaks-patterns.md` | other `references/bot-*.md` |
-| DOMPurify/mXSS claim | `references/dompurify-3.3.1-mxss-verification.md` | exact browser test |
-| Prototype pollution/Node sandbox | `node-and-prototype.md` | hard-pattern refs |
-| Request smuggling/proxy disagreement | `client-side.md` + server/proxy source | `ctf-solve/references/modern-chains.md` |
-| Cache poisoning/deception | `client-side.md` | proxy/cache-specific specialist source during migration |
-| Race/state-machine/business logic | `server-side-deser.md` / `field-notes.md` | `ctf-solve/references/modern-chains.md` |
-| CVE/version banner/dependency leak | `cves.md` | freshest official advisory + exact local version proof |
+| CSP/browser restriction/scriptless exfil | `references/csp-browser.md` | `references/modern-xs-leaks-patterns.md`, `bot-*.md` |
+| XS-Leak/admin-bot side channel | `references/modern-xs-leaks-patterns.md` | matching `bot-*.md` |
+| DOMPurify/mXSS claim | `references/dompurify-3.3.1-mxss-verification.md` | exact-browser harness |
+| Prototype pollution/Node merge/gadget | `references/prototype-pollution.md` | `node-and-prototype.md`, hard-pattern refs |
+| Request smuggling/desync/proxy framing | `references/request-smuggling.md` | `ctf-solve/references/modern-chains.md` |
+| WAF/filter blocks a proven primitive | `references/waf-parser-differentials.md` | underlying technique reference |
+| Cache poisoning/deception/cache-key mismatch | `references/cache-attacks.md` | browser or parser ref for the resulting sink |
+| Race/TOCTOU/concurrent state transition | `references/race-conditions.md` | `references/business-logic.md` |
+| Workflow/state/price/balance/reward/step bypass | `references/business-logic.md` | race/auth refs as evidence demands |
+| CVE/version banner/dependency leak | `cves.md` | current official advisory + exact-version proof |
 | WordPress/SvelteKit/Vite/WASM/H2 hard chain | `references/web-hard-pattern-playbook.md` | `references/sekaictf2025-hard-web-patterns.md` |
-| Solidity/Web3 app integration | `web3.md` | `ctf-crypto` only if pure crypto becomes dominant |
+| Solidity/Web3 app integration | `web3.md` | `ctf-crypto` only if pure cryptanalysis becomes dominant |
 
-`server-side-advanced*.md` means load the **one** file whose table of contents matches the primitive; do not read every advanced file by default.
+`server-side-advanced*.md` means read **one file whose table of contents matches the observed primitive**. Never load the whole advanced series by default.
 
 ## Core decision trees
 
@@ -60,81 +61,70 @@ Use `ctf-solve` alongside this skill for workspace/progress/stuck-recovery lifec
 
 ```text
 token/session observed
-  -> decode structure and claims
+  -> decode representation
   -> determine verification/key source
   -> determine authorization source
+  -> identify server-authoritative vs client-authoritative claims
   -> test one minimal trust failure
-  -> only then forge/escalate
+  -> forge/escalate only after the trust boundary is proven
 ```
-
-JWT/JWE uses `references/jwt.md`; do not activate separate JWT top-level skills in V2.
 
 ### Server-side input
 
 ```text
-input reaches server
-  -> where is it parsed?
-  -> template / SQL / XML / path / command / serializer / URL fetch?
-  -> smallest syntax/behavior oracle
-  -> confirm exact parser/framework
-  -> derive exploit from target behavior
+user input
+  -> which parser receives it?
+  -> SQL / NoSQL / template / XML / path / command / serializer / URL fetch?
+  -> harmless syntax or behavior oracle
+  -> exact framework/parser/version
+  -> smallest read/bypass/state primitive
+  -> flag chain
 ```
 
-### Browser/admin bot
+### Browser / admin bot
 
 ```text
-attacker input -> sanitizer/render -> browser -> sensitive origin/action
+attacker input -> sanitizer/render -> browser -> sensitive origin/action/data
 ```
 
-Capture:
+Capture exact browser version, CSP/COOP/CORP/Fetch-Metadata/SameSite/PNA behavior, origin/port/cookie scope, hosting CSP, and raw browser requests. Old browser tricks remain hypotheses until reproduced on the bot version.
 
-- exact browser version;
-- CSP/COOP/CORP/Fetch-Metadata/SameSite behavior;
-- origin/port/cookie scope;
-- whether HTML hosting/exfil endpoint introduces its own CSP;
-- actual raw browser requests.
-
-Do not trust old browser tricks until reproduced on the bot version.
-
-### Proxy/cache/parser mismatch
-
-List each interpretation layer independently:
+### Proxy / cache / WAF
 
 ```text
-raw request -> CDN/WAF -> reverse proxy -> framework/router -> backend parser
+raw request
+ -> CDN/cache/WAF interpretation
+ -> reverse-proxy interpretation
+ -> framework/router interpretation
+ -> backend parser interpretation
 ```
 
-Look for disagreement in lengths, headers, URL normalization, host, cache key, method or path. Use `ctf-solve/references/modern-chains.md` when the vulnerability exists between adjacent layers.
+Look for disagreement in request boundaries, decode count, headers, URL/path normalization, Host, cache key, method, body/content type or duplicated parameters. If the bug lives between adjacent layers, use `ctf-solve/references/modern-chains.md`.
 
-## Empirical testing rule
+## Evidence-first web loop
 
-Browser/library claims are hypotheses until reproduced on the actual relevant version.
+For each hypothesis record:
 
-Examples that require exact-version verification:
+1. normal baseline;
+2. one controlled mutation;
+3. exact observable difference;
+4. server/browser state change;
+5. whether the primitive survives local/exact-version reproduction;
+6. next cheapest discriminating test.
 
-- browser URL CRLF behavior;
-- DOMPurify mXSS;
-- SameSite/cookie behavior;
-- PNA/private-network requests;
-- framework parsing quirks;
-- proxy/backend desynchronization;
-- recently patched CVE chains.
-
-Prefer a minimal local harness that records raw behavior. Write the version and result to `PROGRESS.md`.
+Do not repeat payload families that already failed for a proven structural reason.
 
 ## Recon discipline
 
-Start filtered and source-aware:
+Start source-aware and filtered:
 
 ```bash
 curl -sSik https://target/
 curl -sS https://target/robots.txt
-rg -n "route|admin|debug|secret|token|jwt|fetch|redirect|render|template|upload|graphql|websocket" .
+rg -n "route|admin|debug|secret|token|jwt|oauth|fetch|redirect|render|template|upload|graphql|websocket|cache" .
 ```
 
-Only use directory fuzzing after source/JS/routes do not expose the surface directly.
-
-Try alternate verbs/content types when framework behavior suggests they matter; do not spray every verb blindly.
+Only directory-fuzz when source/JS/routes do not expose the surface directly. Try alternate verbs/content types when the framework or intermediary behavior suggests a parser difference; do not spray them blindly.
 
 ## Useful category scripts
 
@@ -142,23 +132,23 @@ Try alternate verbs/content types when framework behavior suggests they matter; 
 scripts/jwt_analyze.py
 ```
 
-Scripts are helpers, not proof. Validate generated payloads against target behavior and keep successful/failed results in progress.
+Helpers accelerate testing; they do not prove exploitability. Save exact successful/failed evidence to `PROGRESS.md` through `ctf-solve`.
 
 ## Cross-category pivots
 
-Switch/add a category only when the hard primitive changes:
+Add another category only when the **hard primitive changes**:
 
-- native memory corruption after web RCE -> `ctf-pwn`;
+- native memory corruption after web foothold -> `ctf-pwn`;
 - WASM/native client logic -> `ctf-reverse`;
-- real cryptanalysis/token math -> `ctf-crypto`;
+- real cryptanalysis/custom MAC math -> `ctf-crypto`;
 - PCAP/memory/disk artifact recovery -> `ctf-forensics`;
 - public-world identity/geolocation -> `ctf-osint`;
 - malicious payload/C2 behavior becomes central -> `ctf-malware`.
 
-Do not preload those categories speculatively.
+Do not preload categories speculatively.
 
-## V1 migration note
+## V2 ownership rule
 
-V1 contains many standalone web technique skills. During V2 they are being deduplicated into this category's references/scripts. Until migration validation is complete, the frozen authoritative originals remain on `archive/pre-restructure-20260823`.
+A web vulnerability technique belongs under `ctf-web/references/` or `ctf-web/scripts/`, **not in another top-level skill**. Historical broad references remain for depth, but new upgrades should patch the most focused canonical reference and update this router only when a new technique family appears.
 
-Canonical V2 rule: **web technique = internal `ctf-web` reference/script, not another top-level skill.**
+The complete V1 source remains recoverable from `archive/pre-restructure-20260823`.
