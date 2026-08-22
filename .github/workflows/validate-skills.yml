@@ -22,5 +22,5 @@ jobs:
         with:
           python-version: '3.12'
 
-      - name: Validate skill repository
-        run: python3 scripts/validate_skills.py
+      - name: Validate V2 skill repository
+        run: python3 scripts/validate_skills.py --strict-migration
