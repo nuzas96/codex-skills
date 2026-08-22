@@ -1,6 +1,6 @@
 ---
 name: ctf-forensics
-description: Solve CTF digital-forensics challenges involving disk/filesystem images, memory dumps/coredumps, Windows/Linux/browser/container artifacts, network/PCAP and peripheral captures, steganography/media, PDFs/documents, deleted-file recovery, signals/hardware traces, cryptocurrency evidence and unusual forensic containers. Use when extracting, reconstructing or correlating evidence from artifacts is the primary path to the flag.
+description: Solve CTF digital-forensics challenges involving disk/filesystem images, memory dumps/coredumps, Windows/Linux/browser/container artifacts, network/PCAP and peripheral captures, steganography/media, PDFs/documents, deleted-file recovery, signals/hardware traces, SQLite history and unusual forensic containers. Use when extracting, reconstructing or correlating evidence from artifacts is the primary path to the flag.
 license: MIT
 compatibility: Requires artifact-specific forensic tooling only when selected by the evidence; Python 3 and common CLI inspection tools are sufficient for first-pass triage.
 metadata:
@@ -9,18 +9,16 @@ metadata:
 
 # CTF Forensics — V2 Router
 
-Use `ctf-solve` for lifecycle/progress handling. This skill owns evidence extraction and reconstruction; load only the reference matching the artifact.
+Use `ctf-solve` for workspace/progress/stuck recovery. This skill owns artifact extraction and correlation. Load only the reference matching the artifact and current primitive.
 
 ## First pass: preserve before transforming
 
-1. Identify every supplied artifact with `file`, magic bytes, size and hashes when useful.
-2. Work on copies when a tool mutates/rebuilds the artifact.
-3. Compare extension vs actual format; mismatches are often intentional.
+1. Identify every artifact with `file`, magic, size and hashes when useful.
+2. Work on copies when a tool can mutate/checkpoint/rebuild evidence.
+3. Compare extension vs actual format.
 4. Search cheap metadata/strings/embedded signatures before carving everything.
-5. Identify whether the task is filesystem-aware recovery, raw carving, timeline analysis, protocol reconstruction, hidden media data or nested-container extraction.
-6. Keep an outside-in chain of every extracted layer.
-
-Example:
+5. Decide whether the problem is filesystem-aware recovery, raw carving, timeline analysis, protocol reconstruction, application artifact analysis, hidden media data or nested-container extraction.
+6. Record the outside-in extraction chain in `PROGRESS.md`.
 
 ```bash
 file -- *
@@ -34,155 +32,106 @@ binwalk suspect 2>/dev/null
 
 | Artifact / evidence | Load first | Add only if needed |
 |---|---|---|
-| RAM dump / hiber/coredump / process memory | `disk-and-memory.md` | `disk-advanced.md` |
+| RAM / raw memory / LiME / crash dump | `references/memory-volatility.md` | `disk-and-memory.md`, `disk-advanced.md` |
 | disk/E01/dd/VMDK/filesystem | `disk-and-memory.md` | `disk-recovery.md`, `disk-advanced.md` |
-| deleted/corrupt/nested filesystem/file | `disk-recovery.md` | `disk-advanced.md` |
-| Linux logs/process/app artifacts | `linux-forensics.md` | disk/memory ref |
-| Windows registry/event/artifacts | `windows.md` | disk/memory ref |
-| PCAP/PCAPNG/basic protocol | `network.md` | `network-advanced.md` |
-| timing/covert/SMB/DNS/advanced network | `network-advanced.md` | protocol-specific extraction |
-| USB/HID/Bluetooth/peripheral capture | `peripheral-capture.md` | `network-advanced.md` |
-| image/text/archive/general stego | `steganography.md` | `stego-image.md` |
-| image-specific pixel/palette/JPEG/BMP/PNG stego | `stego-image.md` | `stego-advanced.md` |
-| audio/video/SSTV/FFT/advanced media | `stego-advanced.md` | `stego-advanced-2.md` |
-| exotic/multi-layer stego | `stego-advanced-2.md` | general stego reference |
-| logic analyzer/power/UART/VGA/hardware signal | `signals-and-hardware.md` | network/peripheral ref if transport capture |
+| deleted/unallocated/corrupt file | `references/file-carving.md` | `disk-recovery.md` |
+| Linux logs/process/app artifacts | `linux-forensics.md` | disk/memory reference |
+| Windows disk/registry/MFT/Prefetch/EVTX/LNK/Jump Lists | `references/windows-artifacts.md` | `windows.md`, disk refs |
+| Chromium browser profile/history/cookies/storage | `references/browser-artifacts.md` | `references/sqlite-forensics.md` |
+| SQLite DB/WAL/freelist/edit history | `references/sqlite-forensics.md` | application-specific artifact ref |
+| Docker image/save/export/overlay/container evidence | `references/docker-containers.md` | `disk-and-memory.md` |
+| PDF object/stream/attachment/incremental revision | `references/pdf-analysis.md` | nested-container / malware ref if extracted payload dominates |
+| PCAP/PCAPNG/general protocol | `references/network-pcap.md` | `network-advanced.md` |
+| timing/covert/SMB/DNS/advanced network | `network-advanced.md` | `references/network-pcap.md` |
+| USB/HID/Bluetooth/peripheral capture | `peripheral-capture.md` | network ref |
+| general stego / hidden media data | `references/stego-detection.md` | `steganography.md`, `stego-image.md` |
+| image-specific JPEG/PNG/BMP/palette/bit-plane | `stego-image.md` | `stego-advanced.md` |
+| audio/video/SSTV/FFT/advanced media | `stego-advanced.md` | `stego-advanced-2.md`, signals ref |
+| logic analyzer/power/UART/VGA/hardware | `signals-and-hardware.md` | peripheral/network ref |
 | 3D/CAD/G-code | `3d-printing.md` | general artifact triage |
-| known DalCTF stacked artifact pattern | `references/dalctf2026-patterns.md` | matching canonical artifact ref |
+| stacked/nested CTF artifact chain | `references/dalctf2026-patterns.md` | focused reference for each layer |
 
-Specialist V1 packages for Volatility, Hindsight, Wireshark, Foremost, SQLite, Docker, Zimmerman, peepdf and stego are being merged into these canonical families and their scripts preserved under this category.
-
-## Memory decision tree
+## Memory
 
 ```text
-memory artifact
-  -> identify OS/profile/build/architecture
-  -> process/module/network overview
-  -> suspicious process/object/file
-  -> focused extraction
-  -> correlate with disk/network/config evidence
+identify OS/build/arch
+  -> process tree + cmdline/env + network overview
+  -> suspicious process/file/object
+  -> targeted dump/extraction
+  -> correlate with disk/network/config
 ```
 
-For Windows memory, prefer Volatility 3-compatible plugins and verify plugin names against installed version. Do not blindly copy Volatility 2 commands.
+Use Volatility 3 plugin names for a Volatility 3 environment; do not blindly copy Volatility 2 profiles/plugins. If symbols fail, solve the symbol problem or use simpler artifact/string/application analysis rather than treating the absence of plugin output as evidence.
 
-Capture useful facts:
+## Disk / filesystem
 
-- OS/build and architecture;
-- suspicious processes/parents/cmdline;
-- network sockets;
-- mapped/dumped files;
-- environment/credentials/keys only as challenge evidence;
-- MFT/file objects when deleted data is involved.
-
-## Disk/filesystem decision tree
-
-Prefer filesystem-aware recovery before raw carving:
+Prefer filesystem-aware recovery:
 
 ```text
-partition/table -> filesystem metadata -> allocated/deleted entry -> exact file extraction
+partition -> filesystem metadata -> allocated/deleted entry -> exact extraction
 ```
 
-Use carving when metadata is missing/corrupt or the file is unreferenced.
+Then use raw carving when metadata is unavailable/corrupt. Check journals, WAL, snapshots, alternate/resource streams, slack/unallocated space and nested containers as evidence demands.
 
-Check:
+## Browser / SQLite
 
-- partitions and offsets;
-- deleted directory/MFT/inode entries;
-- journal/WAL/snapshots;
-- alternate/resource streams;
-- filesystem-specific slack/unallocated space;
-- nested archives/images/containers.
+Preserve browser SQLite DBs with WAL/SHM. Decode application-specific timestamps correctly. Hindsight is a fast normalizer for Chromium artifacts but raw DB/storage/cache inspection remains authoritative when the answer is missing from the generated timeline.
 
-A deleted file may still have metadata that gives cleaner boundaries than `foremost`/`scalpel`.
+SQLite challenge data may survive in WAL frames, freelists, page freeblocks or edit-history tables after logical deletion.
 
-## Network decision tree
+## Docker
 
-1. Summarize protocols/endpoints/conversations.
-2. Follow likely streams before mass extraction.
-3. Export transferred objects/credentials/files only when protocol supports it.
-4. Inspect timing, ordering, flags, DNS labels and retransmission anomalies when payload is empty/normal-looking.
-5. For encrypted traffic, look for supplied keys/session secrets or endpoint artifacts before attempting cryptanalysis.
+Distinguish `docker save` layer history from `docker export` merged filesystem. Search image config/history, earlier layers, runtime changes, volumes and environment. A file deleted in a later Docker layer can still exist in the earlier layer tar.
 
-Use `tshark` filters for reproducible extraction and Wireshark for visual exploration when useful.
+## Network
 
-## Peripheral capture discipline
+1. Summarize protocol hierarchy/endpoints/conversations.
+2. Follow relevant streams before mass extraction.
+3. Export objects only for protocols that actually carry them.
+4. Inspect timing/order/flags/DNS labels when payloads look normal.
+5. Reconstruct exact ciphertext/framing before pivoting to crypto.
 
-For HID/mouse/keyboard/USB:
+Use tshark for reproducible extraction and Wireshark for visual exploration.
 
-- derive report layout from descriptor/packet shape;
-- handle signed deltas and endianness correctly;
-- reconstruct cumulative coordinates/state;
-- separate button-down strokes from movement;
-- test orientation/reflection only after the raw reconstruction is correct.
+## Windows artifacts
 
-Do not assume a standard report offset when descriptor evidence exists.
+Choose the parser based on the artifact/question: MFTECmd for NTFS metadata, PECmd for Prefetch, RECmd for registry, EvtxECmd for EVTX, LECmd/JLECmd for links/jump lists, SBECmd for shellbags. KAPE is orchestration, not the analysis itself.
 
-## Steganography discipline
+## Steganography
 
-Start with structure, not random steg tools:
+Start structural:
 
-1. validate file/container structure;
-2. inspect metadata/chunks/segments/trailing data;
-3. compare channels/bitplanes/palettes/frames;
-4. inspect dimensions, alpha, frame timing and disposal modes;
-5. move to FFT/spectrogram/statistical methods only when simpler structural channels fail.
+1. metadata and format validity;
+2. chunks/segments/trailing data/embedded magic;
+3. channels/bitplanes/palettes/frames;
+4. only then statistical/FFT/signal analysis.
 
-For animated images, inspect each frame independently and differences between frames.
+Do not run every stego tool against every file. For custom bit extraction, explicitly record traversal order, channel, bit position and byte endianness.
 
-## Signals / hardware
+## PDF / nested containers
 
-Identify sampling model first:
+Treat an unusually large/odd document as a possible carrier. Enumerate PDF objects/streams/attachments and incremental revisions before relying on visual rendering. At every extracted layer verify magic before choosing the next parser.
 
-- clock/data edges;
-- baud/symbol rate;
-- channel mapping;
-- amplitude/frequency encoding;
-- synchronous vs asynchronous framing.
-
-Plot/histogram before hard-coding thresholds. Validate decoded bytes against expected framing/magic/text.
-
-## Nested container rule
-
-Treat suspiciously large or structurally odd documents as possible carriers.
-
-Record every transformation, for example:
+Example chain:
 
 ```text
-PDF -> embedded base64 -> ZIP -> SIF -> SquashFS -> file
+PDF -> encoded stream -> ZIP -> SIF -> SquashFS -> flag file
 ```
-
-At every layer verify magic bytes before choosing the next extractor. A password/hint from one layer may unlock the next.
-
-## Database/browser/container artifacts
-
-During V2 consolidation, canonical ownership is:
-
-- browser history/cookies/downloads -> Forensics browser reference;
-- SQLite/WAL/freelist/edit history -> Forensics SQLite reference;
-- Docker image/layers/runtime evidence -> Forensics container reference;
-- Windows artifact tooling/KAPE/Zimmerman -> Forensics Windows reference;
-- malicious PDF structure/extraction -> Forensics PDF reference, then `ctf-malware` if executable payload behavior becomes primary.
-
-These should not remain separate top-level skills after migration.
 
 ## Cross-category pivots
 
-- extracted ciphertext requires cryptanalysis -> `ctf-crypto`;
-- recovered binary must be understood -> `ctf-reverse`;
-- recovered exploit/memory-corruption path becomes primary -> `ctf-pwn`;
-- artifact identifies a real-world person/location that must be traced -> `ctf-osint`;
-- malicious executable/script behavior/C2 becomes the goal -> `ctf-malware`.
+Add a category only when the hard primitive changes:
 
-Preserve the extraction chain in progress before pivoting.
+- extracted ciphertext -> `ctf-crypto`;
+- recovered binary/client logic -> `ctf-reverse`;
+- memory corruption/exploit path -> `ctf-pwn`;
+- real-world identity/geolocation -> `ctf-osint`;
+- malware behavior/config/C2 -> `ctf-malware`.
 
-## Completion criteria
+Preserve the extraction chain before pivoting.
 
-- evidence chain from original artifact to final data is reproducible;
-- every format/offset/transformation is recorded;
-- filesystem/protocol-aware extraction was preferred when possible;
-- recovered candidate is validated against challenge context/flag format;
-- `PROGRESS.md` identifies original and generated artifact paths.
+## V2 ownership rule
 
-## V1 migration rule
+Forensic tools and artifact families are internal techniques, **not top-level skills**. New knowledge for Volatility, Hindsight, Wireshark, Foremost, SQLite, Docker, stego, Windows tooling or PDF analysis belongs in the focused `ctf-forensics/references/` files above. Update this router only when a genuinely new artifact family appears.
 
-Forensic tools are techniques, not top-level skills. Hindsight, Volatility, Wireshark, Foremost, SQLite, Docker, stego, Zimmerman, peepdf and similar specialist packages will become focused `ctf-forensics/references/` and `scripts/` while their V1 originals remain frozen on `archive/pre-restructure-20260823` during validation.
+The complete V1 source remains recoverable from `archive/pre-restructure-20260823`.
