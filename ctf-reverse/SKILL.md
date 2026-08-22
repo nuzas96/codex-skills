@@ -1,6 +1,6 @@
 ---
 name: ctf-reverse
-description: Solve CTF reverse-engineering challenges where the main task is understanding a compiled, obfuscated, packed, virtualized or platform-specific program: ELF/PE/native binaries, APK/iOS apps, WASM, firmware, bytecode/custom VMs, game clients, Go/Rust/.NET/Swift/Kotlin and anti-debug/anti-analysis logic. Use when program semantics are the blocker. Pivot to ctf-pwn once the vulnerability is understood and memory-corruption exploitation becomes the main task.
+description: Solve CTF reverse-engineering challenges where the main task is understanding a compiled, obfuscated, packed, virtualized or platform-specific program: ELF/PE/native binaries, APK/iOS apps, WASM, firmware, bytecode/custom VMs, game clients, Go/Rust/.NET/Swift/Kotlin and anti-debug/anti-analysis logic. Use when program semantics are the blocker. Pivot to ctf-pwn once memory-corruption exploitation becomes primary.
 license: MIT
 compatibility: Requires target-appropriate static/dynamic analysis tools plus Python 3 for automation/emulation when needed.
 metadata:
@@ -9,18 +9,16 @@ metadata:
 
 # CTF Reverse — V2 Router
 
-Use `ctf-solve` for lifecycle/progress handling. This skill routes reverse-engineering work to the smallest relevant reference.
+Use `ctf-solve` for lifecycle/progress. This skill owns program/platform semantics and routes to the smallest relevant reference.
 
 ## First pass
 
-1. Identify file/container, architecture, language/runtime and packing/obfuscation signals.
-2. Run cheap static triage before opening a heavyweight decompiler.
-3. Locate input, validation, success/failure, crypto/encoding and anti-analysis boundaries.
-4. Choose static, dynamic, emulation or symbolic analysis based on the blocker.
-5. Patch only nuisance behavior needed to expose semantics; keep validation logic intact.
+1. Identify format/container, architecture, language/runtime and packing/obfuscation signals.
+2. Run cheap static triage before heavyweight tools.
+3. Locate input, validation, success/failure, encoding/crypto and anti-analysis boundaries.
+4. Pick static, dynamic, emulation or symbolic analysis based on the blocker.
+5. Patch only nuisance behavior needed to expose semantics.
 6. Automate recovered transformations after understanding them.
-
-Baseline:
 
 ```bash
 file ./chall
@@ -29,124 +27,84 @@ readelf -hSW ./chall 2>/dev/null || true
 objdump -d ./chall 2>/dev/null | head
 ```
 
-Use language/platform-specific signatures when `file` and strings indicate managed/runtime code.
-
 ## Reference router
 
 | Evidence / blocker | Load first | Add only if needed |
 |---|---|---|
-| generic native static analysis | `tools.md` | `patterns.md` |
+| generic native / decompiler | `references/ghidra-native.md` | `tools.md`, `patterns.md` |
 | debugger/runtime tracing | `tools-dynamic.md` | `patterns-runtime.md` |
-| emulation / Unicorn / Qiling-style analysis | `tools-emulation.md` | `references/unicorn-pe-emulation.md` |
-| symbolic execution / advanced frameworks | `tools-advanced.md` | `tools-advanced-2.md` |
-| anti-debug / anti-VM / environment checks | `anti-analysis.md` | `anti-analysis-ctf.md` |
-| common CTF validator/transformation patterns | `patterns.md` | `patterns-ctf.md` |
-| additional CTF hard patterns | `patterns-ctf-2.md` / `patterns-ctf-3.md` | select by TOC |
-| runtime/self-modifying behavior | `patterns-runtime.md` | dynamic/emulation refs |
-| Python/JS/Java/.NET/managed languages | `languages.md` | `languages-platforms.md` |
-| Go/Rust/Swift/Kotlin/C++ compiled languages | `languages-compiled.md` | language-specific specialist migration ref |
-| APK/mobile/platform packaging | `languages-platforms.md` | mobile specialist refs during migration |
-| game engines/WASM/platform targets | `platforms.md` | `platforms-hardware.md` |
-| ARM/RISC-V/hardware/embedded | `platforms-hardware.md` | firmware reference |
-| firmware filesystem/extraction | `firmware-extraction.md` | `ctf-forensics` if artifact recovery dominates |
-| Go malware-like binary | `golang-malware-rev.md` | `ctf-malware` if behavior/C2 becomes primary |
-| recent Sekai reverse patterns | `references/sekaictf2025-reverse-patterns.md` | one matching core reference |
-| uncertain niche | `field-notes.md` | only after normal category references fail |
+| emulation / Unicorn / Qiling | `tools-emulation.md` | `references/unicorn-pe-emulation.md` |
+| symbolic execution | `tools-advanced.md` | `tools-advanced-2.md` |
+| anti-debug / anti-VM | `anti-analysis.md` | `anti-analysis-ctf.md` |
+| common validator/transformation | `patterns.md` | `patterns-ctf*.md` selected by TOC |
+| Android APK / Java/Kotlin / resources | `references/android-apk-jadx.md` | `references/mobile-app-security.md`, native ref for JNI |
+| .NET managed assembly | `references/dotnet-dnspy.md` | `languages.md` |
+| iOS runtime / Objective-C / Swift tracing | `references/ios-frida.md` | `references/ghidra-native.md` |
+| Rust binary | `references/rust-binaries.md` | `languages-compiled.md` |
+| Go binary | `languages-compiled.md` | `golang-malware-rev.md` |
+| firmware / embedded filesystem | `references/firmware-binwalk.md` | `platforms-hardware.md`, `ctf-forensics` if recovery dominates |
+| Android IPC / mobile TLS runtime checks | `references/mobile-app-security.md` | Android/iOS platform ref |
+| WASM/game/platform target | `platforms.md` | `platforms-hardware.md` |
+| custom VM/bytecode | `patterns-ctf.md` | emulation/symbolic refs |
+| recent hard patterns | `references/sekaictf2025-reverse-patterns.md` | matching focused ref |
+| uncertain niche | `field-notes.md` | only after normal refs fail |
 
-Do not read all pattern/tool files by default. Select based on the current blocker.
+Do not preload every platform/tool reference.
 
-## Analysis strategy
+## Strategy
 
-### Static first when
+### Static first
+Use when strings/imports/resources/control flow are readable. Trace the smallest flag-relevant path and improve types/xrefs only there.
 
-- strings/imports expose obvious validation structure;
-- control flow is readable;
-- constants/tables/embedded resources matter;
-- the binary is not heavily packed/self-modifying.
+### Dynamic first
+Use when runtime decryption/unpacking/environment/time behavior hides a specific value. Instrument one boundary and return to offline analysis.
 
-### Dynamic first when
+### Emulation
+Use for bounded routines or inconvenient architectures when dependencies can be stubbed.
 
-- values are decrypted/unpacked at runtime;
-- environment/time/randomness changes behavior;
-- anti-debug or self-modifying code hides the real path;
-- a short breakpoint/watchpoint reveals the compared value directly.
+### Symbolic execution
+Use only after success/failure semantics are known and state explosion/nondeterminism can be controlled.
 
-### Emulation when
+## Packed / self-modifying
 
-- executing the full target is inconvenient/unsafe;
-- only a bounded function/routine matters;
-- platform dependencies can be stubbed;
-- instruction-level visibility is more useful than full OS behavior.
-
-### Symbolic execution when
-
-- input constraints are narrow but path conditions are tedious;
-- success/failure addresses are identifiable;
-- state explosion can be controlled;
-- nondeterministic nuisance branches can be safely patched/stubbed.
-
-Do not start angr/Manticore/Triton before identifying success/failure semantics and major blockers.
-
-## Packed / obfuscated targets
-
-1. Determine whether the packer/loader can be unpacked generically.
-2. If not, identify where original code/data appears in memory.
-3. Dump after unpack/decrypt boundary.
-4. Re-run file/import/string analysis on the recovered image.
-5. Only then spend time on function-level reversing.
+```text
+identify loader/packer
+ -> locate unpack/decrypt boundary
+ -> recover stable stage
+ -> re-run format/import/string analysis
+ -> reverse recovered code
+```
 
 ## Custom VM / bytecode
 
-Recover, in order:
+Recover instruction width/format, opcode dispatch, VM state, operands, branch/call semantics and validation flow. Build a disassembler/emulator once semantics stabilize rather than manually tracing hundreds of instructions.
 
-1. bytecode format/instruction width;
-2. opcode dispatch;
-3. VM state/register/stack model;
-4. operand decoding/endian rules;
-5. branch/call semantics;
-6. validation/data-flow logic.
+## Platform ownership
 
-Build a disassembler/emulator once instruction semantics are stable. Do not manually trace hundreds of instructions if a small emulator can make state observable.
+- Android static/decompile -> `android-apk-jadx.md`.
+- .NET metadata/IL -> `dotnet-dnspy.md`.
+- iOS runtime -> `ios-frida.md`.
+- native assembly/decompiler -> `ghidra-native.md`.
+- Rust-specific layouts/runtime noise -> `rust-binaries.md`.
+- firmware extraction -> `firmware-binwalk.md`.
+- mobile IPC/pinning behavior -> `mobile-app-security.md`.
 
-## Language/runtime discipline
-
-Recognizing the implementation language changes the analysis strategy:
-
-- Go: large statically linked binaries, pclntab/runtime metadata;
-- Rust: monomorphization, panic strings, trait/vtable patterns;
-- .NET: metadata/IL usually beats native-style disassembly;
-- Java/Kotlin Android: decompile bytecode/resources first, then dynamic hooks as needed;
-- Swift/iOS: symbol/runtime metadata and Frida/native debugging can complement static analysis.
-
-Canonical language tooling should live here, while malware workflows link to it rather than duplicating generic reversing instructions.
+If the recovered sample is malicious, generic platform mechanics stay here; behavior/config/C2 interpretation goes to `ctf-malware`.
 
 ## Patch discipline
 
-Patch only what is needed to reveal deterministic behavior:
-
-- anti-debug check;
-- random early exit;
-- sleep/timing delay;
-- environment gate.
-
-Preserve the actual validator/decoder/crypto path. Revalidate recovered input against the **original unpatched** program.
+Patch only anti-debug/random/sleep/environment gates needed to expose deterministic behavior. Revalidate the recovered candidate against the original unpatched target.
 
 ## Cross-category pivots
 
-- memory-corruption primitive is understood and exploit construction is now the blocker -> `ctf-pwn`;
-- recovered algorithm is cryptographically hard rather than implementation-hard -> `ctf-crypto`;
-- artifact/container recovery dominates -> `ctf-forensics`;
-- malicious behavior/config/C2 is the investigation goal -> `ctf-malware`;
-- browser/API delivery becomes the main trust boundary -> `ctf-web`.
+- exploit construction after a known memory-corruption bug -> `ctf-pwn`;
+- mathematically hard crypto -> `ctf-crypto`;
+- disk/memory/container extraction -> `ctf-forensics`;
+- malware behavior/config/C2 -> `ctf-malware`;
+- browser/API trust boundary -> `ctf-web`.
 
-## Completion criteria
+## V2 ownership rule
 
-- important program semantics are explained;
-- transformations/VM logic are reproducible in a script when practical;
-- anti-analysis bypass does not alter the true solution logic;
-- candidate flag/input validates against the original target;
-- `PROGRESS.md` contains decisive offsets/functions/algorithms and artifact paths.
+Reverse tool/platform knowledge is internal to `ctf-reverse/references/` or existing category notes. Do not create a new top-level skill for Ghidra, JADX, dnSpy, Frida, Rust, firmware or mobile IPC/TLS.
 
-## V1 migration rule
-
-Tool-specific reversing skills (Ghidra, JADX, dnSpy, Frida, Rust, etc.) are being consolidated as internal Reverse references/scripts. Generic reversing knowledge has one canonical owner here; malware-specific workflow notes stay in `ctf-malware`.
+The complete V1 sources remain recoverable from `archive/pre-restructure-20260823`.
