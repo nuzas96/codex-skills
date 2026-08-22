@@ -1,194 +1,127 @@
 ---
 name: ctf-osint
-description: Provides open source intelligence techniques for CTF challenges. Use when gathering information from public sources, social media, geolocation, DNS records, username enumeration, reverse image search, Google dorking, Wayback Machine, Tor relays, FEC filings, or identifying unknown data like hashes and coordinates.
+description: Solve CTF OSINT challenges using public information: geolocation and image/media clues, social-media identities and timestamps, usernames, DNS/web infrastructure, archives, repositories, public records, map/road systems and related open sources. Use when identifying a real-world person, place, event, organization, account or public digital footprint is the primary path to the flag.
 license: MIT
-compatibility: Requires filesystem-based agent (Claude Code or similar) with bash, Python 3, and internet access for OSINT lookups.
-allowed-tools: Bash Read Write Edit Glob Grep Task WebFetch WebSearch
+compatibility: Requires web/public-data access and normal metadata/map/search tooling; use APIs or specialized services only when the selected clue requires them.
 metadata:
   user-invocable: "false"
 ---
 
-# CTF OSINT
+# CTF OSINT — V2 Router
 
-Quick reference for OSINT CTF challenges. Each technique has a one-liner here; see supporting files for full details.
+Use `ctf-solve` for lifecycle/progress. OSINT answers should be evidence chains, not single-search guesses.
 
-## Prerequisites
+## First pass
 
-**Python packages (all platforms):**
-```bash
-pip install shodan Pillow
-```
+1. Extract every concrete clue before searching: visible text, language, road markings, architecture, weather, event date, username, ID, domain, metadata, reflections and unique objects.
+2. Separate **hard clues** from thematic/story text.
+3. Generate a small candidate set and maintain disconfirming evidence as aggressively as confirming evidence.
+4. Prefer primary/public records and exact visual matches over SEO pages or reposts.
+5. Record query terms, source URLs/identifiers and why each source proves a step.
 
-**Linux (apt):**
-```bash
-apt install whois dnsutils nmap libimage-exiftool-perl imagemagick curl
-```
+## Reference router
 
-**macOS (Homebrew):**
-```bash
-brew install whois bind nmap exiftool imagemagick curl
-```
+| Clue / task | Load first | Add only if needed |
+|---|---|---|
+| place/image/road/building/landscape | `geolocation-and-media.md` | `references/highway-km-marker-geolocation.md` |
+| social account/post/user/date/ID | `social-media.md` | web/DNS ref if domain/account correlation needed |
+| website/domain/DNS/Wayback/GitHub/public infra | `web-and-dns.md` | social-media ref |
+| highway kilometer marker | `references/highway-km-marker-geolocation.md` | `geolocation-and-media.md` |
 
-## Additional Resources
+## Geolocation discipline
 
-- [social-media.md](social-media.md) - Twitter/X (user IDs, Snowflake timestamps, Nitter, memory.lol, Wayback CDX), Tumblr (blog checks, post JSON, avatars), BlueSky search + API, Unicode homoglyph steganography, Discord API, username OSINT (namechk, whatsmyname, Osint Industries), username metadata mining (postal codes), platform false positives, multi-platform chains, Strava fitness route OSINT
-- [geolocation-and-media.md](geolocation-and-media.md) - Image analysis, reverse image search (including Baidu for China), Google Lens cropped region search, reflected/mirrored text reading, geolocation techniques (railroad signs, infrastructure maps, MGRS), Google Plus Codes, EXIF/metadata, hardware identification, newspaper archives, IP geolocation, Google Street View panorama matching, What3Words micro-landmark matching, Google Maps crowd-sourced photo verification, Overpass Turbo spatial queries, music-themed landmark geolocation with key encoding
-- [highway-km-marker-geolocation.md](references/highway-km-marker-geolocation.md) - Solving "highway km X" CTF challenges: read km post → identify country/road → cumulative km arithmetic across toll road segments → OSM motorway_junction lookup → flag coordinates
-- [web-and-dns.md](web-and-dns.md) - Google dorking (including TBS image filters), Google Docs/Sheets enumeration, DNS recon (TXT, zone transfers), Wayback Machine, FEC research, Tor relay lookups, GitHub repository analysis, Telegram bot investigation, WHOIS investigation (reverse WHOIS, historical WHOIS, IP/ASN lookup), fake service banner detection via nmap fingerprinting
+Work from high-information features:
 
----
+- script/language and exact wording;
+- road side, lane/curb/guardrail/sign standards;
+- utility poles, terrain, vegetation and coast/mountain orientation;
+- business/building names;
+- transport/route numbers and kilometer markers;
+- distinctive religious/civic architecture;
+- shadows/weather only as supporting evidence.
 
-## When to Pivot
+For images, crop/refocus distinctive regions for reverse-image matching rather than submitting the entire frame repeatedly. Reflections, signs and background ridgelines can be stronger than the foreground object.
 
-- If you already have the files or packets locally and now need extraction or carving, switch to `/ctf-forensics`.
-- If the task becomes active exploitation of a live HTTP service, switch to `/ctf-web`.
-- If you uncover malware samples, beacons, or suspicious binaries during attribution, switch to `/ctf-malware`.
+When a route/highway marker is present, map the official road first, then solve distance/direction along that road rather than visually searching an entire country.
 
-## Quick Start Commands
+## Social-media discipline
 
-```bash
-# DNS recon
-dig -t any target.com
-dig -t txt target.com
-dig axfr @ns.target.com target.com
-whois target.com
+Capture exact identifiers and platform semantics:
 
-# Image metadata
-exiftool image.jpg
-identify -verbose image.jpg | head -30
+- username vs display name;
+- post/status numeric ID;
+- timestamp/timezone;
+- reply/repost relationships;
+- image variants/CDN paths;
+- profile history/aliases;
+- linked domains/accounts.
 
-# Web archive
-curl "https://web.archive.org/web/20230101*/target.com"
+Where platform IDs encode time (for example Snowflake-style IDs), decode them and validate against the visible post date. Use archived/public API data when UI search is incomplete.
 
-# Username lookup
-curl -s "https://whatsmyname.app/api/lookup?username=<user>"
+## Web / DNS discipline
 
-# Shodan
-shodan search "hostname:target.com"
-shodan host <ip>
-```
+For a domain or site, correlate:
 
-## String Identification
+- DNS records/subdomains;
+- certificate transparency when useful;
+- Wayback/archive snapshots;
+- WHOIS/registration data where public and relevant;
+- source/repository references;
+- robots/sitemaps/well-known paths;
+- username/email/domain reuse.
 
-- 40 hex chars -> SHA-1 (Tor fingerprint)
-- 64 hex chars -> SHA-256
-- 32 hex chars -> MD5
+A current page can be misleading if the challenge points to historical ownership/content; always align source date with challenge date.
 
-## Twitter/X Account Tracking
+## Time reasoning
 
-- Persistent numeric User ID: `https://x.com/i/user/<id>` works even after renames.
-- Snowflake timestamps: `(id >> 22) + 1288834974657` = Unix ms.
-- Wayback CDX, Nitter, memory.lol for historical data. See [social-media.md](social-media.md).
-
-## Tumblr Investigation
-
-- Blog check: `curl -sI` for `x-tumblr-user` header. Avatar at `/avatar/512`. See [social-media.md](social-media.md).
-
-## Username OSINT
-
-- [whatsmyname.app](https://whatsmyname.app) (741+ sites), [namechk.com](https://namechk.com). Watch for platform false positives. See [social-media.md](social-media.md).
-
-## Image Analysis & Reverse Image Search
-
-- Google Lens (crop to region of interest), Google Images, TinEye, Yandex (faces). Check corners for visual stego. Twitter strips EXIF. See [geolocation-and-media.md](geolocation-and-media.md).
-- **Cropped region search:** Isolate distinctive elements (shop signs, building facades) and search via Google Lens for better results than full-scene search. See [geolocation-and-media.md](geolocation-and-media.md).
-- **Reflected text:** Flip mirrored/reflected text (water, glass) horizontally; search partial text with quoted strings. See [geolocation-and-media.md](geolocation-and-media.md).
-
-## Geolocation
-
-- Railroad signs, infrastructure maps (OpenRailwayMap, OpenInfraMap), process of elimination. See [geolocation-and-media.md](geolocation-and-media.md).
-- **Street View panorama matching:** Feature extraction + multi-metric image similarity ranking against candidate panoramas. Useful when challenge image is a crop of a Street View photo. See [geolocation-and-media.md](geolocation-and-media.md).
-- **Road sign OCR:** Extract text from directional signs (town names, route numbers) to pinpoint road corridors. Driving side + sign style + script identify the country. See [geolocation-and-media.md](geolocation-and-media.md).
-- **Architecture + brand identification:** Post-Soviet concrete = Russia/CIS; named businesses → search locations/branches → cross-reference with coastline/terrain. See [geolocation-and-media.md](geolocation-and-media.md).
-- **Music-themed landmark geolocation:** Multiple images of music-related landmarks worldwide; each yields a piano key number encoding one flag character. Identify all locations first, then decode the key sequence. See [geolocation-and-media.md](geolocation-and-media.md).
-- **Highway kilometer marker geolocation:** Small white km post on shoulder = km number → identify country + road network → cumulative km arithmetic (esp. Indonesian Trans-Java, where markers count continuously from Jakarta, not per-segment) → OSM motorway_junction node → flag coords. See [references/highway-km-marker-geolocation.md](references/highway-km-marker-geolocation.md).
-
-## MGRS Coordinates
-
-- Grid format "4V FH 246 677" -> online converter -> lat/long -> Google Maps. See [geolocation-and-media.md](geolocation-and-media.md).
-
-## Google Plus Codes
-
-- Format `XXXX+XXX` (chars: `23456789CFGHJMPQRVWX`). Drop a pin on Google Maps → Plus Code appears in details. Free, no API key needed. See [geolocation-and-media.md](geolocation-and-media.md).
-
-## Metadata Extraction
-
-```bash
-exiftool image.jpg           # EXIF data
-pdfinfo document.pdf         # PDF metadata
-mediainfo video.mp4          # Video metadata
-```
-
-## Google Dorking
+OSINT challenges often hinge on event timing. Keep separate:
 
 ```text
-site:example.com filetype:pdf
-intitle:"index of" password
+photo/post capture date
+publication date
+real-world event date
+archive snapshot date
 ```
 
-**Image TBS filters:** Append `&tbs=itp:face` to Google Image URLs to filter for faces only (strips logos/banners). See [web-and-dns.md](web-and-dns.md).
+Do not treat them as interchangeable. When the prompt gives a date, constrain candidate events/venues to that period first.
 
-## Google Docs/Sheets
+## Candidate table
 
-- Try `/export?format=csv`, `/pub`, `/gviz/tq?tqx=out:csv`, `/htmlview`. See [web-and-dns.md](web-and-dns.md).
+For difficult identification challenges, maintain a compact table:
 
-## DNS Reconnaissance
-
-```bash
-dig -t txt subdomain.ctf.domain.com
-dig axfr @ns.domain.com domain.com  # Zone transfer
+```text
+candidate | confirming clues | contradictions | source quality | next test
 ```
 
-Always check TXT, CNAME, MX for CTF domains. See [web-and-dns.md](web-and-dns.md).
+A famous/obvious candidate with one contradiction should not survive merely because it matches the theme.
 
-## Tor Relay Lookups
+## Verification before flag
 
-- `https://metrics.torproject.org/rs.html#simple/<FINGERPRINT>` -- check family, sort by "first seen". See [web-and-dns.md](web-and-dns.md).
+A final identity/location should normally have at least two independent high-quality links, for example:
 
-## GitHub Repository Analysis
-
-- Check issue comments, PR reviews, commit messages, wiki edits via `gh api`. See [web-and-dns.md](web-and-dns.md).
-
-## Telegram Bot Investigation
-
-- Find bot references in browser history, interact via `/start`, answer verification questions. See [web-and-dns.md](web-and-dns.md).
-
-## FEC Political Donation Research
-
-- FEC.gov for committee receipts; 501(c)(4) orgs obscure original funders. See [web-and-dns.md](web-and-dns.md).
-
-## IP Geolocation
-
-```bash
-curl "http://ip-api.com/json/103.150.68.150"
+```text
+visual/metadata clue -> exact place
+place/date -> exact event
+venue record -> home/away participants
+award/record -> exact restaurant name
 ```
 
-See [geolocation-and-media.md](geolocation-and-media.md).
+Then normalize spelling exactly to the flag format.
 
-## Unicode Homoglyph Steganography
+## Cross-category pivots
 
-**Pattern:** Visually-identical Unicode characters from different blocks (Cyrillic, Greek, Math) encode binary data in social media posts. ASCII = 0, homoglyph = 1. Group bits into bytes for flag. See [social-media.md](social-media.md#unicode-homoglyph-steganography-on-bluesky-metactf-2026).
+- hidden data must first be extracted from an image/document -> `ctf-forensics`;
+- obfuscated code/domain generation must be reversed -> `ctf-reverse`;
+- web application exploitation, not public research, becomes primary -> `ctf-web`;
+- public clue leads to cryptographic encoding that is the real blocker -> `ctf-crypto`.
 
-## BlueSky Public API
+## Completion criteria
 
-No auth needed. Endpoints: `public.api.bsky.app/xrpc/app.bsky.feed.searchPosts?q=...`, `app.bsky.actor.searchActors`, `app.bsky.feed.getAuthorFeed`. Check all replies to official posts. See [social-media.md](social-media.md#unicode-homoglyph-steganography-on-bluesky-metactf-2026).
+- final answer is supported by a reproducible evidence chain;
+- contradictory candidates were explicitly eliminated;
+- dates/names/locations match authoritative or direct sources;
+- exact flag normalization is recorded in `PROGRESS.md`.
 
-## Fake Service Banner Detection
+## V1 migration rule
 
-**Pattern:** Port appears open on a standard service port (22/SSH, 80/HTTP) but runs a fake service. `nmap -sV` or `nc host port` reveals the flag in the banner. Never trust port numbers alone -- always fingerprint the service. See [web-and-dns.md](web-and-dns.md#fake-service-banner-detection-via-fingerprinting-metactf-flash-2026).
-
-## Shodan SSH Fingerprint Lookup
-
-Search Shodan by SSH host key fingerprint to identify servers: `shodan search "fingerprint:AA:BB:CC:..."`. See [web-and-dns.md](web-and-dns.md#shodan-ssh-fingerprint-lookup-ekoparty-ctf-2016).
-
-## Gaming Platform OSINT
-
-Lookup usernames across gaming platforms (Steam, Xbox, PSN, MMOs) for character profiles, activity, and linked accounts. See [social-media.md](social-media.md#gaming-platform-osint--mmo-character-lookup-csaw-ctf-2016).
-
-## Resources
-
-- **Shodan** - Internet-connected devices
-- **Censys** - Certificate and host search
-- **VirusTotal** - File/URL reputation
-- **WHOIS** - Domain registration
-- **Wayback Machine** - Historical snapshots
+OSINT remains one top-level domain skill. New techniques belong in `geolocation-and-media.md`, `social-media.md`, `web-and-dns.md`, or a focused internal reference rather than another top-level skill.
