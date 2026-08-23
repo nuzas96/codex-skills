@@ -1,29 +1,30 @@
 # Codex Skills V2 Migration Plan
 
-> Status: restructuring work-in-progress. Do not merge to `main` until validation passes.
+> **Status: consolidation and physical cleanup complete. Final candidate is on `restructure/v2-category-first`; merge to `main` only after strict CI and representative routing checks pass.**
 
-## Safety snapshot
+## Safety points
 
 - Original branch: `main`
-- Frozen archive branch: `archive/pre-restructure-20260823`
-- Working branch: `restructure/v2-category-first`
-- Original snapshot commit: `cfc30195cfed1982b28dd24b39647a2c85c8f056`
-- `main` and the archive branch were verified identical before migration began.
+- Frozen archive: `archive/pre-restructure-20260823`
+- Core-router checkpoint: `checkpoint/v2-core-routers-20260823`
+- Strict-pass checkpoint: `checkpoint/v2-strict-pass-20260823`
+- Final candidate: `restructure/v2-category-first`
+- Original V1 snapshot: `cfc30195cfed1982b28dd24b39647a2c85c8f056`
 
-The archive branch is the canonical rollback point. Never rewrite or force-push it during V2 migration.
+The archive is the canonical rollback/history point. Do not rewrite or force-push it during V2 adoption.
 
 ## V2 design goals
 
-1. Reduce top-level skill activation noise.
+1. Reduce top-level activation noise.
 2. Make each top-level skill represent a task/domain, not one exploit primitive.
-3. Use category `SKILL.md` files as small routers.
-4. Put detailed techniques in `references/` and executable helpers in `scripts/`.
-5. Give every technique exactly one canonical owner.
-6. Preserve imported knowledge, scripts, licenses, and attribution before deduplication.
+3. Keep category `SKILL.md` files as compact routers.
+4. Put detailed techniques in `references/` and deterministic helpers in `scripts/`.
+5. Give every reusable technique exactly one canonical owner.
+6. Preserve useful V1 knowledge and provenance before removing duplicate entrypoints.
 7. Make future upgrades deterministic: classify -> deduplicate -> update canonical reference -> validate.
-8. Keep challenge solving evidence-first and preserve progress/stuck-recovery behavior.
+8. Preserve evidence-first solving, progress discipline and stuck recovery.
 
-## Target top-level skills
+## Final top-level skills
 
 - `ctf-solve`
 - `ctf-web`
@@ -39,6 +40,8 @@ The archive branch is the canonical rollback point. Never rewrite or force-push 
 - `ctf-skill-upgrade`
 - `agent-maintenance`
 
+No V1 specialist directory remains at the V2 root.
+
 ## Structural rule
 
 ```text
@@ -46,134 +49,175 @@ The archive branch is the canonical rollback point. Never rewrite or force-push 
 ├── SKILL.md              # routing + workflow only
 ├── references/           # canonical technique knowledge
 ├── scripts/              # reusable automation
-└── assets/               # templates/static resources only when needed
+└── assets/               # optional templates/static resources
 ```
 
-A technique must not become a new top-level skill merely because it is useful. Add it to the relevant category reference unless it is a genuinely separate task/domain.
+A technique does not become a new top-level skill merely because it is useful.
 
-## Current -> V2 mapping
+## Completed consolidation map
 
-| Current directory | V2 owner | Action |
-|---|---|---|
-| `solve-challenge` | `ctf-solve` | Merge into orchestrator |
-| `ctf-desktop-workspace` | `ctf-solve/references/workspace.md` | Merge |
-| `progress-discipline` | `ctf-solve/references/progress.md` | Merge |
-| `ctf-stuck-recovery` | `ctf-solve/references/stuck-recovery.md` | Merge |
-| `ctf-modern-chains` | `ctf-solve/references/modern-chains.md` | Merge |
-| `ctf-web` | `ctf-web` | Keep name; slim `SKILL.md`; retain canonical references |
-| `web-ctf` | `ctf-web` + `ctf-solve` | Deduplicate workflow/field notes |
-| `exploiting-http-request-smuggling` | `ctf-web/references/request-smuggling.md` | Merge |
-| `exploiting-insecure-deserialization` | `ctf-web/references/deserialization.md` | Merge |
-| `exploiting-jwt-algorithm-confusion-attack` | `ctf-web/references/jwt.md` | Merge |
-| `performing-jwt-none-algorithm-attack` | `ctf-web/references/jwt.md` | Merge |
-| `exploiting-nosql-injection-vulnerabilities` | `ctf-web/references/nosql-injection.md` | Merge |
-| `exploiting-oauth-misconfiguration` | `ctf-web/references/oauth-oidc.md` | Merge |
-| `exploiting-prototype-pollution-in-javascript` | `ctf-web/references/prototype-pollution.md` | Merge |
-| `exploiting-race-condition-vulnerabilities` | `ctf-web/references/race-conditions.md` | Merge |
-| `exploiting-template-injection-vulnerabilities` | `ctf-web/references/ssti.md` | Merge |
-| `exploiting-websocket-vulnerabilities` | `ctf-web/references/websockets.md` | Merge |
-| `performing-content-security-policy-bypass` | `ctf-web/references/csp.md` | Merge |
-| `performing-directory-traversal-testing` | `ctf-web/references/traversal-lfi.md` | Merge |
-| `performing-graphql-introspection-attack` | `ctf-web/references/graphql.md` | Merge |
-| `performing-web-application-firewall-bypass` | `ctf-web/references/waf-bypass.md` | Merge |
-| `performing-web-cache-poisoning-attack` | `ctf-web/references/cache-poisoning.md` | Merge |
-| `testing-for-business-logic-vulnerabilities` | `ctf-web/references/business-logic.md` | Merge |
-| `testing-for-xxe-injection-vulnerabilities` | `ctf-web/references/xxe.md` | Merge |
-| `ctf-pwn` | `ctf-pwn` | Keep; slim router and organize references |
-| `ctf-reverse` | `ctf-reverse` | Keep; slim router and organize references |
-| `reverse-engineering-android-malware-with-jadx` | `ctf-reverse` + `ctf-malware` | Canonical tooling in reverse; malware workflow links to it |
-| `reverse-engineering-dotnet-malware-with-dnspy` | `ctf-reverse` + `ctf-malware` | Canonical tooling in reverse; malware workflow links to it |
-| `reverse-engineering-ios-app-with-frida` | `ctf-reverse/references/mobile-ios-frida.md` | Merge |
-| `reverse-engineering-malware-with-ghidra` | `ctf-reverse/references/ghidra.md` | Merge generic reversing; malware-specific notes retained in malware |
-| `reverse-engineering-ransomware-encryption-routine` | `ctf-malware/references/ransomware-crypto.md` | Merge |
-| `reverse-engineering-rust-malware` | `ctf-reverse/references/rust.md` + malware notes | Deduplicate |
-| `ctf-crypto` | `ctf-crypto` | Keep; slim router and organize references |
-| `ctf-forensics` | `ctf-forensics` | Keep; slim router and organize references |
-| `analyzing-browser-forensics-with-hindsight` | `ctf-forensics/references/browser-artifacts.md` | Merge |
-| `analyzing-docker-container-forensics` | `ctf-forensics/references/docker-containers.md` | Merge |
-| `analyzing-malicious-pdf-with-peepdf` | `ctf-forensics/references/pdf.md` + malware handoff | Merge |
-| `performing-file-carving-with-foremost` | `ctf-forensics/references/file-carving.md` | Merge |
-| `performing-memory-forensics-with-volatility3` | `ctf-forensics/references/memory-volatility.md` | Merge |
-| `performing-network-forensics-with-wireshark` | `ctf-forensics/references/network-pcap.md` | Merge |
-| `performing-sqlite-database-forensics` | `ctf-forensics/references/sqlite.md` | Merge |
-| `performing-steganography-detection` | `ctf-forensics/references/steganography.md` | Merge |
-| `performing-windows-artifact-analysis-with-eric-zimmerman-tools` | `ctf-forensics/references/windows-artifacts.md` | Merge |
-| `performing-firmware-extraction-with-binwalk` | `ctf-forensics/references/firmware-extraction.md` + reverse handoff | Merge |
-| `ctf-osint` | `ctf-osint` | Keep; slim router and organize references |
-| `ctf-malware` | `ctf-malware` | Keep; slim router and organize references |
-| `deobfuscating-javascript-malware` | `ctf-malware/references/javascript-deobfuscation.md` | Merge |
-| `deobfuscating-powershell-obfuscated-malware` | `ctf-malware/references/powershell-deobfuscation.md` | Merge |
-| `ctf-misc` | `ctf-misc` | Keep; slim router and organize references |
-| `ctf-ai-ml` | `ctf-ai-ml` | Keep; slim router and organize references |
-| `exploiting-active-directory-certificate-services-esc1` | `ctf-misc/references/active-directory.md` | Merge under infrastructure/AD section |
-| `exploiting-active-directory-with-bloodhound` | `ctf-misc/references/active-directory.md` | Merge |
-| `performing-kerberoasting-attack` | `ctf-misc/references/active-directory.md` | Merge |
-| `performing-mobile-app-certificate-pinning-bypass` | `ctf-reverse/references/mobile-dynamic-analysis.md` | Merge |
-| `testing-android-intents-for-vulnerabilities` | `ctf-reverse/references/mobile-android.md` | Merge |
-| `ctf-writeup` | `ctf-writeup` | Keep; simplify |
-| `ctf-writeup-repository-study` | `ctf-skill-upgrade` | Merge as knowledge-ingestion workflow |
-| `token-efficient-cli-workflows` | `agent-maintenance/references/token-efficiency.md` | Merge |
-| `hermes-context-compression` | `agent-maintenance/references/context-compression.md` | Merge |
+### Orchestration -> `ctf-solve`
 
-## Canonical ownership rules
+- `solve-challenge`
+- `ctf-desktop-workspace`
+- `progress-discipline`
+- `ctf-stuck-recovery`
+- `ctf-modern-chains`
+
+Canonical destinations include:
+
+- `ctf-solve/references/workspace.md`
+- `ctf-solve/references/progress.md`
+- `ctf-solve/references/stuck-recovery.md`
+- `ctf-solve/references/modern-chains.md`
+- `ctf-solve/references/triage-routing.md`
+
+### Web -> `ctf-web`
+
+Merged specialist families include:
+
+- HTTP request smuggling -> `references/request-smuggling.md`
+- insecure deserialization -> `references/deserialization.md`
+- JWT confusion / `alg:none` -> `references/jwt.md`
+- NoSQL injection -> `references/nosql-injection.md`
+- OAuth/OIDC -> `references/oauth-oidc.md`
+- prototype pollution -> `references/prototype-pollution.md`
+- race conditions -> `references/race-conditions.md`
+- SSTI -> `references/ssti.md`
+- WebSockets -> `references/websockets.md`
+- CSP/browser behavior -> `references/csp-browser.md`
+- traversal/LFI -> `references/path-traversal-lfi.md`
+- GraphQL -> `references/graphql.md`
+- WAF/parser differential -> `references/waf-parser-differentials.md`
+- cache attacks -> `references/cache-attacks.md`
+- business logic -> `references/business-logic.md`
+- XXE/XML -> `references/xxe-xml.md`
+- V1 `web-ctf` empirical workflow -> `references/empirical-workflow.md`
+
+### Forensics -> `ctf-forensics`
+
+- Hindsight/browser -> `references/browser-artifacts.md`
+- Docker -> `references/docker-containers.md`
+- malicious PDF/peepdf -> `references/pdf-analysis.md`
+- Foremost -> `references/file-carving.md`
+- Volatility 3 -> `references/memory-volatility.md`
+- Wireshark/tshark -> `references/network-pcap.md`
+- SQLite/WAL -> `references/sqlite-forensics.md`
+- steganography detection -> `references/stego-detection.md`
+- Zimmerman/KAPE -> `references/windows-artifacts.md`
+
+### Reverse / mobile -> `ctf-reverse`
+
+- Android/JADX -> `references/android-apk-jadx.md`
+- .NET/dnSpy -> `references/dotnet-dnspy.md`
+- iOS/Frida -> `references/ios-frida.md`
+- generic Ghidra/native -> `references/ghidra-native.md`
+- Rust binaries -> `references/rust-binaries.md`
+- firmware/binwalk -> `references/firmware-binwalk.md`
+- Android intents + mobile TLS/pinning concepts -> `references/mobile-app-security.md`
+
+Generic platform/tool reversing is owned here. Malware links here instead of copying generic tutorials.
+
+### Malware -> `ctf-malware`
+
+- JavaScript + PowerShell deobfuscation -> `references/script-deobfuscation.md`
+- ransomware encryption/config recovery -> `references/ransomware-crypto.md`
+- C2/config/behavior remains owned by malware references and core files
+
+### Infrastructure / AD -> `ctf-misc`
+
+- BloodHound path analysis
+- Kerberoasting
+- AD CS ESC1
+
+All are consolidated into `ctf-misc/references/active-directory.md` so enterprise CTF knowledge is a focused subfamily rather than three global activation candidates.
+
+### Agent maintenance
+
+- token-efficient CLI workflow -> `agent-maintenance/references/token-efficiency.md`
+- Hermes context compression -> `agent-maintenance/references/context-compression.md`
+
+### Knowledge ingestion
+
+- `ctf-writeup-repository-study` -> `ctf-skill-upgrade`
+
+New writeups should update canonical owners instead of spawning top-level technique skills.
+
+## Canonical ownership boundaries
 
 ### Web
-Auth/JWT/OAuth, parser bugs, browser/client attacks, API protocols, caching/proxy behavior, business logic, request races, traversal/LFI, SSRF, XXE, SSTI, deserialization and WAF behavior belong to `ctf-web`.
+HTTP/application/API/browser/auth/proxy/cache/parser/business-logic trust boundaries.
 
 ### Pwn
-Memory corruption, mitigations, ROP, heap, FSOP, seccomp, kernel exploitation and native binary exploitation primitives belong to `ctf-pwn`.
+Native memory corruption, mitigations, ROP, heap, FSOP, seccomp and kernel exploitation.
 
 ### Reverse
-Static/dynamic program analysis, decompilers, symbolic execution, VM/bytecode analysis, APK/iOS native reversing, language-specific reversing and anti-analysis belong to `ctf-reverse`.
+Program semantics, static/dynamic tooling, decompilers, symbolic execution, VM/bytecode, mobile/platform/language reversing.
 
 ### Crypto
-Cryptographic construction attacks, number theory, lattices, PRNGs, RSA/ECC/AES/signatures/oracles belong to `ctf-crypto`.
+Cryptographic construction attacks, number theory, lattices, PRNG, RSA/ECC/AES/signatures/oracles.
 
 ### Forensics
-Evidence extraction/reconstruction from memory, disks, filesystems, browsers, PCAP, media, SQLite, containers and artifacts belongs to `ctf-forensics`.
+Evidence extraction and reconstruction from memory, disks, filesystems, browsers, PCAP, media, SQLite, containers and document artifacts.
 
 ### Malware
-Malware triage, unpacking/deobfuscation, C2/config extraction, behavioral analysis and malware-specific workflows belong to `ctf-malware`. Generic reverse-engineering tooling stays canonical in `ctf-reverse` and is linked rather than duplicated.
+Malware behavior, deobfuscation workflow, unpacking, C2/config extraction and malware-specific crypto/framing.
 
 ### Misc
-Jails, unusual protocols, infrastructure challenges, AD/Kerberos, esolangs, game/VM puzzles and challenges that do not fit a stronger category belong to `ctf-misc`.
+Jails, unusual protocols, games/state puzzles, AD/Kerberos/infrastructure and edge cases that do not fit a stronger domain.
 
 ## Migration sequence
 
 1. Freeze archive branch. **DONE**
 2. Create isolated restructuring branch. **DONE**
-3. Add migration manifest. **DONE with this commit**
-4. Build `ctf-solve` orchestrator.
-5. Consolidate Web specialist skills into `ctf-web`.
-6. Consolidate Forensics specialist skills.
-7. Consolidate Reverse/Malware/Mobile specialist skills.
-8. Consolidate AD/infrastructure into Misc.
-9. Consolidate agent-maintenance skills.
-10. Build `ctf-skill-upgrade`.
-11. Slim all category `SKILL.md` files into routing documents.
-12. Add root `README.md`, `CATALOG.md`, attribution index and validator.
-13. Validate all paths, links, frontmatter, scripts, references and skill sizes.
-14. Compare V2 against archive to ensure no source knowledge was accidentally lost.
-15. Test representative challenge prompts for each category.
-16. Only then open/merge a PR into `main`.
+3. Add migration manifest. **DONE**
+4. Build `ctf-solve` orchestrator. **DONE**
+5. Consolidate Web specialists. **DONE**
+6. Consolidate Forensics specialists. **DONE**
+7. Consolidate Reverse/Malware/Mobile specialists. **DONE**
+8. Consolidate AD/infrastructure. **DONE**
+9. Consolidate agent-maintenance skills. **DONE**
+10. Build `ctf-skill-upgrade`. **DONE**
+11. Slim category `SKILL.md` files into routers. **DONE**
+12. Add root README/catalog/validator. **DONE**
+13. Deactivate V1 specialist entrypoints. **DONE**
+14. Remove migrated V1 physical subtrees from V2 root. **DONE**
+15. Enforce strict physical root cleanliness in CI. **DONE**
+16. Run strict structural validation. **REQUIRED BEFORE MERGE**
+17. Run representative routing-path checks. **REQUIRED BEFORE MERGE**
+18. Review PR diff/status and only then merge to `main`.
 
-## Non-negotiable migration checks
+## Non-negotiable validation gates
 
-Before deleting an old top-level skill directory:
+Before V2 can merge:
 
-- its `SKILL.md` knowledge has a canonical V2 destination;
-- useful `references/` content has been preserved or deduplicated;
-- reusable scripts have been moved and still have their dependencies documented;
-- license/attribution requirements are retained;
-- all incoming references to the old path are updated;
-- no unique technique or field note is silently discarded.
+- exactly the 13 canonical top-level skills are present;
+- no legacy V1 top-level directory remains;
+- all skill frontmatter names match parent directories;
+- all required canonical skills exist;
+- top-level router relative links resolve;
+- no unclassified root directory exists;
+- representative challenge routes resolve to existing canonical references;
+- GitHub Actions strict validation succeeds.
+
+Run locally:
+
+```bash
+python3 scripts/validate_skills.py --strict-migration
+```
 
 ## Rollback
 
-If V2 fails, restore from `archive/pre-restructure-20260823` or reset to commit:
+If V2 proves worse in real use, restore from:
+
+```text
+archive/pre-restructure-20260823
+```
+
+or original commit:
 
 ```text
 cfc30195cfed1982b28dd24b39647a2c85c8f056
 ```
 
-Do not delete the archive branch after V2 is merged. Keep it as the historical V1 baseline until V2 has been used successfully in real CTFs.
+Do not delete the archive immediately after a V2 merge. Keep it as the historical V1 baseline until V2 has been exercised successfully in real CTFs.
