@@ -1,4 +1,0 @@
-interface:
-  display_name: "CTF Modern Chains"
-  short_description: "Modern multi-stage CTF exploitation patterns"
-  default_prompt: "Use $ctf-modern-chains to identify and exploit an unusual multi-stage CTF chain."

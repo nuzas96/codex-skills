@@ -1,0 +1,29 @@
+name: Validate Skills
+
+on:
+  push:
+    branches:
+      - main
+      - 'restructure/**'
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Validate V2 skill repository
+        run: python3 scripts/validate_skills.py --strict-migration
+
+      - name: Validate representative routing cases
+        run: python3 scripts/validate_routing_cases.py

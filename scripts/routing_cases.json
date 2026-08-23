@@ -1,0 +1,41 @@
+[
+  {"case":"JWT/JWK web API","primary_skill":"ctf-web","references":["ctf-web/references/jwt.md"]},
+  {"case":"OAuth/OIDC callback flaw","primary_skill":"ctf-web","references":["ctf-web/references/oauth-oidc.md"]},
+  {"case":"SSTI template challenge","primary_skill":"ctf-web","references":["ctf-web/references/ssti.md"]},
+  {"case":"XXE XML parser challenge","primary_skill":"ctf-web","references":["ctf-web/references/xxe-xml.md"]},
+  {"case":"HTTP request smuggling","primary_skill":"ctf-web","references":["ctf-web/references/request-smuggling.md"]},
+  {"case":"Web race condition","primary_skill":"ctf-web","references":["ctf-web/references/race-conditions.md"]},
+  {"case":"WebSocket state/auth challenge","primary_skill":"ctf-web","references":["ctf-web/references/websockets.md"]},
+  {"case":"WAF parser differential","primary_skill":"ctf-web","references":["ctf-web/references/waf-parser-differentials.md"]},
+
+  {"case":"Stack overflow ret2win","primary_skill":"ctf-pwn","references":["ctf-pwn/overflow-basics.md"]},
+  {"case":"Heap tcache/UAF","primary_skill":"ctf-pwn","references":["ctf-pwn/heap-techniques.md"]},
+  {"case":"Format string exploit","primary_skill":"ctf-pwn","references":["ctf-pwn/format-string.md"]},
+
+  {"case":"Android APK/JADX reversing","primary_skill":"ctf-reverse","references":["ctf-reverse/references/android-apk-jadx.md"]},
+  {"case":".NET/dnSpy reversing","primary_skill":"ctf-reverse","references":["ctf-reverse/references/dotnet-dnspy.md"]},
+  {"case":"Rust binary reversing","primary_skill":"ctf-reverse","references":["ctf-reverse/references/rust-binaries.md"]},
+  {"case":"Firmware/binwalk reversing","primary_skill":"ctf-reverse","references":["ctf-reverse/references/firmware-binwalk.md"]},
+
+  {"case":"RSA cryptanalysis","primary_skill":"ctf-crypto","references":["ctf-crypto/rsa-attacks.md"]},
+  {"case":"Lattice/LWE challenge","primary_skill":"ctf-crypto","references":["ctf-crypto/lattice-and-lwe.md"]},
+
+  {"case":"Windows RAM/Volatility","primary_skill":"ctf-forensics","references":["ctf-forensics/references/memory-volatility.md"]},
+  {"case":"PCAP/Wireshark reconstruction","primary_skill":"ctf-forensics","references":["ctf-forensics/references/network-pcap.md"]},
+  {"case":"Chromium browser artifacts","primary_skill":"ctf-forensics","references":["ctf-forensics/references/browser-artifacts.md"]},
+  {"case":"SQLite WAL/freelist recovery","primary_skill":"ctf-forensics","references":["ctf-forensics/references/sqlite-forensics.md"]},
+
+  {"case":"Image/location OSINT","primary_skill":"ctf-osint","references":["ctf-osint/geolocation-and-media.md"]},
+
+  {"case":"Obfuscated JavaScript/PowerShell malware","primary_skill":"ctf-malware","references":["ctf-malware/references/script-deobfuscation.md"]},
+  {"case":"Ransomware crypto/config recovery","primary_skill":"ctf-malware","references":["ctf-malware/references/ransomware-crypto.md"]},
+
+  {"case":"Python jail","primary_skill":"ctf-misc","references":["ctf-misc/pyjails.md"]},
+  {"case":"Active Directory BloodHound/Kerberos/AD CS","primary_skill":"ctf-misc","references":["ctf-misc/references/active-directory.md"]},
+
+  {"case":"LLM prompt injection/agent challenge","primary_skill":"ctf-ai-ml","references":["ctf-ai-ml/llm-attacks.md"]},
+
+  {"case":"Final challenge writeup","primary_skill":"ctf-writeup","references":[]},
+  {"case":"Ingest a new public writeup into skill knowledge","primary_skill":"ctf-skill-upgrade","references":[]},
+  {"case":"Token/context optimization workflow","primary_skill":"agent-maintenance","references":["agent-maintenance/references/token-efficiency.md"]}
+]
