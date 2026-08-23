@@ -1,11 +1,6 @@
 ---
 name: ctf-skill-upgrade
-description: Maintain and improve this CTF skill library by studying public writeups/methodology repositories or newly solved challenges, extracting only novel reusable techniques, classifying each technique into its canonical ctf-* owner, deduplicating against existing references, preserving provenance, updating focused references/scripts, and validating the repository. Use when the user asks to learn from writeups, upgrade skills, add a newly discovered technique, study a CTF repository, or improve the library after a solve. Do not use it to solve the live challenge itself.
-license: MIT
-compatibility: Requires git, filesystem/search access, Python 3 and web/GitHub access when studying external public sources.
-metadata:
-  user-invocable: "true"
-  argument-hint: "[writeup-repo-or-technique-source]"
+description: "Maintain and improve the CTF skill library by studying writeups, methodology repositories, or newly solved challenges; extract reusable techniques, classify each into its canonical ctf-* owner, deduplicate, preserve provenance, update focused references/scripts, and validate. Use when asked to learn from writeups, upgrade skills, or add a discovered technique."
 ---
 
 # CTF Skill Upgrade

@@ -1,10 +1,6 @@
 ---
 name: ctf-web
-description: Solve web-focused CTF challenges involving HTTP applications, APIs, browser/admin bots, authentication and authorization, SQL/NoSQL injection, SSTI, SSRF, XXE, deserialization, JWT/OAuth/OIDC, file/path handling, GraphQL/WebSockets, proxy/cache/request-smuggling behavior, prototype pollution, race/business-logic bugs, CSP/XSS/XS-Leaks, and Web3-integrated web surfaces. Use when the primary flag path crosses an application, browser, API, identity, proxy or server-side web trust boundary. Load only the specific internal references indicated by observed evidence.
-license: MIT
-compatibility: Requires normal web inspection tooling, Python 3 and target-specific dependencies. Install specialized tools only when the selected technique requires them.
-metadata:
-  user-invocable: "false"
+description: "Solve web-focused CTF challenges involving HTTP apps, APIs, browser/admin bots, auth, injection, SSTI, SSRF, XXE, deserialization, JWT/OAuth, file/path handling, GraphQL/WebSockets, proxy/cache/smuggling, prototype pollution, race/business logic, CSP/XSS/XS-Leaks, and Web3 web surfaces. Use when the primary flag path crosses a web trust boundary."
 ---
 
 # CTF Web — V2 Router
@@ -152,3 +148,5 @@ Do not preload categories speculatively.
 A web vulnerability technique belongs under `ctf-web/references/` or `ctf-web/scripts/`, **not in another top-level skill**. Historical broad references remain for depth, but new upgrades should patch the most focused canonical reference and update this router only when a new technique family appears.
 
 The complete V1 source remains recoverable from `archive/pre-restructure-20260823`.
+
+Load [references/legacy-evidence-lessons.md](references/legacy-evidence-lessons.md) only when preserved recon, validation, upload, token, or pivot lessons match the evidence.

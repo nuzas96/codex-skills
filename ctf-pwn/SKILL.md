@@ -1,10 +1,6 @@
 ---
 name: ctf-pwn
-description: Solve CTF native binary exploitation challenges after a concrete low-level primitive is identified: stack/global overflows, format strings, ROP/ret2libc/SROP, shellcode, heap/tcache/UAF, FSOP, seccomp/sandbox escapes, kernel exploitation, partial overwrites, allocator abuse and related Linux/Windows memory-corruption chains. Use when the main task is converting native process corruption or a kernel primitive into flag access. Use ctf-reverse first when understanding program semantics is still the main blocker.
-license: MIT
-compatibility: Requires native-analysis tooling appropriate to the target architecture plus Python 3/pwntools for automation when needed.
-metadata:
-  user-invocable: "false"
+description: "Solve CTF native binary exploitation challenges: stack/global overflows, format strings, ROP/ret2libc/SROP, shellcode, heap/tcache/UAF, FSOP, seccomp/sandbox escapes, kernel exploitation, partial overwrites, allocator abuse, and related memory-corruption chains. Use when converting a native or kernel primitive into flag access is primary."
 ---
 
 # CTF Pwn — V2 Router
@@ -152,3 +148,5 @@ Brute force is justified only after calculating the actual remaining entropy. Ma
 ## V1 migration rule
 
 Standalone pwn technique packages should become internal references/scripts rather than additional top-level skills. Existing V1 knowledge remains available on `archive/pre-restructure-20260823` while V2 deduplication is validated.
+
+Load [references/legacy-evidence-lessons.md](references/legacy-evidence-lessons.md) only when preserved reliability, integer, seccomp, protocol, or unusual-ABI lessons match the evidence.

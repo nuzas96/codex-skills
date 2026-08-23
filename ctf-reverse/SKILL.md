@@ -1,10 +1,6 @@
 ---
 name: ctf-reverse
-description: Solve CTF reverse-engineering challenges where the main task is understanding a compiled, obfuscated, packed, virtualized or platform-specific program: ELF/PE/native binaries, APK/iOS apps, WASM, firmware, bytecode/custom VMs, game clients, Go/Rust/.NET/Swift/Kotlin and anti-debug/anti-analysis logic. Use when program semantics are the blocker. Pivot to ctf-pwn once memory-corruption exploitation becomes primary.
-license: MIT
-compatibility: Requires target-appropriate static/dynamic analysis tools plus Python 3 for automation/emulation when needed.
-metadata:
-  user-invocable: "false"
+description: "Solve CTF reverse-engineering challenges involving compiled, obfuscated, packed, virtualized, or platform-specific programs: ELF/PE, APK/iOS, WASM, firmware, bytecode/custom VMs, game clients, Go/Rust/.NET/Swift/Kotlin, and anti-analysis logic. Use when program semantics are the primary blocker."
 ---
 
 # CTF Reverse — V2 Router
@@ -108,3 +104,5 @@ Patch only anti-debug/random/sleep/environment gates needed to expose determinis
 Reverse tool/platform knowledge is internal to `ctf-reverse/references/` or existing category notes. Do not create a new top-level skill for Ghidra, JADX, dnSpy, Frida, Rust, firmware or mobile IPC/TLS.
 
 The complete V1 sources remain recoverable from `archive/pre-restructure-20260823`.
+
+Load [references/legacy-evidence-lessons.md](references/legacy-evidence-lessons.md) only when preserved validator, APK, VM, flattened-control-flow, or protocol lessons match the evidence.

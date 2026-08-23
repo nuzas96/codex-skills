@@ -1,10 +1,6 @@
 ---
 name: ctf-ai-ml
-description: Solve CTF AI/ML challenges involving adversarial examples, model weights/adapters, extraction/inversion/membership inference, poisoning/backdoors, neural-network collisions, prompt injection/jailbreaking, token/context manipulation and tool-using LLM agents. Use when the model or AI agent itself is the primary attack/solve surface rather than merely a component inside a web application.
-license: MIT
-compatibility: Requires Python 3 and only the ML/framework tooling used by the supplied model or API.
-metadata:
-  user-invocable: "false"
+description: "Solve CTF AI/ML challenges involving adversarial examples, model weights/adapters, extraction/inversion/membership inference, poisoning/backdoors, neural-network collisions, prompt injection/jailbreaking, token/context manipulation, and tool-using LLM agents. Use when the model or AI agent is the primary solve surface."
 ---
 
 # CTF AI/ML — V2 Router

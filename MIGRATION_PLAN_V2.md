@@ -39,6 +39,7 @@ The archive is the canonical rollback/history point. Do not rewrite or force-pus
 - `ctf-writeup`
 - `ctf-skill-upgrade`
 - `agent-maintenance`
+- `ctf-boot2root`
 
 No V1 specialist directory remains at the V2 root.
 
@@ -142,6 +143,12 @@ All are consolidated into `ctf-misc/references/active-directory.md` so enterpris
 - `ctf-writeup-repository-study` -> `ctf-skill-upgrade`
 
 New writeups should update canonical owners instead of spawning top-level technique skills.
+
+### Installed legacy evidence skills
+
+The installed `solve-ctf-evidence-first` and seven category solvers contributed distilled evidence, validation, mistake-bank, and personal field lessons to focused `legacy-evidence-lessons.md` references in their canonical V2 owners.
+
+The installed `solve-boot2root-ctf` exposed a lifecycle gap not covered by isolated Linux privilege-escalation or AD references. Its discovery -> enumeration -> foothold -> movement -> privilege escalation -> user/root proof workflow is preserved as the dedicated `ctf-boot2root` domain.
 
 ## Canonical ownership boundaries
 

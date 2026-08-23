@@ -1,10 +1,6 @@
 ---
 name: ctf-forensics
-description: Solve CTF digital-forensics challenges involving disk/filesystem images, memory dumps/coredumps, Windows/Linux/browser/container artifacts, network/PCAP and peripheral captures, steganography/media, PDFs/documents, deleted-file recovery, signals/hardware traces, SQLite history and unusual forensic containers. Use when extracting, reconstructing or correlating evidence from artifacts is the primary path to the flag.
-license: MIT
-compatibility: Requires artifact-specific forensic tooling only when selected by the evidence; Python 3 and common CLI inspection tools are sufficient for first-pass triage.
-metadata:
-  user-invocable: "false"
+description: "Solve CTF digital-forensics challenges involving disk/filesystem images, memory dumps, Windows/Linux/browser/container artifacts, PCAP and peripheral captures, steganography/media, PDFs, deleted-file recovery, signals/hardware traces, SQLite history, and unusual containers. Use when extracting, reconstructing, or correlating artifact evidence is primary."
 ---
 
 # CTF Forensics — V2 Router
@@ -135,3 +131,5 @@ Preserve the extraction chain before pivoting.
 Forensic tools and artifact families are internal techniques, **not top-level skills**. New knowledge for Volatility, Hindsight, Wireshark, Foremost, SQLite, Docker, stego, Windows tooling or PDF analysis belongs in the focused `ctf-forensics/references/` files above. Update this router only when a genuinely new artifact family appears.
 
 The complete V1 source remains recoverable from `archive/pre-restructure-20260823`.
+
+Load [references/legacy-evidence-lessons.md](references/legacy-evidence-lessons.md) only when preserved damaged-database, filesystem, media-path, mobile-backup, or HID lessons match the evidence.

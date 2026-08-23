@@ -189,6 +189,17 @@ Canonical owner: `ctf-ai-ml`
 | weights / LoRA / extraction / inversion / membership | `ctf-ai-ml/model-attacks.md` |
 | prompt injection / jailbreak / LLM agents | `ctf-ai-ml/llm-attacks.md` |
 
+## Boot2Root
+
+Canonical owner: `ctf-boot2root`
+
+| Technique | Route |
+|---|---|
+| full HTB/VulnHub/VM lifecycle | `ctf-boot2root/references/lifecycle.md` |
+| isolated Linux privilege-escalation technique | `ctf-misc/linux-privesc.md` |
+| AD relationship/Kerberos/AD CS branch | `ctf-misc/references/active-directory.md` |
+| native/kernel exploit construction | `ctf-pwn` |
+
 ## Agent maintenance
 
 Canonical owner: `agent-maintenance`

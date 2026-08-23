@@ -1,10 +1,6 @@
 ---
 name: agent-maintenance
-description: Maintain the agent environment around CTF work: reduce noisy CLI/token usage, debug/tune Hermes context compression, and keep always-loaded instructions lean. Use when the user asks about token efficiency, RTK/compact terminal workflows, context unexpectedly compressing, compression thresholds/tool-schema overhead, or agent configuration rather than a CTF challenge itself.
-license: MIT
-compatibility: Hermes/Codex/CLI details are environment-specific; verify installed versions/config before applying commands.
-metadata:
-  user-invocable: "true"
+description: "Maintain the agent environment around CTF work: reduce noisy CLI/token usage, debug or tune context compression, and keep always-loaded instructions lean. Use when asked about token efficiency, compact terminal workflows, unexpected context compression, threshold or tool-schema overhead, or agent configuration rather than a CTF challenge."
 ---
 
 # Agent Maintenance — V2 Router

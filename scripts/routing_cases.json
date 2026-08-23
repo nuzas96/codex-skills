@@ -19,6 +19,7 @@
 
   {"case":"RSA cryptanalysis","primary_skill":"ctf-crypto","references":["ctf-crypto/rsa-attacks.md"]},
   {"case":"Lattice/LWE challenge","primary_skill":"ctf-crypto","references":["ctf-crypto/lattice-and-lwe.md"]},
+  {"case":"Huge Vandermonde polynomial interpolation","primary_skill":"ctf-crypto","references":["ctf-crypto/references/polynomial-interpolation.md"]},
 
   {"case":"Windows RAM/Volatility","primary_skill":"ctf-forensics","references":["ctf-forensics/references/memory-volatility.md"]},
   {"case":"PCAP/Wireshark reconstruction","primary_skill":"ctf-forensics","references":["ctf-forensics/references/network-pcap.md"]},
@@ -32,6 +33,8 @@
 
   {"case":"Python jail","primary_skill":"ctf-misc","references":["ctf-misc/pyjails.md"]},
   {"case":"Active Directory BloodHound/Kerberos/AD CS","primary_skill":"ctf-misc","references":["ctf-misc/references/active-directory.md"]},
+
+  {"case":"HTB/VulnHub full machine lifecycle","primary_skill":"ctf-boot2root","references":["ctf-boot2root/references/lifecycle.md"]},
 
   {"case":"LLM prompt injection/agent challenge","primary_skill":"ctf-ai-ml","references":["ctf-ai-ml/llm-attacks.md"]},
 

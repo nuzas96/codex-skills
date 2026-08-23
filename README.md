@@ -57,6 +57,7 @@ Malware -> Reverse native routine
 | `ctf-malware` | malicious behavior, deobfuscation workflow, config/C2 recovery |
 | `ctf-misc` | deliberate fallback for jails, games, AD/infra and edge cases |
 | `ctf-ai-ml` | adversarial ML, model attacks, LLM/agent challenges |
+| `ctf-boot2root` | complete scoped-machine lifecycle from discovery to root/system proof |
 | `ctf-writeup` | final reproducible challenge writeup |
 | `ctf-skill-upgrade` | learn from writeups/solves and update canonical knowledge |
 | `agent-maintenance` | token-efficient CLI and agent/context configuration |
@@ -82,6 +83,7 @@ codex-skills/
 ├── ctf-malware/
 ├── ctf-misc/
 ├── ctf-ai-ml/
+├── ctf-boot2root/
 ├── ctf-writeup/
 └── ctf-skill-upgrade/
 ```

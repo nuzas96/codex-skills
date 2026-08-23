@@ -1,10 +1,6 @@
 ---
 name: ctf-misc
-description: Solve CTF challenges whose primary primitive does not fit Web, Pwn, Reverse, Crypto, Forensics, OSINT, Malware or AI/ML: Python/bash jails, encodings, RF/SDR, unusual DNS/protocol puzzles, esoteric languages, game/VM/state puzzles, Active Directory/Kerberos infrastructure challenges, constraint problems and hybrid edge cases. Use as a deliberate fallback after identifying the actual primitive, not as the default category.
-license: MIT
-compatibility: Requires only tooling selected by the specific edge-case challenge; do not preload broad toolsets.
-metadata:
-  user-invocable: "false"
+description: "Solve CTF challenges whose primary primitive does not fit Web, Pwn, Reverse, Crypto, Forensics, OSINT, Malware, AI/ML, or Boot2Root: Python/bash jails, encodings, RF/SDR, unusual DNS/protocol puzzles, esolangs, game/VM/state puzzles, Active Directory/Kerberos, constraints, and hybrid edge cases. Use as a deliberate fallback."
 ---
 
 # CTF Misc — V2 Router
@@ -25,6 +21,7 @@ Misc is a controlled fallback. Use `ctf-solve` for lifecycle/progress and move t
 | CTFd platform navigation | `ctfd-navigation.md` | category from challenge evidence |
 | Active Directory / Kerberos / AD CS | `references/active-directory.md` | category-specific ref only if path changes |
 | recent unusual Misc pattern | `references/dalctf2026-patterns.md` | `references/sekaictf2025-misc-patterns.md` |
+| Discord/parser/loop/protocol evidence lessons | `references/legacy-evidence-lessons.md` | only when those patterns match |
 
 ## Misc discipline
 
