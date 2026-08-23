@@ -1,11 +1,6 @@
 ---
 name: ctf-solve
-description: Orchestrate end-to-end CTF challenge solving: create or resume the challenge workspace, preserve continuous PROGRESS.md state, perform evidence-first triage, select one primary category skill, coordinate justified cross-category pivots, run stuck-recovery before declaring defeat, validate the flag, and hand off to ctf-writeup. Use for any active CTF challenge solve, especially when the category is unknown, the solve spans multiple turns, or continuity matters.
-license: MIT
-compatibility: Requires filesystem access plus normal CTF command-line tooling. Category-specific tooling is loaded on demand from the matching ctf-* skill.
-metadata:
-  user-invocable: "true"
-  argument-hint: "[challenge-name-or-path-or-url]"
+description: "Orchestrate end-to-end CTF challenge solving: create or resume the workspace, preserve PROGRESS.md, perform evidence-first triage, select one primary category skill, coordinate justified pivots, run stuck recovery, validate the flag, and hand off to ctf-writeup. Use for any active CTF solve, especially when category is unknown or continuity matters."
 ---
 
 # CTF Solve Orchestrator
@@ -63,6 +58,7 @@ Do not repeat a failed branch unless new evidence changes the expected outcome.
 | Geolocation, identity, social/web-public-data investigation | `ctf-osint` |
 | Malware triage, obfuscation, C2/config extraction, behavior | `ctf-malware` |
 | Jail/sandbox, esolang, unusual game/protocol/infra puzzle | `ctf-misc` |
+| Full HTB/VulnHub/Boot2Root machine lifecycle | `ctf-boot2root` |
 | Model extraction, adversarial ML, prompt/tool/model attacks | `ctf-ai-ml` |
 
 Ambiguous binary rule: a binary plus a remote exploitation service usually starts at `ctf-pwn`; a standalone binary whose logic must be understood starts at `ctf-reverse`. Pivot between them when evidence demands it.
@@ -104,6 +100,7 @@ Do not declare `blocked`, `unsolvable`, `can't solve`, or equivalent until the s
 - [references/stuck-recovery.md](references/stuck-recovery.md) — pre-defeat 7-point enumeration.
 - [references/modern-chains.md](references/modern-chains.md) — second-pass boundary mismatch workflow.
 - [references/migration-sources.md](references/migration-sources.md) — V1 source provenance used to build this orchestrator.
+- [references/legacy-evidence-lessons.md](references/legacy-evidence-lessons.md) — preserved user-specific evidence discipline.
 
 ## Completion criteria
 
