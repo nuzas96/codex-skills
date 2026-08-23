@@ -1,10 +1,6 @@
 ---
 name: ctf-writeup
-description: Produce a concise, reproducible CTF solution writeup after the final flag/answer has been verified. Use for competition submission, teammate handoff or organizer review. Build the writeup from the solved challenge artifacts and PROGRESS.md, preserving the decisive reasoning and one complete solver/exploit path without dumping every dead end.
-license: MIT
-compatibility: Requires access to the solved challenge workspace and any final solver/exploit artifacts.
-metadata:
-  user-invocable: "true"
+description: "Produce a concise, reproducible CTF solution writeup after the final flag or answer is verified. Use for competition submissions, teammate handoffs, or organizer review. Build from solved artifacts and PROGRESS.md, preserving decisive reasoning and one complete solver or exploit path."
 ---
 
 # CTF Writeup — V2
