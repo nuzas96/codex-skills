@@ -30,6 +30,7 @@ binwalk suspect 2>/dev/null
 |---|---|---|
 | RAM / raw memory / LiME / crash dump | `references/memory-volatility.md` | `disk-and-memory.md`, `disk-advanced.md` |
 | disk/E01/dd/VMDK/filesystem | `disk-and-memory.md` | `disk-recovery.md`, `disk-advanced.md` |
+| Apple DMG/UDIF, `koly`/`blkx`, HFS+/APFS delivery image | `references/apple-dmg-udif.md` | `disk-advanced.md` |
 | deleted/unallocated/corrupt file | `references/file-carving.md` | `disk-recovery.md` |
 | Linux logs/process/app artifacts | `linux-forensics.md` | disk/memory reference |
 | Windows disk/registry/MFT/Prefetch/EVTX/LNK/Jump Lists | `references/windows-artifacts.md` | `windows.md`, disk refs |
