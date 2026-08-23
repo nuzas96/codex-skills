@@ -27,3 +27,6 @@ jobs:
 
       - name: Validate representative routing cases
         run: python3 scripts/validate_routing_cases.py
+
+      - name: Validate fast routing index
+        run: python3 scripts/validate_routing_index.py
