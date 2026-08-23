@@ -29,6 +29,7 @@ Use `ctf-solve` for workspace/progress/stuck-recovery. This skill selects the sm
 | ECC/DLP/singular/small subgroup | `ecc-attacks.md` | `advanced-math.md` |
 | MT/LCG/xorshift/seed/state recovery | `prng.md` | `prng-attacks.md` |
 | lattice, HNP, LWE, CVP/SVP | `lattice-and-lwe.md` | `advanced-math.md` |
+| polynomial interpolation, Vandermonde recovery, huge evaluation sets | `references/polynomial-interpolation.md` | `advanced-math.md` |
 | ZKP/signature/protocol/solver-heavy | `zkp-and-advanced.md` | matching math/cipher reference |
 | isogeny/finite-field/polynomial/number-theory hard math | `advanced-math.md` | `references/crypto-hard-pattern-playbook.md` |
 | exotic algebra/protocol/rare construction | `exotic-crypto.md` | `exotic-crypto-2.md` |
