@@ -1,9 +1,10 @@
 #!/usr/bin/env python3
-"""Validate the codex-skills repository structure.
+"""Validate the codex-skills V2 repository structure.
 
 No third-party dependencies are required. Run from any directory:
 
     python3 scripts/validate_skills.py
+    python3 scripts/validate_skills.py --strict-migration
 
 Exit codes:
     0: no errors (warnings may remain)
@@ -36,8 +37,10 @@ CORE_V2_SKILLS = {
     "agent-maintenance",
 }
 
-# These V1 top-level entrypoints should disappear only after their unique content,
-# scripts, references, assets and attribution have a canonical V2 destination.
+ALLOWED_SUPPORT_DIRS = {".git", ".github", "scripts"}
+
+# Frozen V1 top-level directories. Their useful knowledge must have a canonical
+# V2 destination before the directory is removed from the V2 branch.
 LEGACY_TOP_LEVEL_SKILLS = {
     "analyzing-browser-forensics-with-hindsight",
     "analyzing-docker-container-forensics",
@@ -119,7 +122,6 @@ def iter_skill_files(root: Path) -> Iterable[Path]:
 
 def normalize_link_target(raw: str) -> str:
     target = raw.strip().strip("<>")
-    # Markdown allows an optional quoted title after the URL/path.
     if " \"" in target:
         target = target.split(" \"", 1)[0]
     elif " '" in target:
@@ -134,16 +136,12 @@ def validate_markdown_links(path: Path, text: str, root: Path) -> list[Finding]:
         if not target or target.startswith(("http://", "https://", "mailto:", "#")):
             continue
         target_path = target.split("#", 1)[0]
-        if not target_path:
-            continue
-        if target_path.startswith("/"):
-            # Environment-specific absolute paths are documentation, not repo links.
+        if not target_path or target_path.startswith("/"):
             continue
         resolved = (path.parent / target_path).resolve()
         try:
             resolved.relative_to(root.resolve())
         except ValueError:
-            # References intentionally outside the repository are not validated here.
             continue
         if not resolved.exists():
             findings.append(Finding("ERROR", path, f"broken relative link: {target}"))
@@ -193,7 +191,7 @@ def main() -> int:
     parser.add_argument(
         "--strict-migration",
         action="store_true",
-        help="treat remaining V1 top-level SKILL.md entrypoints as errors instead of warnings",
+        help="fail on legacy V1 directories/entrypoints and non-V2 root directories",
     )
     args = parser.parse_args()
 
@@ -216,27 +214,54 @@ def main() -> int:
         if len(paths) > 1:
             findings.append(Finding("ERROR", paths[0], f"duplicate skill name '{name}' in {len(paths)} files"))
 
-    top_level_dirs = {path.parent.name for path in skills}
-    for required in sorted(CORE_V2_SKILLS - top_level_dirs):
+    top_level_skill_dirs = {path.parent.name for path in skills}
+    for required in sorted(CORE_V2_SKILLS - top_level_skill_dirs):
         findings.append(Finding("ERROR", root, f"missing V2 core skill entrypoint: {required}/SKILL.md"))
 
     migration_level = "ERROR" if args.strict_migration else "WARN"
-    for legacy in sorted(LEGACY_TOP_LEVEL_SKILLS & top_level_dirs):
+
+    for legacy in sorted(LEGACY_TOP_LEVEL_SKILLS & top_level_skill_dirs):
         findings.append(
             Finding(
                 migration_level,
                 root / legacy / "SKILL.md",
-                "legacy V1 top-level entrypoint still active; audit/migrate before deactivation",
+                "legacy V1 top-level entrypoint still active",
             )
         )
 
-    unknown = top_level_dirs - CORE_V2_SKILLS - LEGACY_TOP_LEVEL_SKILLS
-    for directory in sorted(unknown):
+    physical_dirs = {
+        path.name
+        for path in root.iterdir()
+        if path.is_dir() and path.name not in {"__pycache__"}
+    }
+    legacy_residue = LEGACY_TOP_LEVEL_SKILLS & physical_dirs
+    for legacy in sorted(legacy_residue):
         findings.append(
             Finding(
-                "WARN",
+                migration_level,
+                root / legacy,
+                "legacy V1 top-level directory still present after migration",
+            )
+        )
+
+    unknown_skills = top_level_skill_dirs - CORE_V2_SKILLS - LEGACY_TOP_LEVEL_SKILLS
+    for directory in sorted(unknown_skills):
+        findings.append(
+            Finding(
+                "ERROR" if args.strict_migration else "WARN",
                 root / directory / "SKILL.md",
-                "unclassified top-level skill; decide whether it is a true V2 domain/task",
+                "unclassified top-level skill; V2 requires an explicit domain/task owner",
+            )
+        )
+
+    allowed_root_dirs = CORE_V2_SKILLS | ALLOWED_SUPPORT_DIRS
+    unknown_physical_dirs = physical_dirs - allowed_root_dirs - LEGACY_TOP_LEVEL_SKILLS
+    for directory in sorted(unknown_physical_dirs):
+        findings.append(
+            Finding(
+                "ERROR" if args.strict_migration else "WARN",
+                root / directory,
+                "unclassified top-level directory outside the V2 architecture",
             )
         )
 
@@ -256,7 +281,9 @@ def main() -> int:
     print(f"Skills: {len(skills)}")
     print(f"Errors: {errors}")
     print(f"Warnings: {warnings}")
-    print(f"Active legacy entrypoints: {len(LEGACY_TOP_LEVEL_SKILLS & top_level_dirs)}")
+    print(f"Active legacy entrypoints: {len(LEGACY_TOP_LEVEL_SKILLS & top_level_skill_dirs)}")
+    print(f"Legacy directories present: {len(legacy_residue)}")
+    print(f"Unclassified root directories: {len(unknown_physical_dirs)}")
 
     return 1 if errors else 0
 
