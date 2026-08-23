@@ -2,7 +2,7 @@
 
 A progressive-disclosure CTF skill library designed for Codex/ChatGPT-style agents.
 
-> **V2 migration is currently developed on `restructure/v2-category-first`.**  
+> **V2 consolidation is complete on `restructure/v2-category-first` and is undergoing final routing validation before merge.**  
 > The untouched V1 snapshot is preserved at `archive/pre-restructure-20260823` from commit `cfc30195cfed1982b28dd24b39647a2c85c8f056`.
 
 ## Why V2 exists
@@ -13,7 +13,7 @@ V2 uses a different rule:
 
 > **Top-level skill = task/domain. Technique = reference. Automation = script.**
 
-The goal is fewer activation candidates, smaller entrypoints, easier maintenance and no duplicated canonical technique knowledge.
+The result is fewer activation candidates, smaller entrypoints, easier maintenance and one canonical owner for reusable technique knowledge.
 
 ## Normal CTF activation
 
@@ -21,6 +21,8 @@ The goal is fewer activation candidates, smaller entrypoints, easier maintenance
 ctf-solve
     +
 one primary category skill
+    +
+one focused reference selected by evidence
 ```
 
 Example:
@@ -61,56 +63,52 @@ Malware -> Reverse native routine
 
 See [CATALOG.md](CATALOG.md) for technique routing.
 
-## Skill layout
+## Repository shape
 
-Target structure:
+```text
+codex-skills/
+├── README.md
+├── CATALOG.md
+├── MIGRATION_PLAN_V2.md
+├── scripts/
+├── agent-maintenance/
+├── ctf-solve/
+├── ctf-web/
+├── ctf-pwn/
+├── ctf-reverse/
+├── ctf-crypto/
+├── ctf-forensics/
+├── ctf-osint/
+├── ctf-malware/
+├── ctf-misc/
+├── ctf-ai-ml/
+├── ctf-writeup/
+└── ctf-skill-upgrade/
+```
+
+Each skill may contain:
 
 ```text
 <skill>/
-├── SKILL.md
-├── references/
-├── scripts/
-└── assets/
+├── SKILL.md       # compact router/workflow
+├── references/    # canonical technique knowledge
+├── scripts/       # reusable deterministic automation
+└── assets/        # static resources/templates when needed
 ```
 
 Not every skill needs every directory.
 
-### `SKILL.md`
+## `SKILL.md` rule
 
-Small router/workflow only:
+A top-level `SKILL.md` should answer:
 
 - when this domain owns the task;
-- cheapest first pass;
-- decision tree;
-- links to focused references;
-- cross-category handoff rules;
-- completion criteria.
+- what the cheapest first pass is;
+- which evidence selects which focused reference;
+- when to pivot to another category;
+- what completion looks like.
 
-Do not turn it into an encyclopedia.
-
-### `references/`
-
-Canonical reusable technique knowledge:
-
-```text
-ctf-web/references/jwt.md
-ctf-pwn/references/how2heap-patterns.md
-ctf-forensics/references/memory-volatility.md
-```
-
-A reference should explain how to **recognize**, **verify**, and **apply** a technique, including important version/environment constraints.
-
-### `scripts/`
-
-Reusable deterministic automation:
-
-- parsers;
-- token/artifact analyzers;
-- solver templates;
-- extraction helpers;
-- repository validation.
-
-Scripts should accept target-derived parameters rather than hard-coded challenge constants.
+It should not become an encyclopedia.
 
 ## Canonical ownership
 
@@ -118,14 +116,15 @@ Every technique has one canonical owner.
 
 Examples:
 
-- JWT -> `ctf-web`
-- generic Ghidra/JADX/dnSpy/Frida workflow -> `ctf-reverse`
-- malware config/C2 interpretation -> `ctf-malware`
+- JWT/OAuth/SSTI/XXE/request smuggling -> `ctf-web`
+- generic Ghidra/JADX/dnSpy/Frida/Rust workflow -> `ctf-reverse`
+- malware config/C2/ransomware behavior -> `ctf-malware`
 - Volatility/Hindsight/Wireshark/SQLite/Foremost -> `ctf-forensics`
-- heap/FSOP -> `ctf-pwn`
+- heap/FSOP/kernel exploitation -> `ctf-pwn`
 - LLL/Coppersmith -> `ctf-crypto`
+- AD CS/BloodHound/Kerberoasting CTF paths -> `ctf-misc`
 
-If another category needs the technique, link to the owner instead of copying the tutorial.
+If another category needs a technique, link to the owner instead of copying the tutorial.
 
 ## Evidence-first solving
 
@@ -144,9 +143,9 @@ observable
 
 - read/resume progress before exploration;
 - pre-flight search for prior version-specific findings;
-- append findings before user-facing replies;
+- append meaningful findings before user-facing replies;
 - exact-version empirical validation;
-- a seven-point stuck-recovery gate before declaring defeat.
+- a pre-defeat stuck-recovery gate before declaring defeat.
 
 ## Upgrading the library
 
@@ -170,41 +169,47 @@ Challenge-specific flags, credentials and copied constants do not belong in perm
 
 ## Validation
 
-Run:
+Normal development check:
 
 ```bash
 python3 scripts/validate_skills.py
 ```
 
-During migration, remaining V1 entrypoints are warnings:
+Final architecture gate:
 
 ```bash
 python3 scripts/validate_skills.py --strict-migration
 ```
 
-Strict mode will fail while legacy top-level `SKILL.md` files are still active.
+Strict mode fails on:
 
-The validator checks:
+- missing canonical V2 skills;
+- invalid top-level skill frontmatter/name mismatch;
+- duplicate skill names;
+- broken relative links from top-level routers;
+- legacy V1 top-level entrypoints;
+- **legacy V1 directory residue**;
+- unclassified top-level skills/directories.
 
-- top-level skill frontmatter/name consistency;
-- duplicate names;
-- missing core V2 entrypoints;
-- relative links from top-level routers;
-- oversized router warnings;
-- remaining legacy V1 activation candidates.
+GitHub Actions runs strict migration validation on the V2 restructuring branch and pull requests.
 
-## V2 migration safety
-
-Never restructure directly on the frozen archive branch.
-
-Current safety points:
+## Migration safety
 
 ```text
-main                          original V1 baseline until final merge
+main
+  original V1 baseline until final merge
+
 archive/pre-restructure-20260823
-                              frozen V1 rollback branch
+  frozen V1 rollback branch
+
+checkpoint/v2-core-routers-20260823
+  intermediate V2 recovery point
+
+checkpoint/v2-strict-pass-20260823
+  V2 state after strict structural validation
+
 restructure/v2-category-first
-                              V2 working branch
+  final V2 candidate branch
 ```
 
 Original snapshot commit:
@@ -213,13 +218,7 @@ Original snapshot commit:
 cfc30195cfed1982b28dd24b39647a2c85c8f056
 ```
 
-Before deleting/deactivating a V1 top-level skill, verify:
-
-1. unique `SKILL.md` knowledge has a canonical V2 destination;
-2. useful references/scripts/assets are preserved or intentionally superseded;
-3. license/attribution obligations are retained;
-4. incoming links are updated;
-5. no reusable technique is silently discarded.
+The archive is the historical source for complete original specialist packages and attribution history. Do not rewrite or delete it during V2 adoption.
 
 Full migration mapping and rollback notes live in [MIGRATION_PLAN_V2.md](MIGRATION_PLAN_V2.md).
 
@@ -227,6 +226,6 @@ Full migration mapping and rollback notes live in [MIGRATION_PLAN_V2.md](MIGRATI
 
 The library should make the next decision easier, not make the model read everything it knows.
 
-A good V2 skill answers:
+A good V2 solve asks:
 
-> "What evidence do I have, what family owns it, and which one reference should I open next?"
+> **What evidence do I have, which domain owns it, and which one reference should I open next?**
