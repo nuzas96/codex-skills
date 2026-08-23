@@ -1,10 +1,6 @@
 ---
 name: ctf-osint
-description: Solve CTF OSINT challenges using public information: geolocation and image/media clues, social-media identities and timestamps, usernames, DNS/web infrastructure, archives, repositories, public records, map/road systems and related open sources. Use when identifying a real-world person, place, event, organization, account or public digital footprint is the primary path to the flag.
-license: MIT
-compatibility: Requires web/public-data access and normal metadata/map/search tooling; use APIs or specialized services only when the selected clue requires them.
-metadata:
-  user-invocable: "false"
+description: "Solve CTF OSINT challenges using public information: geolocation and media clues, social identities and timestamps, usernames, DNS/web infrastructure, archives, repositories, public records, and map/road systems. Use when identifying a real-world entity or public digital footprint is the primary path to the flag."
 ---
 
 # CTF OSINT — V2 Router
@@ -125,3 +121,5 @@ Then normalize spelling exactly to the flag format.
 ## V1 migration rule
 
 OSINT remains one top-level domain skill. New techniques belong in `geolocation-and-media.md`, `social-media.md`, `web-and-dns.md`, or a focused internal reference rather than another top-level skill.
+
+Load [references/legacy-evidence-lessons.md](references/legacy-evidence-lessons.md) only when preserved multilingual, chained-challenge, community-evidence, or infrastructure lessons match the evidence.
