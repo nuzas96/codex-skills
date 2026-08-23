@@ -28,6 +28,7 @@ objdump -d ./chall 2>/dev/null | head
 | Evidence / blocker | Load first | Add only if needed |
 |---|---|---|
 | generic native / decompiler | `references/ghidra-native.md` | `tools.md`, `patterns.md` |
+| AtomPePacker / `.ATOM` / `PP64Stub` / EasyLZMA | `references/atompepacker-lzma.md` | `tools-dynamic.md` only if offline recovery fails |
 | debugger/runtime tracing | `tools-dynamic.md` | `patterns-runtime.md` |
 | emulation / Unicorn / Qiling | `tools-emulation.md` | `references/unicorn-pe-emulation.md` |
 | symbolic execution | `tools-advanced.md` | `tools-advanced-2.md` |

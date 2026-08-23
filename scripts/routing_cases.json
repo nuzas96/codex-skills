@@ -16,6 +16,7 @@
   {"case":".NET/dnSpy reversing","primary_skill":"ctf-reverse","references":["ctf-reverse/references/dotnet-dnspy.md"]},
   {"case":"Rust binary reversing","primary_skill":"ctf-reverse","references":["ctf-reverse/references/rust-binaries.md"]},
   {"case":"Firmware/binwalk reversing","primary_skill":"ctf-reverse","references":["ctf-reverse/references/firmware-binwalk.md"]},
+  {"case":"AtomPePacker .ATOM LZMA-packed PE","primary_skill":"ctf-reverse","references":["ctf-reverse/references/atompepacker-lzma.md"]},
 
   {"case":"RSA cryptanalysis","primary_skill":"ctf-crypto","references":["ctf-crypto/rsa-attacks.md"]},
   {"case":"Lattice/LWE challenge","primary_skill":"ctf-crypto","references":["ctf-crypto/lattice-and-lwe.md"]},

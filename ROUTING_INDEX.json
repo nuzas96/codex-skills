@@ -25,6 +25,7 @@
     {"id":"reverse-dotnet","signals":[".net binary","dnspy","ilspy","msil","cil bytecode"],"primary_skill":"ctf-reverse","reference":"ctf-reverse/references/dotnet-dnspy.md"},
     {"id":"reverse-rust","signals":["rust binary","rustc symbols","core::","alloc::"],"primary_skill":"ctf-reverse","reference":"ctf-reverse/references/rust-binaries.md"},
     {"id":"reverse-firmware","signals":["firmware image","binwalk firmware","squashfs firmware","ubifs"],"primary_skill":"ctf-reverse","reference":"ctf-reverse/references/firmware-binwalk.md"},
+    {"id":"reverse-atompepacker","signals":["atompepacker",".atom section","pp64stub","h_pp64stub","easylzma packed pe"],"primary_skill":"ctf-reverse","reference":"ctf-reverse/references/atompepacker-lzma.md"},
 
     {"id":"crypto-rsa","signals":["rsa cryptanalysis","rsa modulus","public exponent","ciphertext c"],"primary_skill":"ctf-crypto","reference":"ctf-crypto/rsa-attacks.md"},
     {"id":"crypto-lattice-lwe","signals":["lwe","lattice attack","lll","cvp","svp","hidden number problem"],"primary_skill":"ctf-crypto","reference":"ctf-crypto/lattice-and-lwe.md"},
