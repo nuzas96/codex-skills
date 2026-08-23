@@ -25,6 +25,7 @@
   {"case":"PCAP/Wireshark reconstruction","primary_skill":"ctf-forensics","references":["ctf-forensics/references/network-pcap.md"]},
   {"case":"Chromium browser artifacts","primary_skill":"ctf-forensics","references":["ctf-forensics/references/browser-artifacts.md"]},
   {"case":"SQLite WAL/freelist recovery","primary_skill":"ctf-forensics","references":["ctf-forensics/references/sqlite-forensics.md"]},
+  {"case":"Apple DMG/UDIF blkx reconstruction","primary_skill":"ctf-forensics","references":["ctf-forensics/references/apple-dmg-udif.md"]},
 
   {"case":"Image/location OSINT","primary_skill":"ctf-osint","references":["ctf-osint/geolocation-and-media.md"]},
 

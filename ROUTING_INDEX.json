@@ -34,6 +34,7 @@
     {"id":"forensics-pcap","signals":["pcap","pcapng","wireshark","tshark","tcp stream reconstruction"],"primary_skill":"ctf-forensics","reference":"ctf-forensics/references/network-pcap.md"},
     {"id":"forensics-browser","signals":["chromium history","chrome history","browser artifacts","chromium cookies"],"primary_skill":"ctf-forensics","reference":"ctf-forensics/references/browser-artifacts.md"},
     {"id":"forensics-sqlite","signals":["sqlite wal","sqlite freelist","wal file recovery","sqlite recovery"],"primary_skill":"ctf-forensics","reference":"ctf-forensics/references/sqlite-forensics.md"},
+    {"id":"forensics-apple-dmg-udif","signals":["apple dmg","dmg udif","udif","koly","blkx","mish block map"],"primary_skill":"ctf-forensics","reference":"ctf-forensics/references/apple-dmg-udif.md"},
 
     {"id":"osint-geolocation","signals":["image geolocation","reverse image search","street view clue","identify location"],"primary_skill":"ctf-osint","reference":"ctf-osint/geolocation-and-media.md"},
 
