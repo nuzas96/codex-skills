@@ -32,6 +32,7 @@ CORE_V2_SKILLS = {
     "ctf-malware",
     "ctf-misc",
     "ctf-ai-ml",
+    "ctf-boot2root",
     "ctf-writeup",
     "ctf-skill-upgrade",
     "agent-maintenance",
