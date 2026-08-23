@@ -15,6 +15,23 @@ ctf-solve + ONE primary category skill
 
 Only add a second category when observed evidence proves the challenge crosses a boundary.
 
+## Fast routing index
+
+When repository access is available, [ROUTING_INDEX.json](../ROUTING_INDEX.json) is the machine-readable fast path for strong, specific technique signals.
+
+Use it only as an index:
+
+```text
+strong specific signal
+  -> ROUTING_INDEX.json
+  -> exact primary skill + exact reference
+  -> solve
+```
+
+If the signal is ambiguous, multiple routes match, or no route matches confidently, fall back to this orchestrator and the normal category router. The index never replaces the methodology in `SKILL.md` or canonical references.
+
+Do not scan the repository when the index already supplies an exact valid path.
+
 ## Mandatory solve loop
 
 1. **Resume before exploring.** Read an existing `PROGRESS.md` / `progress.md` first. If this is a new challenge, create the workspace and progress file using [references/workspace.md](references/workspace.md).
