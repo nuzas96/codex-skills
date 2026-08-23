@@ -1,0 +1,54 @@
+{
+  "schema_version": 1,
+  "purpose": "Fast exact-path routing index only. Methodology remains in canonical SKILL.md and reference files.",
+  "fallback_skill": "ctf-solve/SKILL.md",
+  "usage": {
+    "match": "Use only a strong, specific signal match. Prefer the most specific route.",
+    "ambiguous": "If multiple routes match or evidence is weak, fall back to ctf-solve/SKILL.md and the category router.",
+    "loading": "Fetch the mapped primary skill and reference directly. Do not treat this index as a substitute for methodology."
+  },
+  "routes": [
+    {"id":"web-jwt","signals":["jwt","jwk","jwks","json web token","algorithm confusion"],"primary_skill":"ctf-web","reference":"ctf-web/references/jwt.md"},
+    {"id":"web-oauth-oidc","signals":["oauth","oidc","openid connect","redirect_uri","oauth callback"],"primary_skill":"ctf-web","reference":"ctf-web/references/oauth-oidc.md"},
+    {"id":"web-ssti","signals":["ssti","server-side template injection","jinja2 template","twig template"],"primary_skill":"ctf-web","reference":"ctf-web/references/ssti.md"},
+    {"id":"web-xxe","signals":["xxe","xml external entity","doctype entity"],"primary_skill":"ctf-web","reference":"ctf-web/references/xxe-xml.md"},
+    {"id":"web-request-smuggling","signals":["request smuggling","cl.te","te.cl","content-length mismatch","transfer-encoding mismatch"],"primary_skill":"ctf-web","reference":"ctf-web/references/request-smuggling.md"},
+    {"id":"web-race-condition","signals":["web race condition","toctou request","double spend race","parallel request race"],"primary_skill":"ctf-web","reference":"ctf-web/references/race-conditions.md"},
+    {"id":"web-websocket","signals":["websocket","ws://","wss://","websocket auth"],"primary_skill":"ctf-web","reference":"ctf-web/references/websockets.md"},
+    {"id":"web-waf-parser","signals":["waf parser differential","waf bypass","normalization mismatch","front-end back-end parsing"],"primary_skill":"ctf-web","reference":"ctf-web/references/waf-parser-differentials.md"},
+
+    {"id":"pwn-stack-overflow","signals":["ret2win","stack overflow","buffer overflow","cyclic offset"],"primary_skill":"ctf-pwn","reference":"ctf-pwn/overflow-basics.md"},
+    {"id":"pwn-heap","signals":["tcache","use-after-free","uaf","double free","heap exploitation"],"primary_skill":"ctf-pwn","reference":"ctf-pwn/heap-techniques.md"},
+    {"id":"pwn-format-string","signals":["format string","printf(user)","%n exploit","%p leak"],"primary_skill":"ctf-pwn","reference":"ctf-pwn/format-string.md"},
+
+    {"id":"reverse-android","signals":["android apk","jadx","androidmanifest","smali"],"primary_skill":"ctf-reverse","reference":"ctf-reverse/references/android-apk-jadx.md"},
+    {"id":"reverse-dotnet","signals":[".net binary","dnspy","ilspy","msil","cil bytecode"],"primary_skill":"ctf-reverse","reference":"ctf-reverse/references/dotnet-dnspy.md"},
+    {"id":"reverse-rust","signals":["rust binary","rustc symbols","core::","alloc::"],"primary_skill":"ctf-reverse","reference":"ctf-reverse/references/rust-binaries.md"},
+    {"id":"reverse-firmware","signals":["firmware image","binwalk firmware","squashfs firmware","ubifs"],"primary_skill":"ctf-reverse","reference":"ctf-reverse/references/firmware-binwalk.md"},
+
+    {"id":"crypto-rsa","signals":["rsa cryptanalysis","rsa modulus","public exponent","ciphertext c"],"primary_skill":"ctf-crypto","reference":"ctf-crypto/rsa-attacks.md"},
+    {"id":"crypto-lattice-lwe","signals":["lwe","lattice attack","lll","cvp","svp","hidden number problem"],"primary_skill":"ctf-crypto","reference":"ctf-crypto/lattice-and-lwe.md"},
+    {"id":"crypto-polynomial-interpolation","signals":["vandermonde","polynomial interpolation","huge evaluation points","nmod_poly_interpolate","million polynomial points"],"primary_skill":"ctf-crypto","reference":"ctf-crypto/references/polynomial-interpolation.md"},
+
+    {"id":"forensics-memory","signals":["volatility","memory dump","ram dump","lime memory"],"primary_skill":"ctf-forensics","reference":"ctf-forensics/references/memory-volatility.md"},
+    {"id":"forensics-pcap","signals":["pcap","pcapng","wireshark","tshark","tcp stream reconstruction"],"primary_skill":"ctf-forensics","reference":"ctf-forensics/references/network-pcap.md"},
+    {"id":"forensics-browser","signals":["chromium history","chrome history","browser artifacts","chromium cookies"],"primary_skill":"ctf-forensics","reference":"ctf-forensics/references/browser-artifacts.md"},
+    {"id":"forensics-sqlite","signals":["sqlite wal","sqlite freelist","wal file recovery","sqlite recovery"],"primary_skill":"ctf-forensics","reference":"ctf-forensics/references/sqlite-forensics.md"},
+
+    {"id":"osint-geolocation","signals":["image geolocation","reverse image search","street view clue","identify location"],"primary_skill":"ctf-osint","reference":"ctf-osint/geolocation-and-media.md"},
+
+    {"id":"malware-script-deobfuscation","signals":["obfuscated powershell","obfuscated javascript","malicious script","script deobfuscation"],"primary_skill":"ctf-malware","reference":"ctf-malware/references/script-deobfuscation.md"},
+    {"id":"malware-ransomware","signals":["ransomware","ransom note","encrypted victim files","file encryption malware"],"primary_skill":"ctf-malware","reference":"ctf-malware/references/ransomware-crypto.md"},
+
+    {"id":"misc-python-jail","signals":["python jail","pyjail","restricted eval","python sandbox escape"],"primary_skill":"ctf-misc","reference":"ctf-misc/pyjails.md"},
+    {"id":"misc-active-directory","signals":["active directory","bloodhound","kerberos","ad cs","kerberoast"],"primary_skill":"ctf-misc","reference":"ctf-misc/references/active-directory.md"},
+
+    {"id":"boot2root-lifecycle","signals":["hack the box machine","htb machine","vulnhub","boot2root","root.txt","user.txt"],"primary_skill":"ctf-boot2root","reference":"ctf-boot2root/references/lifecycle.md"},
+
+    {"id":"ai-ml-llm","signals":["llm prompt injection","prompt injection challenge","model extraction","adversarial ml","tool injection"],"primary_skill":"ctf-ai-ml","reference":"ctf-ai-ml/llm-attacks.md"},
+
+    {"id":"writeup-final","signals":["final challenge writeup","ctf writeup","solution report"],"primary_skill":"ctf-writeup","reference":null},
+    {"id":"skill-upgrade","signals":["upgrade skill","harvest writeup","ingest writeup","skill knowledge upgrade"],"primary_skill":"ctf-skill-upgrade","reference":null},
+    {"id":"agent-maintenance","signals":["token optimization","context compression","context window optimization"],"primary_skill":"agent-maintenance","reference":"agent-maintenance/references/token-efficiency.md"}
+  ]
+}
