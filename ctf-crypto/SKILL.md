@@ -1,10 +1,6 @@
 ---
 name: ctf-crypto
-description: Solve CTF cryptography challenges where the main blocker is a cryptographic or mathematical weakness: classical ciphers, RSA, ECC, AES/block modes, stream ciphers, hashes/MACs/signatures, PRNGs, ZKP/protocols, lattices/LWE/CVP, Coppersmith/LLL, number theory, algebraic constructions and custom crypto. Use when breaking the construction or recovering secret mathematical state is the primary path to the flag; use ctf-reverse instead when understanding the implementation is still the main blocker.
-license: MIT
-compatibility: Requires Python 3 and target-specific math/crypto tooling such as SageMath, SymPy or solver libraries only when the selected technique needs them.
-metadata:
-  user-invocable: "false"
+description: "Solve CTF cryptography challenges involving classical ciphers, RSA, ECC, AES/block modes, stream ciphers, hashes/MACs/signatures, PRNGs, ZKP/protocols, lattices/LWE/CVP, Coppersmith/LLL, number theory, algebraic constructions, and custom crypto. Use when breaking the construction or recovering mathematical state is primary."
 ---
 
 # CTF Crypto — V2 Router
@@ -169,3 +165,5 @@ Many CTF crypto failures are not deep cryptanalysis. Check:
 ## V1 migration rule
 
 Crypto techniques remain internal category references. New writeups should update the canonical family file or hard-pattern reference instead of creating another top-level skill.
+
+Load [references/legacy-evidence-lessons.md](references/legacy-evidence-lessons.md) only when preserved proof, oracle, PRNG-chain, RSA, or ECC lessons match the evidence.
