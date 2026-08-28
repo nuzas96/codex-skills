@@ -1,0 +1,43 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+ROOT="${CTF_CODEX_ROOT:-/home/nuzhmi/Desktop/ctf-codex}"
+
+if [[ $# -lt 1 ]]; then
+  echo "Usage: ctf-init <challenge name>" >&2
+  exit 2
+fi
+
+NAME="$*"
+SLUG="$(
+  printf '%s' "$NAME" \
+    | tr '[:upper:]' '[:lower:]' \
+    | sed -E 's/[^a-z0-9]+/-/g; s/^-+//; s/-+$//'
+)"
+
+if [[ -z "$SLUG" ]]; then
+  echo "ctf-init: challenge name produced an empty workspace slug" >&2
+  exit 2
+fi
+
+DIR="$ROOT/$SLUG"
+mkdir -p "$DIR"
+
+if [[ -f "$DIR/PROGRESS.md" ]]; then
+  PROGRESS="$DIR/PROGRESS.md"
+elif [[ -f "$DIR/progress.md" ]]; then
+  PROGRESS="$DIR/progress.md"
+else
+  PROGRESS="$DIR/PROGRESS.md"
+  cat > "$PROGRESS" <<EOF
+# Progress — $NAME
+
+Status: Active
+EOF
+fi
+
+# Deliberately do not create STATE.md, scripts/, artifacts/, or logs/ here.
+# The solver should perform the first meaningful test immediately; detailed
+# progress population begins only after evidence exists.
+
+printf '%s\n' "$DIR"
