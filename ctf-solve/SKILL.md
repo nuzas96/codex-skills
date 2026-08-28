@@ -1,6 +1,6 @@
 ---
 name: ctf-solve
-description: "Orchestrate end-to-end CTF challenge solving in the local Codex/Kali environment: create or resume the challenge workspace, preserve PROGRESS.md, perform evidence-first triage, select one primary category skill, coordinate justified pivots, run stuck recovery, validate the flag, and hand off to ctf-writeup."
+description: "Orchestrate end-to-end CTF challenge solving in the local Codex/Kali environment: minimally bootstrap or resume the challenge workspace, preserve PROGRESS.md, perform evidence-first triage, select one primary category skill, coordinate justified pivots, run stuck recovery, validate the flag, and hand off to ctf-writeup."
 ---
 
 # CTF Solve Orchestrator
@@ -29,6 +29,35 @@ Runtime priorities:
 
 The GitHub repository is the upstream/canonical source for maintenance and upgrades, not a required network dependency for each Codex solve.
 
+## New-challenge startup rule
+
+A new challenge must reach a meaningful solve attempt as quickly as possible.
+
+Mandatory startup sequence:
+
+```text
+create/resume dedicated challenge folder
+  -> ensure minimal PROGRESS.md exists
+  -> immediately perform first meaningful solve/triage test
+  -> record the evidence in PROGRESS.md
+  -> continue normal evidence-first solve + progress discipline
+```
+
+`PROGRESS.md` is mandatory, but detailed documentation **before the first meaningful test is prohibited** unless the user explicitly requests it.
+
+Do not delay the first test to populate:
+
+- initial hypotheses;
+- environment inventories;
+- next-action lists;
+- detailed challenge metadata;
+- `STATE.md`;
+- empty `scripts/`, `artifacts/`, or `artifacts/logs/` directories.
+
+After the first meaningful result exists, progress logging returns to the normal detailed discipline: preserve every important finding, dead end, pivot, exact error, offset, relevant version, artifact and verification result.
+
+This startup exception applies only to a brand-new challenge. On resume, read existing state/progress before acting.
+
 ## Fast routing index
 
 When a local V2 `ROUTING_INDEX.json` is available, use it as the machine-readable fast path for strong, specific technique signals. Prefer the local installed/source copy over network retrieval.
@@ -48,16 +77,28 @@ Do not scan the whole local skill tree when the index already supplies an exact 
 
 ## Mandatory solve loop
 
-1. **Resume before exploring.** Read an existing `PROGRESS.md` / `progress.md` first. If this is a new challenge, create the workspace and progress file using [references/workspace.md](references/workspace.md).
-2. **Search local knowledge before committing.** Grep local category references for the challenge name, author, exact library/browser version, CVE/GHSA, and suspected primitive. This prevents repeating already-documented dead ends.
-3. **Triage cheaply.** Identify files, service behavior, source structure and flag format. Use [references/triage-routing.md](references/triage-routing.md).
-4. **Choose one primary category.** Load only the matching locally installed `ctf-*` skill.
-5. **Run evidence-first iterations.** Hypothesis -> smallest discriminating test -> evidence -> update progress -> next ranked path.
-6. **Persist before replying.** If a turn produced a finding, append it to the progress log before sending the user-facing reply. See [references/progress.md](references/progress.md).
-7. **Pivot only on evidence.** Add another category only when a concrete primitive requires it. For unusual adjacent-layer mismatches, use [references/modern-chains.md](references/modern-chains.md).
-8. **Before defeat, recover systematically.** Run [references/stuck-recovery.md](references/stuck-recovery.md) before saying the challenge is blocked or unsolved.
-9. **Validate the final artifact.** Confirm source/path, uniqueness and expected flag format; do not report obvious decoys as solved.
-10. **Write up after solve.** Use `ctf-writeup` once the flag or required final answer is verified.
+1. **Bootstrap or resume.** For a new challenge, create the dedicated folder plus minimal `PROGRESS.md` using [references/workspace.md](references/workspace.md), then immediately execute the first meaningful test. For an existing challenge, read `STATE.md` if present and `PROGRESS.md` / `progress.md` before new exploration.
+2. **Route cheaply.** Identify the dominant category from supplied evidence. Use the local routing index or [references/triage-routing.md](references/triage-routing.md). Do not preload unrelated skills.
+3. **Choose one primary category.** Load only the matching locally installed `ctf-*` skill.
+4. **Test before over-documenting.** On a new challenge, the first useful action should be an actual discriminating test, not documentation or scaffold generation.
+5. **Search local knowledge when it helps the active path.** Grep local category references for challenge name/author, exact versions, CVE/GHSA and suspected primitive. Do not let broad reference search postpone an obvious cheap test.
+6. **Run evidence-first iterations.** Hypothesis -> smallest discriminating test -> evidence -> update progress -> next ranked path.
+7. **Persist important evidence.** After solving has begun, append every important finding to the progress log. Detailed entries are fine; speed optimization applies only to pre-test startup overhead. See [references/progress.md](references/progress.md).
+8. **Pivot only on evidence.** Add another category only when a concrete primitive requires it. For unusual adjacent-layer mismatches, use [references/modern-chains.md](references/modern-chains.md).
+9. **Before defeat, recover systematically.** Run [references/stuck-recovery.md](references/stuck-recovery.md) before saying the challenge is blocked or unsolved.
+10. **Validate the final artifact.** Confirm source/path, reproducibility, uniqueness and expected flag format; do not report obvious decoys as solved.
+11. **Write up after solve.** Use `ctf-writeup` once the flag or required final answer is verified.
+
+## Workspace growth rule
+
+The challenge folder and `PROGRESS.md` are mandatory. Everything else is lazy/on-demand.
+
+- `STATE.md`: create when a compact snapshot materially helps a long, complex, multi-session or multi-agent solve.
+- `scripts/`: create when multiple scripts need organization; a single `solve.py`/`exploit.py` may live in the challenge root.
+- `artifacts/`: create when multiple generated/recovered artifacts need organization.
+- `artifacts/logs/`: create when raw logs are worth preserving.
+
+Do not create empty structure merely to satisfy a template.
 
 ## Evidence-first rule
 
@@ -109,7 +150,11 @@ Record why the second category was activated in `PROGRESS.md`.
 
 ## Progress gate
 
-A CTF turn that produced a new finding is incomplete until the finding is written to the progress file. Keep entries short and append-only. Preserve exact errors, paths, versions, request/response differences and dead ends.
+For a brand-new challenge, create minimal `PROGRESS.md`, run the first meaningful test, then record its result.
+
+After that point, a solve that produces important new evidence is incomplete until that evidence is persisted in the progress file. Entries may be concise or detailed; do not discard useful technical detail for formatting speed.
+
+Preserve exact errors, paths, versions, request/response differences, offsets, addresses/relationships, dead ends, pivots and verification evidence when they matter.
 
 When multiple Codex sessions or terminals share the same progress file, treat it as collaborative state: re-read before patching and append/patch instead of overwriting.
 
@@ -126,8 +171,10 @@ Do not declare `blocked`, `unsolvable`, `can't solve`, or equivalent until the s
 ## Supporting references
 
 - [references/triage-routing.md](references/triage-routing.md) — cheap triage, category selection and flag validation.
-- [references/workspace.md](references/workspace.md) — Codex challenge folder and continuity rules.
-- [references/progress.md](references/progress.md) — hard pre-reply persistence gate.
+- [references/workspace.md](references/workspace.md) — minimal bootstrap, Codex challenge folder and continuity rules.
+- [references/progress.md](references/progress.md) — startup exception plus mandatory evidence persistence after the first meaningful test.
+- [references/codex-agents-template.md](references/codex-agents-template.md) — canonical workspace `AGENTS.md` policy to sync into `/home/nuzhmi/Desktop/ctf-codex/AGENTS.md`.
+- [references/codex-readme-template.md](references/codex-readme-template.md) — matching workspace README policy.
 - [references/stuck-recovery.md](references/stuck-recovery.md) — pre-defeat 7-point enumeration.
 - [references/modern-chains.md](references/modern-chains.md) — second-pass boundary mismatch workflow.
 - [references/migration-sources.md](references/migration-sources.md) — V1 source provenance used to build this orchestrator.
