@@ -1,6 +1,6 @@
 ---
 name: ctf-solve
-description: "Orchestrate end-to-end CTF challenge solving: create or resume the workspace, preserve PROGRESS.md, perform evidence-first triage, select one primary category skill, coordinate justified pivots, run stuck recovery, validate the flag, and hand off to ctf-writeup. Use for any active CTF solve, especially when category is unknown or continuity matters."
+description: "Orchestrate end-to-end CTF challenge solving in the local Codex/Kali environment: create or resume the challenge workspace, preserve PROGRESS.md, perform evidence-first triage, select one primary category skill, coordinate justified pivots, run stuck recovery, validate the flag, and hand off to ctf-writeup."
 ---
 
 # CTF Solve Orchestrator
@@ -15,29 +15,43 @@ ctf-solve + ONE primary category skill
 
 Only add a second category when observed evidence proves the challenge crosses a boundary.
 
+## Codex local runtime
+
+This V2 solve lifecycle is designed to run locally in Codex/Kali.
+
+Runtime priorities:
+
+1. obey `/home/nuzhmi/Desktop/ctf-codex/AGENTS.md` when present;
+2. create/resume the challenge under `/home/nuzhmi/Desktop/ctf-codex/<challenge-name>/` unless an explicit path overrides it;
+3. use locally installed skills under `/home/nuzhmi/.codex/skills/`;
+4. use the local source worktree `/home/nuzhmi/Desktop/codex-skills-github/` when source/index access is needed;
+5. do not make normal solving depend on fetching the skill library from GitHub over the network.
+
+The GitHub repository is the upstream/canonical source for maintenance and upgrades, not a required network dependency for each Codex solve.
+
 ## Fast routing index
 
-When repository access is available, [ROUTING_INDEX.json](../ROUTING_INDEX.json) is the machine-readable fast path for strong, specific technique signals.
+When a local V2 `ROUTING_INDEX.json` is available, use it as the machine-readable fast path for strong, specific technique signals. Prefer the local installed/source copy over network retrieval.
 
 Use it only as an index:
 
 ```text
 strong specific signal
-  -> ROUTING_INDEX.json
+  -> local ROUTING_INDEX.json
   -> exact primary skill + exact reference
   -> solve
 ```
 
-If the signal is ambiguous, multiple routes match, or no route matches confidently, fall back to this orchestrator and the normal category router. The index never replaces the methodology in `SKILL.md` or canonical references.
+If the signal is ambiguous, multiple routes match, or no route matches confidently, use this orchestrator and the normal category router. The index never replaces the methodology in `SKILL.md` or canonical references.
 
-Do not scan the repository when the index already supplies an exact valid path.
+Do not scan the whole local skill tree when the index already supplies an exact valid path.
 
 ## Mandatory solve loop
 
 1. **Resume before exploring.** Read an existing `PROGRESS.md` / `progress.md` first. If this is a new challenge, create the workspace and progress file using [references/workspace.md](references/workspace.md).
-2. **Search local knowledge before committing.** Grep category references for the challenge name, author, exact library/browser version, CVE/GHSA, and suspected primitive. This prevents repeating already-documented dead ends.
+2. **Search local knowledge before committing.** Grep local category references for the challenge name, author, exact library/browser version, CVE/GHSA, and suspected primitive. This prevents repeating already-documented dead ends.
 3. **Triage cheaply.** Identify files, service behavior, source structure and flag format. Use [references/triage-routing.md](references/triage-routing.md).
-4. **Choose one primary category.** Load only the matching `ctf-*` skill.
+4. **Choose one primary category.** Load only the matching locally installed `ctf-*` skill.
 5. **Run evidence-first iterations.** Hypothesis -> smallest discriminating test -> evidence -> update progress -> next ranked path.
 6. **Persist before replying.** If a turn produced a finding, append it to the progress log before sending the user-facing reply. See [references/progress.md](references/progress.md).
 7. **Pivot only on evidence.** Add another category only when a concrete primitive requires it. For unusual adjacent-layer mismatches, use [references/modern-chains.md](references/modern-chains.md).
@@ -97,7 +111,7 @@ Record why the second category was activated in `PROGRESS.md`.
 
 A CTF turn that produced a new finding is incomplete until the finding is written to the progress file. Keep entries short and append-only. Preserve exact errors, paths, versions, request/response differences and dead ends.
 
-When multiple agents or terminals share the same progress file, treat it as collaborative state: re-read before patching and append/patch instead of overwriting.
+When multiple Codex sessions or terminals share the same progress file, treat it as collaborative state: re-read before patching and append/patch instead of overwriting.
 
 ## Stuck gate
 
@@ -112,7 +126,7 @@ Do not declare `blocked`, `unsolvable`, `can't solve`, or equivalent until the s
 ## Supporting references
 
 - [references/triage-routing.md](references/triage-routing.md) — cheap triage, category selection and flag validation.
-- [references/workspace.md](references/workspace.md) — challenge folder and continuity rules.
+- [references/workspace.md](references/workspace.md) — Codex challenge folder and continuity rules.
 - [references/progress.md](references/progress.md) — hard pre-reply persistence gate.
 - [references/stuck-recovery.md](references/stuck-recovery.md) — pre-defeat 7-point enumeration.
 - [references/modern-chains.md](references/modern-chains.md) — second-pass boundary mismatch workflow.
