@@ -14,7 +14,7 @@ Apply this section only to authorized CTF, lab, wargame, or challenge work.
 
 ### New challenge
 
-- Run `.ctf/bin/ctf-init "<challenge name>"` when available. The initializer must create/resume only the dedicated challenge folder plus a minimal `PROGRESS.md`.
+- Run `bash .ctf/bin/ctf-init "<challenge name>"` when available. The initializer must create/resume only the dedicated challenge folder plus a minimal `PROGRESS.md`.
 - If the helper is unavailable, create the challenge folder and minimal `PROGRESS.md` directly.
 - Immediately perform the first meaningful solve/triage test after bootstrap.
 - Do **not** spend time populating detailed progress notes, hypotheses, environment summaries, next actions, `STATE.md`, or empty helper directories before that first meaningful test.
