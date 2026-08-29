@@ -4,6 +4,7 @@
   {"case":"SSTI template challenge","primary_skill":"ctf-web","references":["ctf-web/references/ssti.md"]},
   {"case":"XXE XML parser challenge","primary_skill":"ctf-web","references":["ctf-web/references/xxe-xml.md"]},
   {"case":"HTTP request smuggling","primary_skill":"ctf-web","references":["ctf-web/references/request-smuggling.md"]},
+  {"case":"Proxy rewrites script Content-Length to zero but still pipes body; browser response queue poisoning plus Service Worker audio Range 206/416 oracle","primary_skill":"ctf-web","references":["ctf-web/references/browser-response-desync-range-oracle.md"]},
   {"case":"Web race condition","primary_skill":"ctf-web","references":["ctf-web/references/race-conditions.md"]},
   {"case":"WebSocket state/auth challenge","primary_skill":"ctf-web","references":["ctf-web/references/websockets.md"]},
   {"case":"WAF parser differential","primary_skill":"ctf-web","references":["ctf-web/references/waf-parser-differentials.md"]},
