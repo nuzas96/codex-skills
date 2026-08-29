@@ -29,6 +29,7 @@
 
     {"id":"crypto-rsa","signals":["rsa cryptanalysis","rsa modulus","public exponent","ciphertext c"],"primary_skill":"ctf-crypto","reference":"ctf-crypto/rsa-attacks.md"},
     {"id":"crypto-lattice-lwe","signals":["lwe","lattice attack","lll","cvp","svp","hidden number problem"],"primary_skill":"ctf-crypto","reference":"ctf-crypto/lattice-and-lwe.md"},
+    {"id":"crypto-nested-lcg","signals":["nested lcg","cascaded lcg","two lcgs","lcg-driven increment","lcg incremented by lcg","two secret moduli lcg"],"primary_skill":"ctf-crypto","reference":"ctf-crypto/references/nested-lcg-kernel-recovery.md"},
     {"id":"crypto-polynomial-interpolation","signals":["vandermonde","polynomial interpolation","huge evaluation points","nmod_poly_interpolate","million polynomial points"],"primary_skill":"ctf-crypto","reference":"ctf-crypto/references/polynomial-interpolation.md"},
 
     {"id":"forensics-memory","signals":["volatility","memory dump","ram dump","lime memory"],"primary_skill":"ctf-forensics","reference":"ctf-forensics/references/memory-volatility.md"},
