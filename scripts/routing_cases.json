@@ -20,6 +20,7 @@
 
   {"case":"RSA cryptanalysis","primary_skill":"ctf-crypto","references":["ctf-crypto/rsa-attacks.md"]},
   {"case":"Lattice/LWE challenge","primary_skill":"ctf-crypto","references":["ctf-crypto/lattice-and-lwe.md"]},
+  {"case":"Nested/cascaded LCG with evolving LCG increment and secret moduli","primary_skill":"ctf-crypto","references":["ctf-crypto/references/nested-lcg-kernel-recovery.md"]},
   {"case":"Huge Vandermonde polynomial interpolation","primary_skill":"ctf-crypto","references":["ctf-crypto/references/polynomial-interpolation.md"]},
 
   {"case":"Windows RAM/Volatility","primary_skill":"ctf-forensics","references":["ctf-forensics/references/memory-volatility.md"]},
