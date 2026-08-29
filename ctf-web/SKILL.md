@@ -37,6 +37,7 @@ This file is a **router, not an encyclopedia**. Use `ctf-solve` for workspace, p
 | WebSocket/Socket.IO/SignalR | `references/websockets.md` | auth/injection/race ref matching the message primitive |
 | XSS/CSRF/DOM/admin bot | `client-side.md` | `client-side-advanced.md`, bot refs |
 | CSP/browser restriction/scriptless exfil | `references/csp-browser.md` | `references/modern-xs-leaks-patterns.md`, `bot-*.md` |
+| browser response `Content-Length` rewrite still pipes body / queued subresource consumes injected response / Service Worker Range 206-vs-416 oracle | `references/browser-response-desync-range-oracle.md` | `references/csp-browser.md`, `references/modern-xs-leaks-patterns.md` |
 | XS-Leak/admin-bot side channel | `references/modern-xs-leaks-patterns.md` | matching `bot-*.md` |
 | DOMPurify/mXSS claim | `references/dompurify-3.3.1-mxss-verification.md` | exact-browser harness |
 | Prototype pollution/Node merge/gadget | `references/prototype-pollution.md` | `node-and-prototype.md`, hard-pattern refs |
@@ -95,7 +96,7 @@ raw request
  -> backend parser interpretation
 ```
 
-Look for disagreement in request boundaries, decode count, headers, URL/path normalization, Host, cache key, method, body/content type or duplicated parameters. If the bug lives between adjacent layers, use `ctf-solve/references/modern-chains.md`.
+Look for disagreement in request boundaries, decode count, headers, URL/path normalization, Host, cache key, method, body/content type or duplicated parameters. Also inspect **response** framing whenever an intermediary rewrites `Content-Length`/`Transfer-Encoding` while still streaming an upstream body. If the bug lives between adjacent layers, use `ctf-solve/references/modern-chains.md`.
 
 ## Evidence-first web loop
 
