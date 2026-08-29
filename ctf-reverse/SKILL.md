@@ -42,6 +42,7 @@ objdump -d ./chall 2>/dev/null | head
 | firmware / embedded filesystem | `references/firmware-binwalk.md` | `platforms-hardware.md`, `ctf-forensics` if recovery dominates |
 | Android IPC / mobile TLS runtime checks | `references/mobile-app-security.md` | Android/iOS platform ref |
 | WASM/game/platform target | `platforms.md` | `platforms-hardware.md` |
+| VMProtect/custom VM where only p-code/tape operands may change and execution trace must stay identical | `references/vmprotect-trace-preserving-pcode.md` | `tools-emulation.md`, `tools-advanced.md` |
 | custom VM/bytecode | `patterns-ctf.md` | emulation/symbolic refs |
 | recent hard patterns | `references/sekaictf2025-reverse-patterns.md` | matching focused ref |
 | uncertain niche | `field-notes.md` | only after normal refs fail |
@@ -75,6 +76,8 @@ identify loader/packer
 ## Custom VM / bytecode
 
 Recover instruction width/format, opcode dispatch, VM state, operands, branch/call semantics and validation flow. Build a disassembler/emulator once semantics stabilize rather than manually tracing hundreds of instructions.
+
+If a challenge constrains patches to the VM tape while requiring identical handler/control-flow traces, prefer the focused trace-preserving operand workflow instead of full devirtualization.
 
 ## Platform ownership
 
