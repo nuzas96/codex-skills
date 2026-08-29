@@ -48,6 +48,7 @@ This file is a **router, not an encyclopedia**. Use `ctf-solve` for workspace, p
 | Workflow/state/price/balance/reward/step bypass | `references/business-logic.md` | race/auth refs as evidence demands |
 | CVE/version banner/dependency leak | `cves.md` | current official advisory + exact-version proof |
 | WordPress/SvelteKit/Vite/WASM/H2 hard chain | `references/web-hard-pattern-playbook.md` | `references/sekaictf2025-hard-web-patterns.md` |
+| cross-chain bridge / off-chain relayer / pending or failed attestation / unsigned completion field / replayable failure-side effect | `references/cross-chain-bridge-relayer.md` | `web3.md`; add `ctf-crypto` only if signature cryptanalysis becomes dominant |
 | Solidity/Web3 app integration | `web3.md` | `ctf-crypto` only if pure cryptanalysis becomes dominant |
 
 `server-side-advanced*.md` means read **one file whose table of contents matches the observed primitive**. Never load the whole advanced series by default.
