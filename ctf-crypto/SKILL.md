@@ -28,6 +28,7 @@ Use `ctf-solve` for workspace/progress/stuck-recovery. This skill selects the sm
 | RSA partial-key/small-root/LLL/Boneh-Durfee | `references/rsa-lll-patterns.md` | `lattice-and-lwe.md` |
 | ECC/DLP/singular/small subgroup | `ecc-attacks.md` | `advanced-math.md` |
 | MT/LCG/xorshift/seed/state recovery | `prng.md` | `prng-attacks.md` |
+| nested/cascaded LCG, LCG-driven increment, two secret moduli, ordinary LCG recovery fails | `references/nested-lcg-kernel-recovery.md` | `prng.md`, `lattice-and-lwe.md` |
 | lattice, HNP, LWE, CVP/SVP | `lattice-and-lwe.md` | `advanced-math.md` |
 | polynomial interpolation, Vandermonde recovery, huge evaluation sets | `references/polynomial-interpolation.md` | `advanced-math.md` |
 | ZKP/signature/protocol/solver-heavy | `zkp-and-advanced.md` | matching math/cipher reference |
@@ -96,6 +97,8 @@ Mirror implementation semantics exactly:
 - seed derivation/time source;
 - state transition order.
 
+For chained generators, write each state recurrence separately and preserve which modulus applies at each layer. If an observed generator uses the evolving state of another LCG as its increment, do not force standard single-LCG invariants after they fail; route to `references/nested-lcg-kernel-recovery.md` and test difference-sequence short relations.
+
 Validate predicted outputs before using recovered state for the flag stage.
 
 ## Lattice discipline
@@ -109,7 +112,7 @@ Before running LLL/BKZ:
 5. estimate determinant/dimension where useful;
 6. verify recovered vector algebraically.
 
-Do not treat LLL as a blind solver. Poor scaling/bounds can make a valid attack look impossible.
+Do not treat LLL as a blind solver. Poor scaling/bounds can make a valid attack look impossible. For recurrence-recovery lattices, also state what a short kernel vector represents before interpreting it as a polynomial or hidden-state relation.
 
 ## ECC / finite-field discipline
 
