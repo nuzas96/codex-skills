@@ -35,6 +35,7 @@ readelf -lW ./chall | grep -E 'INTERP|GNU_STACK|GNU_RELRO'
 | ROP, ret2libc, ret2csu, shellcode | `rop-and-shellcode.md` | `rop-advanced.md` |
 | SROP, pivots, exotic gadgets, constrained ROP | `rop-advanced.md` | matching `advanced-exploits*.md` |
 | tcache/fastbin/unsorted/UAF/double-free | `heap-techniques.md` | `heap-techniques-2.md`, `references/how2heap-patterns.md` |
+| signed length wrap + narrow copy, tcache-off threaded arenas, arena/top corruption | `references/ptmalloc-thread-arena-overflow.md` | exact supplied glibc source/debug symbols |
 | FILE structures / FSOP | `heap-fsop.md` | allocator reference matching exact glibc |
 | general hard native chain | `advanced.md` | one matching `advanced-exploits*.md` |
 | seccomp/sandbox syscall constraints | `sandbox-escape.md` | ROP/SROP reference as needed |
@@ -95,10 +96,12 @@ Heap techniques are strongly version-dependent. Record:
 - chunk sizes and bins;
 - tcache count/state;
 - safe-linking behavior;
+- thread count, `arena_max`, and whether relevant operations share an arena;
+- every attacker-controlled length's parser type, storage type, allocation arithmetic and copy/read parameter width;
 - whether the target zeroes or edits freed data;
 - object callback/vtable/function-pointer offsets.
 
-Use `references/how2heap-patterns.md` as a pattern library, then verify against the exact allocator.
+Use `references/how2heap-patterns.md` as a pattern library, then verify against the exact allocator. If a threaded service exposes persistent connections, treat worker/arena assignment as part of heap state rather than scheduler noise.
 
 ## FSOP discipline
 

@@ -19,6 +19,7 @@
 
     {"id":"pwn-stack-overflow","signals":["ret2win","stack overflow","buffer overflow","cyclic offset"],"primary_skill":"ctf-pwn","reference":"ctf-pwn/overflow-basics.md"},
     {"id":"pwn-heap","signals":["tcache","use-after-free","uaf","double free","heap exploitation"],"primary_skill":"ctf-pwn","reference":"ctf-pwn/heap-techniques.md"},
+    {"id":"pwn-thread-arena-length-wrap","signals":["content-length -1","negative content-length heap overflow","signed length malloc wrap","malloc(0) huge read","tcache disabled arena_max","thread arena heap grooming","non-main arena top corruption"],"primary_skill":"ctf-pwn","reference":"ctf-pwn/references/ptmalloc-thread-arena-overflow.md"},
     {"id":"pwn-format-string","signals":["format string","printf(user)","%n exploit","%p leak"],"primary_skill":"ctf-pwn","reference":"ctf-pwn/format-string.md"},
 
     {"id":"reverse-android","signals":["android apk","jadx","androidmanifest","smali"],"primary_skill":"ctf-reverse","reference":"ctf-reverse/references/android-apk-jadx.md"},
