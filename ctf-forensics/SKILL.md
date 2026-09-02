@@ -35,6 +35,7 @@ binwalk suspect 2>/dev/null
 | deleted/unallocated/corrupt file | `references/file-carving.md` | `disk-recovery.md` |
 | Linux logs/process/app artifacts | `linux-forensics.md` | disk/memory reference |
 | Windows disk/registry/MFT/Prefetch/EVTX/LNK/Jump Lists | `references/windows-artifacts.md` | `windows.md`, disk refs |
+| RDP persistent bitmap cache, `Cache*.bin`, remote-only visual reconstruction | `references/rdp-persistent-bitmap-cache.md` | `references/windows-artifacts.md` for session corroboration |
 | Chromium browser profile/history/cookies/storage | `references/browser-artifacts.md` | `references/sqlite-forensics.md` |
 | SQLite DB/WAL/freelist/edit history | `references/sqlite-forensics.md` | application-specific artifact ref |
 | Docker image/save/export/overlay/container evidence | `references/docker-containers.md` | `disk-and-memory.md` |
@@ -99,6 +100,8 @@ When a PCAP reconstructs into a nested carrier, keep artifact provenance across 
 
 Choose the parser based on the artifact/question: MFTECmd for NTFS metadata, PECmd for Prefetch, RECmd for registry, EvtxECmd for EVTX, LECmd/JLECmd for links/jump lists, SBECmd for shellbags. KAPE is orchestration, not the analysis itself.
 
+If the sought content was visible through Remote Desktop but the original file never existed on the examined client, do not stop at deleted-file carving. Check whether persistent bitmap caching was enabled, locate every plausible `Cache*.bin`, and route to `references/rdp-persistent-bitmap-cache.md`. Treat extracted bitmap-cache entries as presentation-layer residue: contact-sheet and cluster them first, then reconstruct from text/background/edge continuity rather than assuming cache index equals screen position.
+
 ## Steganography
 
 Start structural:
@@ -134,7 +137,7 @@ Preserve the extraction chain before pivoting. Standard PBKDF2/HKDF/AES-GCM oper
 
 ## V2 ownership rule
 
-Forensic tools and artifact families are internal techniques, **not top-level skills**. New knowledge for Volatility, Hindsight, Wireshark, Foremost, SQLite, Docker, stego, Windows tooling, OpenZFS encrypted streams or PDF analysis belongs in the focused `ctf-forensics/references/` files above. Update this router only when a genuinely new artifact family appears.
+Forensic tools and artifact families are internal techniques, **not top-level skills**. New knowledge for Volatility, Hindsight, Wireshark, Foremost, SQLite, Docker, stego, Windows tooling, RDP bitmap caches, OpenZFS encrypted streams or PDF analysis belongs in the focused `ctf-forensics/references/` files above. Update this router only when a genuinely new artifact family appears.
 
 The complete V1 source remains recoverable from `archive/pre-restructure-20260823`.
 
