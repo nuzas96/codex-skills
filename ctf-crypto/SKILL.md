@@ -27,6 +27,7 @@ Use `ctf-solve` for workspace/progress/stuck-recovery. This skill selects the sm
 | RSA textbook/weak parameters/common attacks | `rsa-attacks.md` | `rsa-attacks-2.md` |
 | RSA partial-key/small-root/LLL/Boneh-Durfee | `references/rsa-lll-patterns.md` | `lattice-and-lwe.md` |
 | multi-prime RSA-like modulus + factor low bits + auxiliary congruence + cheap factor peeling + Coppersmith/root-tree inversion | `references/hybrid-multiprime-rsa-recovery.md` | `references/rsa-lll-patterns.md`, `advanced-math.md` |
+| bounded DH/DLP private exponent, interval BSGS, composite modulus or non-unit base | `references/bounded-dh-discrete-log.md` | `advanced-math.md`, `modern-ciphers.md` |
 | ECC/DLP/singular/small subgroup | `ecc-attacks.md` | `advanced-math.md` |
 | MT/LCG/xorshift/seed/state recovery | `prng.md` | `prng-attacks.md` |
 | nested/cascaded LCG, LCG-driven increment, two secret moduli, ordinary LCG recovery fails | `references/nested-lcg-kernel-recovery.md` | `prng.md`, `lattice-and-lwe.md` |
@@ -132,6 +133,14 @@ Determine:
 - exceptional formulas or attacker-supplied points.
 
 Verify every recovered scalar/point against the original public relation.
+
+## Bounded DLP / Diffie-Hellman discipline
+
+If a DH-like challenge leaks or hints that a private exponent lies in a small interval, estimate the interval before judging hardness from the modulus size. A bound `B` makes baby-step giant-step roughly `O(sqrt(B))` time and memory even when the modulus itself is large.
+
+Before running BSGS, record the original relation and inspect `gcd(g,n)`. If `gcd(g,n) != 1`, ordinary BSGS can fail because its giant step requires a modular inverse. Route to `references/bounded-dh-discrete-log.md` for extended-BSGS/gcd-stripping or a justified coprime projection. Any exponent recovered from a reduced equation must verify against the original modulus before use.
+
+After recovering one private exponent, compute the actual shared secret using the target's **original** modulus, reproduce the exact integer/byte/text serialization used by the KDF, and preserve the same challenge session when a timed verifier binds cryptographic parameters to cookies or server state.
 
 ## Oracle discipline
 
