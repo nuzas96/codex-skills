@@ -29,6 +29,7 @@
 
   {"case":"Windows RAM/Volatility","primary_skill":"ctf-forensics","references":["ctf-forensics/references/memory-volatility.md"]},
   {"case":"PCAP/Wireshark reconstruction","primary_skill":"ctf-forensics","references":["ctf-forensics/references/network-pcap.md"]},
+  {"case":"PCAP carrier reconstructs an encrypted OpenZFS send stream with native key metadata and an encrypted DMU file block","primary_skill":"ctf-forensics","references":["ctf-forensics/references/openzfs-encrypted-send-stream.md"]},
   {"case":"Chromium browser artifacts","primary_skill":"ctf-forensics","references":["ctf-forensics/references/browser-artifacts.md"]},
   {"case":"SQLite WAL/freelist recovery","primary_skill":"ctf-forensics","references":["ctf-forensics/references/sqlite-forensics.md"]},
   {"case":"Apple DMG/UDIF blkx reconstruction","primary_skill":"ctf-forensics","references":["ctf-forensics/references/apple-dmg-udif.md"]},
