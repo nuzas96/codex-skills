@@ -11,6 +11,7 @@
   {"case":"WAF parser differential","primary_skill":"ctf-web","references":["ctf-web/references/waf-parser-differentials.md"]},
 
   {"case":"Stack overflow ret2win","primary_skill":"ctf-pwn","references":["ctf-pwn/overflow-basics.md"]},
+  {"case":"OOB signed-byte comparator reveals lower/equal/higher; equality permits replacing that stack byte under a strict turn budget, so binary-search bytes and install a minimal read-to-BSS stack-pivot ROP bootstrap","primary_skill":"ctf-pwn","references":["ctf-pwn/references/comparator-oracle-byte-write-rop.md"]},
   {"case":"Heap tcache/UAF","primary_skill":"ctf-pwn","references":["ctf-pwn/heap-techniques.md"]},
   {"case":"Negative signed length wraps malloc small while narrower read stays huge in a tcache-off threaded ptmalloc service","primary_skill":"ctf-pwn","references":["ctf-pwn/references/ptmalloc-thread-arena-overflow.md"]},
   {"case":"Format string exploit","primary_skill":"ctf-pwn","references":["ctf-pwn/format-string.md"]},
