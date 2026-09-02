@@ -26,6 +26,7 @@
 
   {"case":"RSA cryptanalysis","primary_skill":"ctf-crypto","references":["ctf-crypto/rsa-attacks.md"]},
   {"case":"Multi-prime RSA-like construction where low factor residues plus an auxiliary sum congruence feed ECM, Coppersmith on a cofactor, a short hash/XOR fixed point, and CRT modular-root enumeration","primary_skill":"ctf-crypto","references":["ctf-crypto/references/hybrid-multiprime-rsa-recovery.md"]},
+  {"case":"Diffie-Hellman-like service uses a small bounded private exponent; standard BSGS inverse fails because the composite modulus makes the generator non-coprime, so use bounded exBSGS or a verified coprime projection, then derive the shared secret on the original modulus and submit within the same timed session","primary_skill":"ctf-crypto","references":["ctf-crypto/references/bounded-dh-discrete-log.md"]},
   {"case":"Lattice/LWE challenge","primary_skill":"ctf-crypto","references":["ctf-crypto/lattice-and-lwe.md"]},
   {"case":"Nested/cascaded LCG with evolving LCG increment and secret moduli","primary_skill":"ctf-crypto","references":["ctf-crypto/references/nested-lcg-kernel-recovery.md"]},
   {"case":"Huge Vandermonde polynomial interpolation","primary_skill":"ctf-crypto","references":["ctf-crypto/references/polynomial-interpolation.md"]},
