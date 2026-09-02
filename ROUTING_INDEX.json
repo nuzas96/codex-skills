@@ -20,6 +20,7 @@
     {"id":"web-waf-parser","signals":["waf parser differential","waf bypass","normalization mismatch","front-end back-end parsing"],"primary_skill":"ctf-web","reference":"ctf-web/references/waf-parser-differentials.md"},
 
     {"id":"pwn-stack-overflow","signals":["ret2win","stack overflow","buffer overflow","cyclic offset"],"primary_skill":"ctf-pwn","reference":"ctf-pwn/overflow-basics.md"},
+    {"id":"pwn-comparator-oracle-byte-write","signals":["comparison oracle byte write","equality-gated byte write","binary-search stack byte","guess lower equal higher target byte","oob signed byte comparator","oracle-guided rop bootstrap","turn-limited byte overwrite","query-budgeted rop","conditional byte replacement after correct guess","stack byte oracle bss pivot"],"primary_skill":"ctf-pwn","reference":"ctf-pwn/references/comparator-oracle-byte-write-rop.md"},
     {"id":"pwn-heap","signals":["tcache","use-after-free","uaf","double free","heap exploitation"],"primary_skill":"ctf-pwn","reference":"ctf-pwn/heap-techniques.md"},
     {"id":"pwn-thread-arena-length-wrap","signals":["content-length -1","negative content-length heap overflow","signed length malloc wrap","malloc(0) huge read","tcache disabled arena_max","thread arena heap grooming","non-main arena top corruption"],"primary_skill":"ctf-pwn","reference":"ctf-pwn/references/ptmalloc-thread-arena-overflow.md"},
     {"id":"pwn-format-string","signals":["format string","printf(user)","%n exploit","%p leak"],"primary_skill":"ctf-pwn","reference":"ctf-pwn/format-string.md"},
