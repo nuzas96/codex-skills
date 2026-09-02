@@ -30,6 +30,7 @@
     {"id":"reverse-rust","signals":["rust binary","rustc symbols","core::","alloc::"],"primary_skill":"ctf-reverse","reference":"ctf-reverse/references/rust-binaries.md"},
     {"id":"reverse-firmware","signals":["firmware image","binwalk firmware","squashfs firmware","ubifs"],"primary_skill":"ctf-reverse","reference":"ctf-reverse/references/firmware-binwalk.md"},
     {"id":"reverse-atompepacker","signals":["atompepacker",".atom section","pp64stub","h_pp64stub","easylzma packed pe"],"primary_skill":"ctf-reverse","reference":"ctf-reverse/references/atompepacker-lzma.md"},
+    {"id":"reverse-algebraic-vm-validator","signals":["custom vm odd multiplier rotate xor add","invert vm validator algebraically","vm modular inverse rol ror","bytecode compare immediate reversible transform","odd multiplier modulo 2^32 vm","straight-line bijective vm validator","custom vm rolling state decrypt"],"primary_skill":"ctf-reverse","reference":"ctf-reverse/references/algebraic-vm-validator-inversion.md"},
     {"id":"reverse-vm-pcode-patch","signals":["vmprotect pcode","vm p-code patch","vm tape patch","trace-preserving bytecode patch","patch only vm bytecode","same vm tape read trace"],"primary_skill":"ctf-reverse","reference":"ctf-reverse/references/vmprotect-trace-preserving-pcode.md"},
 
     {"id":"crypto-rsa","signals":["rsa cryptanalysis","rsa modulus","public exponent","ciphertext c"],"primary_skill":"ctf-crypto","reference":"ctf-crypto/rsa-attacks.md"},
