@@ -21,6 +21,7 @@
   {"case":"Rust binary reversing","primary_skill":"ctf-reverse","references":["ctf-reverse/references/rust-binaries.md"]},
   {"case":"Firmware/binwalk reversing","primary_skill":"ctf-reverse","references":["ctf-reverse/references/firmware-binwalk.md"]},
   {"case":"AtomPePacker .ATOM LZMA-packed PE","primary_skill":"ctf-reverse","references":["ctf-reverse/references/atompepacker-lzma.md"]},
+  {"case":"Custom VM bytecode validator performs odd multiplication, XOR with rolling previous state, rotate and add before compare; invert each round algebraically and recompute post-validation rolling state","primary_skill":"ctf-reverse","references":["ctf-reverse/references/algebraic-vm-validator-inversion.md"]},
   {"case":"VMProtect p-code/tape patch with identical VM handler and tape-read trace","primary_skill":"ctf-reverse","references":["ctf-reverse/references/vmprotect-trace-preserving-pcode.md"]},
 
   {"case":"RSA cryptanalysis","primary_skill":"ctf-crypto","references":["ctf-crypto/rsa-attacks.md"]},
