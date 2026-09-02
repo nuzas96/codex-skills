@@ -31,6 +31,7 @@ readelf -lW ./chall | grep -E 'INTERP|GNU_STACK|GNU_RELRO'
 | Primitive / signal | Load first | Add only if needed |
 |---|---|---|
 | simple stack/global overflow, ret2win, canary basics | `overflow-basics.md` | `rop-and-shellcode.md` |
+| OOB byte comparator reveals `< / == / >`, equality grants replacement byte, query/turn budget matters | `references/comparator-oracle-byte-write-rop.md` | `rop-advanced.md` |
 | `%p/%s/%n`, arbitrary read/write through printf family | `format-string.md` | `advanced.md` |
 | ROP, ret2libc, ret2csu, shellcode | `rop-and-shellcode.md` | `rop-advanced.md` |
 | SROP, pivots, exotic gadgets, constrained ROP | `rop-advanced.md` | matching `advanced-exploits*.md` |
@@ -77,6 +78,8 @@ Before remote exploitation, derive:
 - whether the process persists across stages.
 
 A two-stage exploit must prove that leaks and later corruption happen in the same relevant process/state.
+
+If a byte can be replaced only after correctly guessing its current value, do **not** model that as an ordinary arbitrary write. When the service exposes ordered `< / == / >` feedback, route to `references/comparator-oracle-byte-write-rop.md`: determine signedness, binary-search each required old byte, account for every query/turn, and spend the expensive oracle writes only on the smallest bootstrap needed to reach a cheap `read()`/pivot stage. Treat loop exhaustion/return as a separate trigger from successful byte installation.
 
 ## Format-string discipline
 
