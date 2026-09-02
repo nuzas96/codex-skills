@@ -31,6 +31,7 @@ binwalk suspect 2>/dev/null
 | RAM / raw memory / LiME / crash dump | `references/memory-volatility.md` | `disk-and-memory.md`, `disk-advanced.md` |
 | disk/E01/dd/VMDK/filesystem | `disk-and-memory.md` | `disk-recovery.md`, `disk-advanced.md` |
 | Apple DMG/UDIF, `koly`/`blkx`, HFS+/APFS delivery image | `references/apple-dmg-udif.md` | `disk-advanced.md` |
+| encrypted OpenZFS send/replay stream, native ZFS encryption metadata, encrypted DMU file block | `references/openzfs-encrypted-send-stream.md` | `references/network-pcap.md` when recovered from traffic; `ctf-crypto` only for actual cryptanalysis |
 | deleted/unallocated/corrupt file | `references/file-carving.md` | `disk-recovery.md` |
 | Linux logs/process/app artifacts | `linux-forensics.md` | disk/memory reference |
 | Windows disk/registry/MFT/Prefetch/EVTX/LNK/Jump Lists | `references/windows-artifacts.md` | `windows.md`, disk refs |
@@ -70,6 +71,8 @@ partition -> filesystem metadata -> allocated/deleted entry -> exact extraction
 
 Then use raw carving when metadata is unavailable/corrupt. Check journals, WAL, snapshots, alternate/resource streams, slack/unallocated space and nested containers as evidence demands.
 
+For encrypted OpenZFS send streams, do not assume the artifact is a mountable pool image. Preserve the full reconstruction chain, parse enough replay-stream metadata to identify key properties and DMU object/write records, and use AEAD authentication as the proof for candidate passphrases and recovered blocks. Load `references/openzfs-encrypted-send-stream.md` before attempting ad-hoc AES decryption.
+
 ## Browser / SQLite
 
 Preserve browser SQLite DBs with WAL/SHM. Decode application-specific timestamps correctly. Hindsight is a fast normalizer for Chromium artifacts but raw DB/storage/cache inspection remains authoritative when the answer is missing from the generated timeline.
@@ -89,6 +92,8 @@ Distinguish `docker save` layer history from `docker export` merged filesystem. 
 5. Reconstruct exact ciphertext/framing before pivoting to crypto.
 
 Use tshark for reproducible extraction and Wireshark for visual exploration.
+
+When a PCAP reconstructs into a nested carrier, keep artifact provenance across every layer. If indexed fragments carry per-chunk hashes, validate each fragment before concatenation and verify any whole-object manifest hash before decompressing or parsing the next layer.
 
 ## Windows artifacts
 
@@ -125,11 +130,11 @@ Add a category only when the hard primitive changes:
 - real-world identity/geolocation -> `ctf-osint`;
 - malware behavior/config/C2 -> `ctf-malware`.
 
-Preserve the extraction chain before pivoting.
+Preserve the extraction chain before pivoting. Standard PBKDF2/HKDF/AES-GCM operations used only to unlock a reconstructed encrypted forensic artifact remain `ctf-forensics`; pivot to `ctf-crypto` only when breaking the cryptography becomes the dominant primitive.
 
 ## V2 ownership rule
 
-Forensic tools and artifact families are internal techniques, **not top-level skills**. New knowledge for Volatility, Hindsight, Wireshark, Foremost, SQLite, Docker, stego, Windows tooling or PDF analysis belongs in the focused `ctf-forensics/references/` files above. Update this router only when a genuinely new artifact family appears.
+Forensic tools and artifact families are internal techniques, **not top-level skills**. New knowledge for Volatility, Hindsight, Wireshark, Foremost, SQLite, Docker, stego, Windows tooling, OpenZFS encrypted streams or PDF analysis belongs in the focused `ctf-forensics/references/` files above. Update this router only when a genuinely new artifact family appears.
 
 The complete V1 source remains recoverable from `archive/pre-restructure-20260823`.
 
