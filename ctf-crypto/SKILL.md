@@ -26,6 +26,7 @@ Use `ctf-solve` for workspace/progress/stuck-recovery. This skill selects the sm
 | XOR/RC4/LFSR/stream reuse | `stream-ciphers.md` | `prng.md` |
 | RSA textbook/weak parameters/common attacks | `rsa-attacks.md` | `rsa-attacks-2.md` |
 | RSA partial-key/small-root/LLL/Boneh-Durfee | `references/rsa-lll-patterns.md` | `lattice-and-lwe.md` |
+| multi-prime RSA-like modulus + factor low bits + auxiliary congruence + cheap factor peeling + Coppersmith/root-tree inversion | `references/hybrid-multiprime-rsa-recovery.md` | `references/rsa-lll-patterns.md`, `advanced-math.md` |
 | ECC/DLP/singular/small subgroup | `ecc-attacks.md` | `advanced-math.md` |
 | MT/LCG/xorshift/seed/state recovery | `prng.md` | `prng-attacks.md` |
 | nested/cascaded LCG, LCG-driven increment, two secret moduli, ordinary LCG recovery fails | `references/nested-lcg-kernel-recovery.md` | `prng.md`, `lattice-and-lwe.md` |
@@ -68,7 +69,12 @@ known phi-related value
 CRT fault
 multiplicative/textbook signature
 partial p/q/message bits
+multi-prime factor count and approximate factor sizes
+factor residues modulo 2^k or another base
+auxiliary relations such as (p+q) mod M
 ```
+
+For a multi-prime modulus with several leaks, first ask whether one factor can be peeled cheaply with ECM/Pollard methods. Then combine partial residues with auxiliary congruences before constructing a lattice. If exponent inversion is not unique modulo the prime factors, enumerate modular roots per prime and recombine with CRT rather than forcing one global private exponent. Route this composed pattern to `references/hybrid-multiprime-rsa-recovery.md`.
 
 Only move to Coppersmith/LLL/Boneh-Durfee when parameter bounds support it. Derive polynomial, root bound and modulus relation explicitly before tuning lattice parameters.
 

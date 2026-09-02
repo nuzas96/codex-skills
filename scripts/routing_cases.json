@@ -23,6 +23,7 @@
   {"case":"VMProtect p-code/tape patch with identical VM handler and tape-read trace","primary_skill":"ctf-reverse","references":["ctf-reverse/references/vmprotect-trace-preserving-pcode.md"]},
 
   {"case":"RSA cryptanalysis","primary_skill":"ctf-crypto","references":["ctf-crypto/rsa-attacks.md"]},
+  {"case":"Multi-prime RSA-like construction where low factor residues plus an auxiliary sum congruence feed ECM, Coppersmith on a cofactor, a short hash/XOR fixed point, and CRT modular-root enumeration","primary_skill":"ctf-crypto","references":["ctf-crypto/references/hybrid-multiprime-rsa-recovery.md"]},
   {"case":"Lattice/LWE challenge","primary_skill":"ctf-crypto","references":["ctf-crypto/lattice-and-lwe.md"]},
   {"case":"Nested/cascaded LCG with evolving LCG increment and secret moduli","primary_skill":"ctf-crypto","references":["ctf-crypto/references/nested-lcg-kernel-recovery.md"]},
   {"case":"Huge Vandermonde polynomial interpolation","primary_skill":"ctf-crypto","references":["ctf-crypto/references/polynomial-interpolation.md"]},
