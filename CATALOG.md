@@ -72,6 +72,7 @@ Canonical owner: `ctf-pwn`
 | ROP / ret2libc / shellcode | `ctf-pwn/rop-and-shellcode.md` |
 | SROP / pivot / advanced ROP | `ctf-pwn/rop-advanced.md` |
 | heap / tcache / UAF | `ctf-pwn/heap-techniques.md`, `heap-techniques-2.md` |
+| custom allocator integrity-tag/header-size forgery | `ctf-pwn/references/integrity-tagged-custom-allocator.md` |
 | how2heap patterns | `ctf-pwn/references/how2heap-patterns.md` |
 | FSOP | `ctf-pwn/heap-fsop.md` |
 | seccomp / sandbox | `ctf-pwn/sandbox-escape.md` |
