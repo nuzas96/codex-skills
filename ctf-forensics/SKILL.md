@@ -40,6 +40,7 @@ binwalk suspect 2>/dev/null
 | SQLite DB/WAL/freelist/edit history | `references/sqlite-forensics.md` | application-specific artifact ref |
 | Docker image/save/export/overlay/container evidence | `references/docker-containers.md` | `disk-and-memory.md` |
 | PDF object/stream/attachment/incremental revision | `references/pdf-analysis.md` | nested-container / malware ref if extracted payload dominates |
+| Active Directory intrusion PCAP: LDAP/Kerberos/WinRM/SMB/PowerShell attack-chain reconstruction | `references/ad-intrusion-pcap.md` | `references/network-pcap.md`; `ctf-misc/references/active-directory.md` only when active AD exploitation/pathing becomes primary |
 | PCAP/PCAPNG/general protocol | `references/network-pcap.md` | `network-advanced.md` |
 | timing/covert/SMB/DNS/advanced network | `network-advanced.md` | `references/network-pcap.md` |
 | USB/HID/Bluetooth/peripheral capture | `peripheral-capture.md` | network ref |
@@ -94,6 +95,8 @@ Distinguish `docker save` layer history from `docker export` merged filesystem. 
 
 Use tshark for reproducible extraction and Wireshark for visual exploration.
 
+When a PCAP contains coordinated LDAP, Kerberos, WinRM/WSMan, SMB and HTTP/PowerShell evidence from an Active Directory environment, do not analyze each protocol in isolation. Route to `references/ad-intrusion-pcap.md`, establish host roles and chronology first, decode account-control flags bitwise, and distinguish observed transfer/authentication evidence from inferred attack steps. In particular, encrypted WinRM can prove remote-management use without revealing the exact command body.
+
 When a PCAP reconstructs into a nested carrier, keep artifact provenance across every layer. If indexed fragments carry per-chunk hashes, validate each fragment before concatenation and verify any whole-object manifest hash before decompressing or parsing the next layer.
 
 ## Windows artifacts
@@ -135,9 +138,11 @@ Add a category only when the hard primitive changes:
 
 Preserve the extraction chain before pivoting. Standard PBKDF2/HKDF/AES-GCM operations used only to unlock a reconstructed encrypted forensic artifact remain `ctf-forensics`; pivot to `ctf-crypto` only when breaking the cryptography becomes the dominant primitive.
 
+AD packet-capture reconstruction remains `ctf-forensics` while the primary task is evidence correlation. Pivot to `ctf-misc/references/active-directory.md` only when the task becomes active authorized AD path exploitation such as BloodHound pathing, live Kerberoasting, ACL abuse or AD CS.
+
 ## V2 ownership rule
 
-Forensic tools and artifact families are internal techniques, **not top-level skills**. New knowledge for Volatility, Hindsight, Wireshark, Foremost, SQLite, Docker, stego, Windows tooling, RDP bitmap caches, OpenZFS encrypted streams or PDF analysis belongs in the focused `ctf-forensics/references/` files above. Update this router only when a genuinely new artifact family appears.
+Forensic tools and artifact families are internal techniques, **not top-level skills**. New knowledge for Volatility, Hindsight, Wireshark, Foremost, SQLite, Docker, stego, Windows tooling, RDP bitmap caches, AD intrusion PCAP reconstruction, OpenZFS encrypted streams or PDF analysis belongs in the focused `ctf-forensics/references/` files above. Update this router only when a genuinely new artifact family appears.
 
 The complete V1 source remains recoverable from `archive/pre-restructure-20260823`.
 
