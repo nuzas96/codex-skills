@@ -13,6 +13,7 @@
   {"case":"Stack overflow ret2win","primary_skill":"ctf-pwn","references":["ctf-pwn/overflow-basics.md"]},
   {"case":"OOB signed-byte comparator reveals lower/equal/higher; equality permits replacing that stack byte under a strict turn budget, so binary-search bytes and install a minimal read-to-BSS stack-pivot ROP bootstrap","primary_skill":"ctf-pwn","references":["ctf-pwn/references/comparator-oracle-byte-write-rop.md"]},
   {"case":"Heap tcache/UAF","primary_skill":"ctf-pwn","references":["ctf-pwn/heap-techniques.md"]},
+  {"case":"Custom allocator object A overreads adjacent B metadata; B header has magic/size/flags plus an XOR-repairable integrity tag, so forge a larger valid size, use B's now-trusted edit length to cross C metadata, overwrite C callback, then trigger a target-derived setcontext/staged ROP path under seccomp","primary_skill":"ctf-pwn","references":["ctf-pwn/references/integrity-tagged-custom-allocator.md"]},
   {"case":"Negative signed length wraps malloc small while narrower read stays huge in a tcache-off threaded ptmalloc service","primary_skill":"ctf-pwn","references":["ctf-pwn/references/ptmalloc-thread-arena-overflow.md"]},
   {"case":"Format string exploit","primary_skill":"ctf-pwn","references":["ctf-pwn/format-string.md"]},
 
