@@ -33,6 +33,7 @@
 
   {"case":"Windows RAM/Volatility","primary_skill":"ctf-forensics","references":["ctf-forensics/references/memory-volatility.md"]},
   {"case":"PCAP/Wireshark reconstruction","primary_skill":"ctf-forensics","references":["ctf-forensics/references/network-pcap.md"]},
+  {"case":"Active Directory PCAP where LDAP Simple Bind/enumeration reveals a DONT_REQ_PREAUTH account, Kerberos AS-REQ/AS-REP activity is followed by WinRM, the victim pulls post-exploitation tooling over SMB, and PowerShell/HTTP staging must be correlated into an evidence-backed intrusion timeline","primary_skill":"ctf-forensics","references":["ctf-forensics/references/ad-intrusion-pcap.md"]},
   {"case":"PCAP carrier reconstructs an encrypted OpenZFS send stream with native key metadata and an encrypted DMU file block","primary_skill":"ctf-forensics","references":["ctf-forensics/references/openzfs-encrypted-send-stream.md"]},
   {"case":"Windows RDP client has persistent bitmap caching enabled and Cache000*.bin files; parse cached bitmap tiles, contact-sheet/cluster them, then reconstruct remote-only displayed content from edge and text continuity","primary_skill":"ctf-forensics","references":["ctf-forensics/references/rdp-persistent-bitmap-cache.md"]},
   {"case":"Chromium browser artifacts","primary_skill":"ctf-forensics","references":["ctf-forensics/references/browser-artifacts.md"]},
