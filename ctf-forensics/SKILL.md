@@ -39,6 +39,7 @@ binwalk suspect 2>/dev/null
 | Chromium browser profile/history/cookies/storage | `references/browser-artifacts.md` | `references/sqlite-forensics.md` |
 | SQLite DB/WAL/freelist/edit history | `references/sqlite-forensics.md` | application-specific artifact ref |
 | Docker image/save/export/overlay/container evidence | `references/docker-containers.md` | `disk-and-memory.md` |
+| Office DOCX/DOCM/XLSX/XLSM/PPTX/PPTM, `CDFV2 Encrypted`, OOXML, `vbaProject.bin`, `office2john`, `msoffcrypto`, static VBA | `references/office-documents.md` | `ctf-crypto`/`ctf-misc` only after a downstream cipher/encoding becomes primary |
 | PDF object/stream/attachment/incremental revision | `references/pdf-analysis.md` | nested-container / malware ref if extracted payload dominates |
 | Active Directory intrusion PCAP: LDAP/Kerberos/WinRM/SMB/PowerShell attack-chain reconstruction | `references/ad-intrusion-pcap.md` | `references/network-pcap.md`; `ctf-misc/references/active-directory.md` only when active AD exploitation/pathing becomes primary |
 | PCAP/PCAPNG/general protocol | `references/network-pcap.md` | `network-advanced.md` |
@@ -140,9 +141,11 @@ Preserve the extraction chain before pivoting. Standard PBKDF2/HKDF/AES-GCM oper
 
 AD packet-capture reconstruction remains `ctf-forensics` while the primary task is evidence correlation. Pivot to `ctf-misc/references/active-directory.md` only when the task becomes active authorized AD path exploitation such as BloodHound pathing, live Kerberoasting, ACL abuse or AD CS.
 
+Office artifact handling remains `ctf-forensics` while the hard work is password recovery/decryption, OOXML member inspection, or static VBA reconstruction. Once a clean ciphertext/encoding is extracted, pivot to the narrow downstream owner instead of duplicating cryptanalysis inside the Office workflow.
+
 ## V2 ownership rule
 
-Forensic tools and artifact families are internal techniques, **not top-level skills**. New knowledge for Volatility, Hindsight, Wireshark, Foremost, SQLite, Docker, stego, Windows tooling, RDP bitmap caches, AD intrusion PCAP reconstruction, OpenZFS encrypted streams or PDF analysis belongs in the focused `ctf-forensics/references/` files above. Update this router only when a genuinely new artifact family appears.
+Forensic tools and artifact families are internal techniques, **not top-level skills**. New knowledge for Volatility, Hindsight, Wireshark, Foremost, SQLite, Docker, stego, Windows tooling, RDP bitmap caches, AD intrusion PCAP reconstruction, Office document forensics, OpenZFS encrypted streams or PDF analysis belongs in the focused `ctf-forensics/references/` files above. Update this router only when a genuinely new artifact family appears.
 
 The complete V1 source remains recoverable from `archive/pre-restructure-20260823`.
 
