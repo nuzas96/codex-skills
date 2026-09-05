@@ -189,7 +189,7 @@ Strict mode fails on:
 - missing canonical V2 skills;
 - invalid top-level skill frontmatter/name mismatch;
 - duplicate skill names;
-- broken relative links from top-level routers;
+- broken local relative links across all Markdown documents;
 - legacy V1 top-level entrypoints;
 - **legacy V1 directory residue**;
 - unclassified top-level skills/directories.
