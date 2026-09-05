@@ -135,9 +135,47 @@ def normalize_link_target(raw: str) -> str:
     return target
 
 
+def markdown_link_scan_text(text: str) -> str:
+    """Remove code regions before interpreting Markdown link syntax.
+
+    Many CTF references contain expressions such as function calls after
+    bracket indexing that look like Markdown links to a regex. Fenced code,
+    indented code blocks, and inline code spans are therefore excluded from
+    link validation.
+    """
+    output: list[str] = []
+    in_fence = False
+    fence_char = ""
+    fence_len = 0
+
+    for line in text.splitlines(keepends=True):
+        stripped = line.lstrip()
+        fence = re.match(r"(`{3,}|~{3,})", stripped)
+
+        if fence:
+            token = fence.group(1)
+            if not in_fence:
+                in_fence = True
+                fence_char = token[0]
+                fence_len = len(token)
+            elif token[0] == fence_char and len(token) >= fence_len:
+                in_fence = False
+            output.append("\n" if line.endswith("\n") else "")
+            continue
+
+        if in_fence or line.startswith(("    ", "\t")):
+            output.append("\n" if line.endswith("\n") else "")
+            continue
+
+        output.append(re.sub(r"`[^`\n]*`", "", line))
+
+    return "".join(output)
+
+
 def validate_markdown_links(path: Path, text: str, root: Path) -> list[Finding]:
     findings: list[Finding] = []
-    for raw in MD_LINK_RE.findall(text):
+    scan_text = markdown_link_scan_text(text)
+    for raw in MD_LINK_RE.findall(scan_text):
         target = normalize_link_target(raw)
         if not target or target.startswith(("http://", "https://", "mailto:", "#")):
             continue
