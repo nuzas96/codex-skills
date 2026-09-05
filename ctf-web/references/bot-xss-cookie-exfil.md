@@ -15,6 +15,20 @@ Read bot_runner source if accessible (Docker exec, source disclosure). Key detai
 - What's the page_load_timeout and sleep duration?
 - Does it use WebDriverWait for specific elements?
 
+### Bot wait conditions are not async-completion proofs
+
+A Selenium/Playwright bot can wait for an element that is present in the static HTML and then immediately navigate away **before** `DOMContentLoaded`, a promise chain, or an authenticated `fetch()` finishes.
+
+When a chain depends on the bot page priming cache/state asynchronously:
+
+1. identify exactly what the wait condition observes;
+2. determine whether that condition exists before the required JS runs;
+3. log the dependent request server-side;
+4. reproduce navigation timing with the exact bot runner;
+5. do not infer "the page was visited" means "its async side effect completed".
+
+This matters for cache priming, background API calls, post-load redirects, and state-setting requests.
+
 ### 2. Map CSP per-endpoint
 Different routes often have DIFFERENT CSPs:
 - Queue/dashboard pages: `script-src 'nonce-...'` + `connect-src 'self'` (XSS-protected)
