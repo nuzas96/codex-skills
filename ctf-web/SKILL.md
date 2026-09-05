@@ -142,6 +142,7 @@ Add another category only when the **hard primitive changes**:
 - PCAP/memory/disk artifact recovery -> `ctf-forensics`;
 - public-world identity/geolocation -> `ctf-osint`;
 - malicious payload/C2 behavior becomes central -> `ctf-malware`.
+- Python `eval`/`exec` sink becomes primarily a jail/charset/AST-constraint problem -> `ctf-misc/pyjails.md`; keep `ctf-web` for HTTP transport and reflected debug/error behavior.
 
 Do not preload categories speculatively.
 
