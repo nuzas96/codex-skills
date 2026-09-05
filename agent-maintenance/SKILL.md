@@ -32,4 +32,4 @@ Before changing an agent setting:
 
 ## V1 provenance
 
-Consolidates V1 `token-efficient-cli-workflows` and `hermes-context-compression`. Their originals remain frozen at `archive/pre-restructure-20260823` until V2 migration validation is complete.
+Consolidates V1 `token-efficient-cli-workflows` and `hermes-context-compression`. Their originals remain frozen at `archive/pre-restructure-20260823` as the historical V1 provenance source.
