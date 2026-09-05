@@ -219,6 +219,6 @@ The key length (`edx=0x10`) is a strong hint that the cipher is RC4 with a 16-by
 
 ## References
 
-- See [tools-dynamic.md](tools-dynamic.md) for Frida/angr alternatives
-- See [tools-emulation.md](tools-emulation.md) for Qiling (higher-level OS emulation)
-- See [patterns-ctf.md](patterns-ctf.md) for RC4 static-analysis patterns
+- See [tools.md](../tools.md) for Frida/angr alternatives
+- See [tools-advanced.md](../tools-advanced.md) for Qiling (higher-level OS emulation)
+- See [patterns-ctf.md](../patterns-ctf.md) for RC4 static-analysis patterns
