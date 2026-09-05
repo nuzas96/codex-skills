@@ -2,8 +2,8 @@
 
 A progressive-disclosure CTF skill library designed for Codex/ChatGPT-style agents.
 
-> **V2 consolidation is complete on `restructure/v2-category-first` and is undergoing final routing validation before merge.**  
-> The untouched V1 snapshot is preserved at `archive/pre-restructure-20260823` from commit `cfc30195cfed1982b28dd24b39647a2c85c8f056`.
+> **V2 is the canonical architecture on `main`.** Ongoing maintenance and knowledge ingestion use the category-first ownership model plus `ctf-skill-upgrade` deduplication/provenance rules.  
+> The untouched V1 snapshot remains preserved at `archive/pre-restructure-20260823` from commit `cfc30195cfed1982b28dd24b39647a2c85c8f056`.
 
 ## Why V2 exists
 
@@ -11,7 +11,7 @@ V1 accumulated useful knowledge quickly, but many exploit/tool techniques became
 
 V2 uses a different rule:
 
-> **Top-level skill = task/domain. Technique = reference. Automation = script.**
+> **Top-level skill = task/domain. Broad mature knowledge = category handbook. Focused technique = reference. Automation = script.**
 
 The result is fewer activation candidates, smaller entrypoints, easier maintenance and one canonical owner for reusable technique knowledge.
 
@@ -93,12 +93,13 @@ Each skill may contain:
 ```text
 <skill>/
 ├── SKILL.md       # compact router/workflow
-├── references/    # canonical technique knowledge
+├── *.md           # optional broad/mature category handbooks
+├── references/    # focused/specialized canonical technique knowledge
 ├── scripts/       # reusable deterministic automation
 └── assets/        # static resources/templates when needed
 ```
 
-Not every skill needs every directory.
+Not every skill needs every layer. Existing broad handbooks remain valid depth material; new upgrades should prefer the smallest canonical destination that already owns the technique.
 
 ## `SKILL.md` rule
 
@@ -193,25 +194,25 @@ Strict mode fails on:
 - **legacy V1 directory residue**;
 - unclassified top-level skills/directories.
 
-GitHub Actions runs strict migration validation on the V2 restructuring branch and pull requests.
+GitHub Actions runs strict repository, representative-routing, and fast-routing validation on `main`, `restructure/**` branches, and pull requests.
 
 ## Migration safety
 
 ```text
 main
-  original V1 baseline until final merge
+  canonical V2 branch and current development line
 
 archive/pre-restructure-20260823
-  frozen V1 rollback branch
+  frozen V1 rollback/history branch
 
 checkpoint/v2-core-routers-20260823
-  intermediate V2 recovery point
+  historical intermediate V2 recovery point
 
 checkpoint/v2-strict-pass-20260823
-  V2 state after strict structural validation
+  historical V2 state after strict structural validation
 
 restructure/v2-category-first
-  final V2 candidate branch
+  historical final V2 migration candidate branch
 ```
 
 Original snapshot commit:
@@ -220,7 +221,7 @@ Original snapshot commit:
 cfc30195cfed1982b28dd24b39647a2c85c8f056
 ```
 
-The archive is the historical source for complete original specialist packages and attribution history. Do not rewrite or delete it during V2 adoption.
+The archive is the historical source for complete original specialist packages and attribution history. Preserve it as the V1 rollback/history point; normal development belongs on V2 `main`.
 
 Full migration mapping and rollback notes live in [MIGRATION_PLAN_V2.md](MIGRATION_PLAN_V2.md).
 

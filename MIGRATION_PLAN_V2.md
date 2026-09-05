@@ -1,24 +1,24 @@
 # Codex Skills V2 Migration Plan
 
-> **Status: consolidation and physical cleanup complete. Final candidate is on `restructure/v2-category-first`; merge to `main` only after strict CI and representative routing checks pass.**
+> **Status: COMPLETED. V2 has been adopted as the canonical architecture on `main`. The migration branches/checkpoints below are retained only as historical recovery points. Ongoing upgrades use `ctf-skill-upgrade` and the existing V2 validation gates.**
 
 ## Safety points
 
-- Original branch: `main`
-- Frozen archive: `archive/pre-restructure-20260823`
-- Core-router checkpoint: `checkpoint/v2-core-routers-20260823`
-- Strict-pass checkpoint: `checkpoint/v2-strict-pass-20260823`
-- Final candidate: `restructure/v2-category-first`
+- Canonical V2 branch: `main`
+- Frozen V1 archive: `archive/pre-restructure-20260823`
+- Historical core-router checkpoint: `checkpoint/v2-core-routers-20260823`
+- Historical strict-pass checkpoint: `checkpoint/v2-strict-pass-20260823`
+- Historical final migration candidate: `restructure/v2-category-first`
 - Original V1 snapshot: `cfc30195cfed1982b28dd24b39647a2c85c8f056`
 
-The archive is the canonical rollback/history point. Do not rewrite or force-push it during V2 adoption.
+The archive is the canonical V1 rollback/history point. Do not rewrite or force-push it; normal development belongs on V2 `main`.
 
 ## V2 design goals
 
 1. Reduce top-level activation noise.
 2. Make each top-level skill represent a task/domain, not one exploit primitive.
 3. Keep category `SKILL.md` files as compact routers.
-4. Put detailed techniques in `references/` and deterministic helpers in `scripts/`.
+4. Keep `SKILL.md` as the router; preserve broad mature category handbooks where useful, put focused/specialized techniques in `references/`, and deterministic helpers in `scripts/`.
 5. Give every reusable technique exactly one canonical owner.
 6. Preserve useful V1 knowledge and provenance before removing duplicate entrypoints.
 7. Make future upgrades deterministic: classify -> deduplicate -> update canonical reference -> validate.
@@ -48,7 +48,8 @@ No V1 specialist directory remains at the V2 root.
 ```text
 <category>/
 ├── SKILL.md              # routing + workflow only
-├── references/           # canonical technique knowledge
+├── *.md                  # optional broad/mature category handbooks
+├── references/           # focused/specialized canonical technique knowledge
 ├── scripts/              # reusable automation
 └── assets/               # optional templates/static resources
 ```
@@ -190,15 +191,15 @@ Jails, unusual protocols, games/state puzzles, AD/Kerberos/infrastructure and ed
 13. Deactivate V1 specialist entrypoints. **DONE**
 14. Remove migrated V1 physical subtrees from V2 root. **DONE**
 15. Enforce strict physical root cleanliness in CI. **DONE**
-16. Run strict structural validation. **REQUIRED BEFORE MERGE**
-17. Run representative routing-path checks. **REQUIRED BEFORE MERGE**
-18. Review PR diff/status and only then merge to `main`.
+16. Run strict structural validation. **DONE**
+17. Run representative routing-path checks. **DONE**
+18. Review PR diff/status and only then merge to `main`. **DONE**
 
 ## Non-negotiable validation gates
 
-Before V2 can merge:
+These were the V2 adoption gates and remain the baseline validation contract for ongoing maintenance:
 
-- exactly the 13 canonical top-level skills are present;
+- exactly the 14 canonical top-level skills are present;
 - no legacy V1 top-level directory remains;
 - all skill frontmatter names match parent directories;
 - all required canonical skills exist;
@@ -213,9 +214,9 @@ Run locally:
 python3 scripts/validate_skills.py --strict-migration
 ```
 
-## Rollback
+## Rollback / historical comparison
 
-If V2 proves worse in real use, restore from:
+If a regression requires comparison with the pre-V2 system, restore or inspect from:
 
 ```text
 archive/pre-restructure-20260823
@@ -227,4 +228,4 @@ or original commit:
 cfc30195cfed1982b28dd24b39647a2c85c8f056
 ```
 
-Do not delete the archive immediately after a V2 merge. Keep it as the historical V1 baseline until V2 has been exercised successfully in real CTFs.
+Keep the archive as the historical V1 baseline and attribution source. It is no longer an active alternative architecture; V2 `main` is the canonical development line.
