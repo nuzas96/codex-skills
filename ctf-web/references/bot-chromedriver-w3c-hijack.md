@@ -9,10 +9,7 @@ attacker can drive the bot's browser with curl.
 This is the OPPOSITE of the usual blind-XSS pattern
 (`bot-xss-exploitation.md`). Instead of "bot visits our URL, payload fires,
 callback to us," it is "we have direct control over the bot's URL bar, JS
-context, and cookies, no exploit needed." It also complements
-`deskmesh-actual-exploitability-2026.md` where CRLF / DOMPurify mXSS bootstrap
-attempts were blocked in Chrome 147+: when the bootstrap primitive is dead,
-driving the bot directly often still works.
+context, and cookies, no exploit needed." It also complements the browser/admin-bot references: when an intended XSS/bootstrap primitive is empirically dead on the exact browser version, direct control of an exposed local WebDriver endpoint may still provide the needed browser context.
 
 ## 1. Find the chromedriver process and port
 

@@ -72,6 +72,56 @@ The exploitable bug is often the disagreement between two parsers rather than "b
 
 If an unkeyed value reaches an HTML/JS/location sink, prove the sink independently first. Then determine whether the resulting response becomes shared. Route browser execution constraints to `csp-browser.md`.
 
+## Browser Cache Replay and Navigation Topology
+
+Some browser CTF chains depend on a response fetched under one request shape later being committed as a **document** under another navigation path. A simplified reproduction can produce a false negative if it changes the browser's history/cache topology.
+
+A reusable pattern is:
+
+```text
+authenticated page performs fetch() with special headers
+  -> response enters browser cache
+  -> attacker-controlled page creates a specific history state
+  -> blob:/history.back()/redirect sequence triggers a navigation
+  -> navigation resolves to the same resource
+  -> browser reuses the cached representation as a document
+```
+
+The important lesson is not that browsers always reuse `fetch()` responses for navigation — they often do not. The lesson is that **cache behavior can be flow-sensitive**.
+
+When reproducing a published or inferred cache/navigation chain, preserve:
+
+- browsing context: same tab, popup, opener, iframe, or new window;
+- history-stack order;
+- `blob:`/data/document transitions;
+- redirect count and which request receives each redirect;
+- cache mode and response headers;
+- request headers on the priming fetch;
+- request headers on the later navigation;
+- exact browser version.
+
+Do not replace:
+
+```text
+popup -> blob -> history.back -> second-hit redirect -> cached document
+```
+
+with:
+
+```text
+fetch(...).then(() => location.href = same_url)
+```
+
+and treat a failure as proof that the original topology cannot work. Those are different browser state machines.
+
+Validation discipline:
+
+1. instrument the server to log every request and relevant headers;
+2. make each stage return a unique marker;
+3. confirm whether the later navigation generated a fresh request or reused a cached representation;
+4. only then reason about CSP/XSS behavior of the committed document;
+5. if exact topology still fails on the target browser version, record the primitive as dead for that environment.
+
 ## Common Failure Modes
 
 - Treating one `X-Cache: HIT` as proof of the key composition.
@@ -83,4 +133,4 @@ If an unkeyed value reaches an HTML/JS/location sink, prove the sink independent
 
 ## Provenance
 
-Consolidated from the original `performing-web-cache-poisoning-attack` Apache-2.0 skill and `ctf-web/client-side.md` cache notes. Original source remains frozen on `archive/pre-restructure-20260823`.
+Consolidated from the original `performing-web-cache-poisoning-attack` Apache-2.0 skill, `ctf-web/client-side.md` cache notes, and a June 2026 admin-bot CTF investigation that demonstrated browser cache/navigation topology can invalidate oversimplified reproductions. Challenge-specific values are omitted. Original V1 source remains frozen on `archive/pre-restructure-20260823`.
