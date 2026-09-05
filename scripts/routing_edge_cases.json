@@ -1,0 +1,26 @@
+[
+  {
+    "case": "JWT OAuth",
+    "expected_state": "ambiguous",
+    "expected_routes": ["web-jwt", "web-oauth-oidc"]
+  },
+  {
+    "case": "Kerberos PCAP",
+    "expected_state": "ambiguous",
+    "expected_routes": ["forensics-pcap", "misc-active-directory"]
+  },
+  {
+    "case": "Completely unknown colored-stone puzzle with no indexed signal",
+    "expected_state": "fallback"
+  },
+  {
+    "case": "Active Directory PCAP with LDAP Simple Bind, DONT_REQ_PREAUTH, Kerberos AS-REQ AS-REP, WinRM WSMan and SMB staging",
+    "expected_state": "match",
+    "expected_route": "forensics-ad-intrusion-pcap"
+  },
+  {
+    "case": "Active Directory BloodHound Kerberos AD CS privilege path",
+    "expected_state": "match",
+    "expected_route": "misc-active-directory"
+  }
+]
