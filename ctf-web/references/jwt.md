@@ -182,11 +182,8 @@ A 401/403 change can distinguish parsing, signature and authorization failures.
 
 ## Provenance
 
-Consolidates V1:
+Canonical V2 consolidation of the former `ctf-web/auth-jwt.md` handbook plus the archived JWT algorithm-confusion / none-algorithm specialist material and reusable analyzer. A 2026-09-05 duplicate audit confirmed that signature-verification bypass, `alg:none`, asymmetric-to-HMAC confusion, JWK/JKU/X5U trust, `kid` lookup abuse, weak symmetric secrets, replayed state, and JWE public-key claim construction are represented here.
 
-- `ctf-web/auth-jwt.md` (blob `e61002f503e1302173ffdbb2d23577ef79cfac5d`)
-- `exploiting-jwt-algorithm-confusion-attack/SKILL.md`
-- `performing-jwt-none-algorithm-attack/SKILL.md` (pending final source audit)
-- reusable analyzer from `exploiting-jwt-algorithm-confusion-attack/scripts/agent.py` (blob `1ac1392a22b00edb340b4c989cc8e2f05993b215`)
+The one non-JWT legacy item — a custom encrypted session with attacker-controlled framing plus an unkeyed checksum — belongs to `../auth-and-access.md` and was migrated there before the redundant handbook was retired.
 
-The frozen originals remain on `archive/pre-restructure-20260823` until migration validation completes.
+The untouched V1 source remains recoverable from `archive/pre-restructure-20260823` and Git history.
