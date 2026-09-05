@@ -203,7 +203,7 @@ These were the V2 adoption gates and remain the baseline validation contract for
 - no legacy V1 top-level directory remains;
 - all skill frontmatter names match parent directories;
 - all required canonical skills exist;
-- top-level router relative links resolve;
+- local relative links across all Markdown documents resolve;
 - no unclassified root directory exists;
 - representative challenge routes resolve to existing canonical references;
 - GitHub Actions strict validation succeeds.
