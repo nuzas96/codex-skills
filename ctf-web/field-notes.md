@@ -150,7 +150,7 @@ JSONP endpoint (`?callback=func`) wraps sensitive data in a function call. Load 
 8. JKU header injection — point to attacker-controlled JWKS URL
 9. KID path traversal — `../../../dev/null` for empty key, or SQL injection in KID
 
-See [auth-jwt.md](auth-jwt.md) for full JWT/JWE attacks and session manipulation.
+See [references/jwt.md](references/jwt.md) for the canonical JWT/JWE workflow.
 
 ## SSTI Quick Reference
 
