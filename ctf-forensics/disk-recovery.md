@@ -93,7 +93,7 @@ for seed in range(timestamp - 86400, timestamp + 86400):
 
 Excel/Word macros may encode binary data in cell values. Extract and decode:
 
-1. **Extract macro:** Use `olevba` or open in LibreOffice to inspect VBA code
+1. **Extract macro:** Use `olevba` for static VBA inspection. For encrypted Office, OOXML containers, `vbaProject.bin`, or general macro triage, route first to `references/office-documents.md` rather than executing/enabling document macros
 2. **Identify encoding:** Look for cell iteration patterns like `Cells(i, j).Value`
 3. **Reverse the encoding formula:**
 
