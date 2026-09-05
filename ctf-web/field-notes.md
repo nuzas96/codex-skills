@@ -142,7 +142,7 @@ JSONP endpoint (`?callback=func`) wraps sensitive data in a function call. Load 
 
 1. `alg: none` — remove signature entirely
 2. Algorithm confusion (RS256→HS256) — sign with public key
-3. Weak secret — brute force with hashcat/flask-unsign
+3. Weak symmetric JWT secret — test targeted candidates with `hashcat -m 16500`; use `scripts/jwt_analyze.py` for token inspection/forging helpers
 4. Key exposure — check `/api/getPublicKey`, `.env`, `/debug/config`
 5. Balance replay — save JWT, spend, replay old JWT, return items for profit
 6. Unverified signature — modify payload, keep original signature
@@ -150,7 +150,7 @@ JSONP endpoint (`?callback=func`) wraps sensitive data in a function call. Load 
 8. JKU header injection — point to attacker-controlled JWKS URL
 9. KID path traversal — `../../../dev/null` for empty key, or SQL injection in KID
 
-See [auth-jwt.md](auth-jwt.md) for full JWT/JWE attacks and session manipulation.
+See [references/jwt.md](references/jwt.md) for the canonical JWT/JWE workflow.
 
 ## SSTI Quick Reference
 

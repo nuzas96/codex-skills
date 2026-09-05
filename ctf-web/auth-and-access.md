@@ -7,6 +7,7 @@
 - [NoSQL Injection (MongoDB)](#nosql-injection-mongodb)
   - [Blind NoSQL with Binary Search](#blind-nosql-with-binary-search)
 - [Cookie Manipulation](#cookie-manipulation)
+- [Custom Encrypted Session: Length Field + Unkeyed Checksum](#custom-encrypted-session-length-field--unkeyed-checksum)
 - [Public Admin Login Route Cookie Seeding (EHAX 2026)](#public-admin-login-route-cookie-seeding-ehax-2026)
 - [Host Header Bypass](#host-header-bypass)
 - [Broken Auth: Always-True Hash Check (0xFun 2026)](#broken-auth-always-true-hash-check-0xfun-2026)
@@ -28,7 +29,7 @@
 - [JA4/JA4H TLS and HTTP Fingerprint Matching (BSidesSF 2026)](#ja4ja4h-tls-and-http-fingerprint-matching-bsidessf-2026)
 - [Colon/Newline Injection in String-Separator Serialization (Evlz CTF 2019)](#colonnewline-injection-in-string-separator-serialization-evlz-ctf-2019)
 
-For JWT/JWE token attacks, see [auth-jwt.md](auth-jwt.md). For OAuth/OIDC, SAML, CI/CD credential theft, and infrastructure auth attacks, see [auth-infra.md](auth-infra.md).
+For JWT/JWE token attacks, see [references/jwt.md](references/jwt.md). For OAuth/OIDC, SAML, CI/CD credential theft, and infrastructure auth attacks, see [auth-infra.md](auth-infra.md).
 
 ---
 
@@ -99,6 +100,43 @@ def extract_char(position, session):
 curl -H "Cookie: role=admin"
 curl -H "Cookie: isAdmin=true"
 ```
+
+## Custom Encrypted Session: Length Field + Unkeyed Checksum
+
+Some custom session formats encrypt a serialized payload but protect framing/integrity only with attacker-recomputable metadata such as a length field plus CRC32/Adler32.
+
+Recognition shape:
+
+```text
+ciphertext || length || checksum
+```
+
+or:
+
+```text
+encrypt(serialized_fields) || parser_length || CRC32(...)
+```
+
+The important question is not "is the payload encrypted?" but **which bytes are authenticated, and with what primitive?**
+
+If the parser trusts an attacker-controlled length and integrity is only an unkeyed checksum, a CTF may allow:
+
+1. obtain a valid session containing attacker-influenced plaintext structure;
+2. identify a useful field boundary in the serialized form;
+3. shorten or otherwise alter the parser-visible length so trailing fields are ignored;
+4. recompute the unkeyed checksum over the representation the server validates;
+5. replay the modified cookie and observe whether deserialization now yields a privileged field/value.
+
+Do not assume arbitrary AES ciphertext truncation preserves meaningful plaintext. First derive the exact construction from source or a reliable oracle: cipher mode, block boundaries, what the length counts, and whether the checksum covers plaintext, ciphertext, or framing.
+
+**Security distinction:**
+
+- CRC32 / Adler32 / plain MD5 checksum -> corruption detection only, attacker can generally recompute it;
+- HMAC or AEAD tag -> keyed integrity, this shortcut does not apply unless there is a separate verification flaw.
+
+If the hard part becomes manipulating CBC/CTR/stream-cipher structure or exploiting checksum linearity mathematically, pivot to `ctf-crypto/modern-ciphers*.md`. Keep this section for the web-session trust boundary and parser/framing logic.
+
+**Provenance:** generalized from a historical DefCamp-style encrypted-session CTF pattern previously stored in the legacy JWT handbook. Challenge-specific field separators, values, and target roles are intentionally omitted.
 
 ## Public Admin Login Route Cookie Seeding (EHAX 2026)
 
