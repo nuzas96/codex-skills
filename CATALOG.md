@@ -130,6 +130,7 @@ Canonical owner: `ctf-forensics`
 | deleted/corrupt/nested recovery | `ctf-forensics/disk-recovery.md`, `disk-advanced.md` |
 | browser/Hindsight artifacts | `ctf-forensics/references/browser-artifacts.md` |
 | Docker/container artifacts | `ctf-forensics/references/docker-containers.md` |
+| Office DOCX/DOCM/OOXML, encrypted Office, static VBA | `ctf-forensics/references/office-documents.md` |
 | PDF/peepdf | `ctf-forensics/references/pdf-analysis.md` |
 | file carving / Foremost | `ctf-forensics/references/file-carving.md` |
 | network / Wireshark / tshark | `ctf-forensics/references/network-pcap.md` |
