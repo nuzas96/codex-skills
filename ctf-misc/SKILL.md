@@ -50,7 +50,7 @@ Do not load BloodHound, Kerberoasting and AD CS as separate global skills.
 
 ## Jail / encoding / game rules
 
-For jails, enumerate parser context, available objects/builtins/binaries and filter semantics before payload lists. For encodings, justify each transformation with alphabet/length/magic evidence. For games/VMs, define state variables/actions/win condition/randomness before BFS/DP/Z3 automation.
+For jails, enumerate parser context, available objects/builtins/binaries and filter semantics before payload lists. If the filter limits **distinct characters**, track `len(set(payload))` separately from total length and look for reflected exception text as a possible output oracle when eval results are discarded. For encodings, justify each transformation with alphabet/length/magic evidence. For games/VMs, define state variables/actions/win condition/randomness before BFS/DP/Z3 automation.
 
 ## Cross-category pivots
 
