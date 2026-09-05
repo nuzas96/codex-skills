@@ -145,5 +145,5 @@ The `--user-data-dir` MUST be unique per run. Without this, you may see stale re
 ## Related references
 
 - `references/modern-xs-leaks-patterns.md` — broader XS-Leak + XSS primitive catalog
-- `references/deskmesh-flask-dual-port.md` — specific Chrome 147/149 empirical findings for the Deskmesh challenge
-- `references/deskmesh-actual-exploitability-2026.md` — full empirical session log including what doesn't work
+- `references/bot-xss-cookie-exfil.md` — cookie/dangling-markup exfiltration patterns and exact-browser validation discipline
+- `references/empirical-workflow.md` — general rule for building the smallest exact-version harness before accepting or rejecting a browser/parser hypothesis
