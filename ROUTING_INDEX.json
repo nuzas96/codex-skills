@@ -8,62 +8,601 @@
     "loading": "Fetch the mapped primary skill and reference directly. Do not treat this index as a substitute for methodology."
   },
   "routes": [
-    {"id":"web-jwt","signals":["jwt","jwk","jwks","json web token","algorithm confusion"],"primary_skill":"ctf-web","reference":"ctf-web/references/jwt.md"},
-    {"id":"web-oauth-oidc","signals":["oauth","oidc","openid connect","redirect_uri","oauth callback"],"primary_skill":"ctf-web","reference":"ctf-web/references/oauth-oidc.md"},
-    {"id":"web-ssti","signals":["ssti","server-side template injection","jinja2 template","twig template"],"primary_skill":"ctf-web","reference":"ctf-web/references/ssti.md"},
-    {"id":"web-xxe","signals":["xxe","xml external entity","doctype entity"],"primary_skill":"ctf-web","reference":"ctf-web/references/xxe-xml.md"},
-    {"id":"web-request-smuggling","signals":["request smuggling","cl.te","te.cl","content-length mismatch","transfer-encoding mismatch"],"primary_skill":"ctf-web","reference":"ctf-web/references/request-smuggling.md"},
-    {"id":"web-browser-response-desync-range","signals":["script content-length 0 but body still piped","response content-length rewrite still streams body","browser response queue poisoning","queued script consumes smuggled response","sec-fetch-dest script response desync","service worker range 206 416 oracle","audio range xs-leak","partial response laundering"],"primary_skill":"ctf-web","reference":"ctf-web/references/browser-response-desync-range-oracle.md"},
-    {"id":"web3-cross-chain-relayer","signals":["cross-chain bridge relayer","pending bridge attestation","failed bridge attestation replay","unsigned fee recipient attestation","relayer completion race","bridge receive buffer replay","soroban sui bridge","stellar sui bridge"],"primary_skill":"ctf-web","reference":"ctf-web/references/cross-chain-bridge-relayer.md"},
-    {"id":"web-race-condition","signals":["web race condition","toctou request","double spend race","parallel request race"],"primary_skill":"ctf-web","reference":"ctf-web/references/race-conditions.md"},
-    {"id":"web-websocket","signals":["websocket","ws://","wss://","websocket auth"],"primary_skill":"ctf-web","reference":"ctf-web/references/websockets.md"},
-    {"id":"web-waf-parser","signals":["waf parser differential","waf bypass","normalization mismatch","front-end back-end parsing"],"primary_skill":"ctf-web","reference":"ctf-web/references/waf-parser-differentials.md"},
-
-    {"id":"pwn-stack-overflow","signals":["ret2win","stack overflow","buffer overflow","cyclic offset"],"primary_skill":"ctf-pwn","reference":"ctf-pwn/overflow-basics.md"},
-    {"id":"pwn-comparator-oracle-byte-write","signals":["comparison oracle byte write","equality-gated byte write","binary-search stack byte","guess lower equal higher target byte","oob signed byte comparator","oracle-guided rop bootstrap","turn-limited byte overwrite","query-budgeted rop","conditional byte replacement after correct guess","stack byte oracle bss pivot"],"primary_skill":"ctf-pwn","reference":"ctf-pwn/references/comparator-oracle-byte-write-rop.md"},
-    {"id":"pwn-heap","signals":["tcache","use-after-free","uaf","double free","heap exploitation"],"primary_skill":"ctf-pwn","reference":"ctf-pwn/heap-techniques.md"},
-    {"id":"pwn-custom-allocator-integrity","signals":["integrity tagged custom allocator","custom allocator checksum","allocator header checksum","allocator size inflation","xor checksum heap header","adjacent allocator header leak","forged allocator size callback","trusted length laundering","custom heap metadata callback overwrite","setcontext callback heap"],"primary_skill":"ctf-pwn","reference":"ctf-pwn/references/integrity-tagged-custom-allocator.md"},
-    {"id":"pwn-thread-arena-length-wrap","signals":["content-length -1","negative content-length heap overflow","signed length malloc wrap","malloc(0) huge read","tcache disabled arena_max","thread arena heap grooming","non-main arena top corruption"],"primary_skill":"ctf-pwn","reference":"ctf-pwn/references/ptmalloc-thread-arena-overflow.md"},
-    {"id":"pwn-format-string","signals":["format string","printf(user)","%n exploit","%p leak"],"primary_skill":"ctf-pwn","reference":"ctf-pwn/format-string.md"},
-
-    {"id":"reverse-android","signals":["android apk","jadx","androidmanifest","smali"],"primary_skill":"ctf-reverse","reference":"ctf-reverse/references/android-apk-jadx.md"},
-    {"id":"reverse-dotnet","signals":[".net binary","dnspy","ilspy","msil","cil bytecode"],"primary_skill":"ctf-reverse","reference":"ctf-reverse/references/dotnet-dnspy.md"},
-    {"id":"reverse-rust","signals":["rust binary","rustc symbols","core::","alloc::"],"primary_skill":"ctf-reverse","reference":"ctf-reverse/references/rust-binaries.md"},
-    {"id":"reverse-firmware","signals":["firmware image","binwalk firmware","squashfs firmware","ubifs"],"primary_skill":"ctf-reverse","reference":"ctf-reverse/references/firmware-binwalk.md"},
-    {"id":"reverse-atompepacker","signals":["atompepacker",".atom section","pp64stub","h_pp64stub","easylzma packed pe"],"primary_skill":"ctf-reverse","reference":"ctf-reverse/references/atompepacker-lzma.md"},
-    {"id":"reverse-algebraic-vm-validator","signals":["custom vm odd multiplier rotate xor add","invert vm validator algebraically","vm modular inverse rol ror","bytecode compare immediate reversible transform","odd multiplier modulo 2^32 vm","straight-line bijective vm validator","custom vm rolling state decrypt"],"primary_skill":"ctf-reverse","reference":"ctf-reverse/references/algebraic-vm-validator-inversion.md"},
-    {"id":"reverse-vm-pcode-patch","signals":["vmprotect pcode","vm p-code patch","vm tape patch","trace-preserving bytecode patch","patch only vm bytecode","same vm tape read trace"],"primary_skill":"ctf-reverse","reference":"ctf-reverse/references/vmprotect-trace-preserving-pcode.md"},
-
-    {"id":"crypto-rsa","signals":["rsa cryptanalysis","rsa modulus","public exponent","ciphertext c"],"primary_skill":"ctf-crypto","reference":"ctf-crypto/rsa-attacks.md"},
-    {"id":"crypto-hybrid-multiprime-rsa","signals":["multi-prime rsa low bits","n p q r partial factor leak","p q low bits plus sum congruence","ecm coppersmith cofactor","partial factor arithmetic progression","truncated hash xor fixed point rsa","multiple modular roots crt rsa","nth root per prime crt"],"primary_skill":"ctf-crypto","reference":"ctf-crypto/references/hybrid-multiprime-rsa-recovery.md"},
-    {"id":"crypto-bounded-dh-dlp","signals":["bounded diffie hellman private exponent","small dh private exponent","bounded baby-step giant-step","interval discrete log","non-coprime bsgs","extended bsgs","exbsgs","gcd generator modulus","composite diffie hellman modulus","time-limited dh verification"],"primary_skill":"ctf-crypto","reference":"ctf-crypto/references/bounded-dh-discrete-log.md"},
-    {"id":"crypto-lattice-lwe","signals":["lwe","lattice attack","lll","cvp","svp","hidden number problem"],"primary_skill":"ctf-crypto","reference":"ctf-crypto/lattice-and-lwe.md"},
-    {"id":"crypto-nested-lcg","signals":["nested lcg","cascaded lcg","two lcgs","lcg-driven increment","lcg incremented by lcg","two secret moduli lcg"],"primary_skill":"ctf-crypto","reference":"ctf-crypto/references/nested-lcg-kernel-recovery.md"},
-    {"id":"crypto-polynomial-interpolation","signals":["vandermonde","polynomial interpolation","huge evaluation points","nmod_poly_interpolate","million polynomial points"],"primary_skill":"ctf-crypto","reference":"ctf-crypto/references/polynomial-interpolation.md"},
-
-    {"id":"forensics-memory","signals":["volatility","memory dump","ram dump","lime memory"],"primary_skill":"ctf-forensics","reference":"ctf-forensics/references/memory-volatility.md"},
-    {"id":"forensics-pcap","signals":["pcap","pcapng","wireshark","tshark","tcp stream reconstruction"],"primary_skill":"ctf-forensics","reference":"ctf-forensics/references/network-pcap.md"},
-    {"id":"forensics-ad-intrusion-pcap","signals":["active directory pcap","ad intrusion pcap","domain controller pcap","ldap simple bind pcap","ldap bind credential capture","useraccountcontrol dont_req_preauth","dont_req_preauth pcap","as-rep roast pcap","as-rep roasting pcap","kerberos as-req as-rep pcap","winrm wsman pcap","smb mimikatz transfer","powershell http staging pcap","ad attack chain reconstruction"],"primary_skill":"ctf-forensics","reference":"ctf-forensics/references/ad-intrusion-pcap.md"},
-    {"id":"forensics-openzfs-encrypted-send","signals":["openzfs encrypted send stream","zfs encrypted send stream","zfs native encryption send stream","encrypted dmu file block","zfs wrapped key metadata","pbkdf2 aes-gcm zfs","dmu_ot_plain_file_contents encrypted","zfs send aes-256-gcm"],"primary_skill":"ctf-forensics","reference":"ctf-forensics/references/openzfs-encrypted-send-stream.md"},
-    {"id":"forensics-rdp-bitmap-cache","signals":["rdp persistent bitmap cache","remote desktop bitmap cache","cache0000.bin","cache0001.bin","bitmapcachepersistenable","bmc-tools rdp","rdp cached bitmap tiles","remote-only image bitmap cache","rdp screen tile reconstruction","persistent bitmap caching"],"primary_skill":"ctf-forensics","reference":"ctf-forensics/references/rdp-persistent-bitmap-cache.md"},
-    {"id":"forensics-browser","signals":["chromium history","chrome history","browser artifacts","chromium cookies"],"primary_skill":"ctf-forensics","reference":"ctf-forensics/references/browser-artifacts.md"},
-    {"id":"forensics-sqlite","signals":["sqlite wal","sqlite freelist","wal file recovery","sqlite recovery"],"primary_skill":"ctf-forensics","reference":"ctf-forensics/references/sqlite-forensics.md"},
-    {"id":"forensics-apple-dmg-udif","signals":["apple dmg","dmg udif","udif","koly","blkx","mish block map"],"primary_skill":"ctf-forensics","reference":"ctf-forensics/references/apple-dmg-udif.md"},
-
-    {"id":"osint-geolocation","signals":["image geolocation","reverse image search","street view clue","identify location"],"primary_skill":"ctf-osint","reference":"ctf-osint/geolocation-and-media.md"},
-
-    {"id":"malware-script-deobfuscation","signals":["obfuscated powershell","obfuscated javascript","malicious script","script deobfuscation"],"primary_skill":"ctf-malware","reference":"ctf-malware/references/script-deobfuscation.md"},
-    {"id":"malware-ransomware","signals":["ransomware","ransom note","encrypted victim files","file encryption malware"],"primary_skill":"ctf-malware","reference":"ctf-malware/references/ransomware-crypto.md"},
-
-    {"id":"misc-python-jail","signals":["python jail","pyjail","restricted eval","python sandbox escape"],"primary_skill":"ctf-misc","reference":"ctf-misc/pyjails.md"},
-    {"id":"misc-active-directory","signals":["active directory","bloodhound","kerberos","ad cs","kerberoast"],"primary_skill":"ctf-misc","reference":"ctf-misc/references/active-directory.md"},
-
-    {"id":"boot2root-lifecycle","signals":["hack the box machine","htb machine","vulnhub","boot2root","root.txt","user.txt"],"primary_skill":"ctf-boot2root","reference":"ctf-boot2root/references/lifecycle.md"},
-
-    {"id":"ai-ml-llm","signals":["llm prompt injection","prompt injection challenge","model extraction","adversarial ml","tool injection"],"primary_skill":"ctf-ai-ml","reference":"ctf-ai-ml/llm-attacks.md"},
-
-    {"id":"writeup-final","signals":["final challenge writeup","ctf writeup","solution report"],"primary_skill":"ctf-writeup","reference":null},
-    {"id":"skill-upgrade","signals":["upgrade skill","harvest writeup","ingest writeup","skill knowledge upgrade"],"primary_skill":"ctf-skill-upgrade","reference":null},
-    {"id":"agent-maintenance","signals":["token optimization","context compression","context window optimization"],"primary_skill":"agent-maintenance","reference":"agent-maintenance/references/token-efficiency.md"}
+    {
+      "id": "web-jwt",
+      "signals": [
+        "jwt",
+        "jwk",
+        "jwks",
+        "json web token",
+        "algorithm confusion"
+      ],
+      "primary_skill": "ctf-web",
+      "reference": "ctf-web/references/jwt.md"
+    },
+    {
+      "id": "web-oauth-oidc",
+      "signals": [
+        "oauth",
+        "oidc",
+        "openid connect",
+        "redirect_uri",
+        "oauth callback"
+      ],
+      "primary_skill": "ctf-web",
+      "reference": "ctf-web/references/oauth-oidc.md"
+    },
+    {
+      "id": "web-ssti",
+      "signals": [
+        "ssti",
+        "server-side template injection",
+        "jinja2 template",
+        "twig template"
+      ],
+      "primary_skill": "ctf-web",
+      "reference": "ctf-web/references/ssti.md"
+    },
+    {
+      "id": "web-xxe",
+      "signals": [
+        "xxe",
+        "xml external entity",
+        "doctype entity"
+      ],
+      "primary_skill": "ctf-web",
+      "reference": "ctf-web/references/xxe-xml.md"
+    },
+    {
+      "id": "web-request-smuggling",
+      "signals": [
+        "request smuggling",
+        "cl.te",
+        "te.cl",
+        "content-length mismatch",
+        "transfer-encoding mismatch"
+      ],
+      "primary_skill": "ctf-web",
+      "reference": "ctf-web/references/request-smuggling.md"
+    },
+    {
+      "id": "web-browser-response-desync-range",
+      "signals": [
+        "script content-length 0 but body still piped",
+        "response content-length rewrite still streams body",
+        "browser response queue poisoning",
+        "queued script consumes smuggled response",
+        "sec-fetch-dest script response desync",
+        "service worker range 206 416 oracle",
+        "audio range xs-leak",
+        "partial response laundering"
+      ],
+      "primary_skill": "ctf-web",
+      "reference": "ctf-web/references/browser-response-desync-range-oracle.md"
+    },
+    {
+      "id": "web3-cross-chain-relayer",
+      "signals": [
+        "cross-chain bridge relayer",
+        "pending bridge attestation",
+        "failed bridge attestation replay",
+        "unsigned fee recipient attestation",
+        "relayer completion race",
+        "bridge receive buffer replay",
+        "soroban sui bridge",
+        "stellar sui bridge"
+      ],
+      "primary_skill": "ctf-web",
+      "reference": "ctf-web/references/cross-chain-bridge-relayer.md"
+    },
+    {
+      "id": "web-race-condition",
+      "signals": [
+        "web race condition",
+        "toctou request",
+        "double spend race",
+        "parallel request race"
+      ],
+      "primary_skill": "ctf-web",
+      "reference": "ctf-web/references/race-conditions.md"
+    },
+    {
+      "id": "web-websocket",
+      "signals": [
+        "websocket",
+        "ws://",
+        "wss://",
+        "websocket auth"
+      ],
+      "primary_skill": "ctf-web",
+      "reference": "ctf-web/references/websockets.md"
+    },
+    {
+      "id": "web-waf-parser",
+      "signals": [
+        "waf parser differential",
+        "waf bypass",
+        "normalization mismatch",
+        "front-end back-end parsing"
+      ],
+      "primary_skill": "ctf-web",
+      "reference": "ctf-web/references/waf-parser-differentials.md"
+    },
+    {
+      "id": "pwn-stack-overflow",
+      "signals": [
+        "ret2win",
+        "stack overflow",
+        "buffer overflow",
+        "cyclic offset"
+      ],
+      "primary_skill": "ctf-pwn",
+      "reference": "ctf-pwn/overflow-basics.md"
+    },
+    {
+      "id": "pwn-comparator-oracle-byte-write",
+      "signals": [
+        "comparison oracle byte write",
+        "equality-gated byte write",
+        "binary-search stack byte",
+        "guess lower equal higher target byte",
+        "oob signed byte comparator",
+        "oracle-guided rop bootstrap",
+        "turn-limited byte overwrite",
+        "query-budgeted rop",
+        "conditional byte replacement after correct guess",
+        "stack byte oracle bss pivot"
+      ],
+      "primary_skill": "ctf-pwn",
+      "reference": "ctf-pwn/references/comparator-oracle-byte-write-rop.md"
+    },
+    {
+      "id": "pwn-heap",
+      "signals": [
+        "tcache",
+        "use-after-free",
+        "uaf",
+        "double free",
+        "heap exploitation"
+      ],
+      "primary_skill": "ctf-pwn",
+      "reference": "ctf-pwn/heap-techniques.md"
+    },
+    {
+      "id": "pwn-custom-allocator-integrity",
+      "signals": [
+        "integrity tagged custom allocator",
+        "custom allocator checksum",
+        "allocator header checksum",
+        "allocator size inflation",
+        "xor checksum heap header",
+        "adjacent allocator header leak",
+        "forged allocator size callback",
+        "trusted length laundering",
+        "custom heap metadata callback overwrite",
+        "setcontext callback heap"
+      ],
+      "primary_skill": "ctf-pwn",
+      "reference": "ctf-pwn/references/integrity-tagged-custom-allocator.md"
+    },
+    {
+      "id": "pwn-thread-arena-length-wrap",
+      "signals": [
+        "content-length -1",
+        "negative content-length heap overflow",
+        "signed length malloc wrap",
+        "malloc(0) huge read",
+        "tcache disabled arena_max",
+        "thread arena heap grooming",
+        "non-main arena top corruption"
+      ],
+      "primary_skill": "ctf-pwn",
+      "reference": "ctf-pwn/references/ptmalloc-thread-arena-overflow.md"
+    },
+    {
+      "id": "pwn-format-string",
+      "signals": [
+        "format string",
+        "printf(user)",
+        "%n exploit",
+        "%p leak"
+      ],
+      "primary_skill": "ctf-pwn",
+      "reference": "ctf-pwn/format-string.md"
+    },
+    {
+      "id": "reverse-android",
+      "signals": [
+        "android apk",
+        "jadx",
+        "androidmanifest",
+        "smali"
+      ],
+      "primary_skill": "ctf-reverse",
+      "reference": "ctf-reverse/references/android-apk-jadx.md"
+    },
+    {
+      "id": "reverse-dotnet",
+      "signals": [
+        ".net binary",
+        "dnspy",
+        "ilspy",
+        "msil",
+        "cil bytecode"
+      ],
+      "primary_skill": "ctf-reverse",
+      "reference": "ctf-reverse/references/dotnet-dnspy.md"
+    },
+    {
+      "id": "reverse-rust",
+      "signals": [
+        "rust binary",
+        "rustc symbols",
+        "core::",
+        "alloc::"
+      ],
+      "primary_skill": "ctf-reverse",
+      "reference": "ctf-reverse/references/rust-binaries.md"
+    },
+    {
+      "id": "reverse-firmware",
+      "signals": [
+        "firmware image",
+        "binwalk firmware",
+        "squashfs firmware",
+        "ubifs"
+      ],
+      "primary_skill": "ctf-reverse",
+      "reference": "ctf-reverse/references/firmware-binwalk.md"
+    },
+    {
+      "id": "reverse-atompepacker",
+      "signals": [
+        "atompepacker",
+        ".atom section",
+        "pp64stub",
+        "h_pp64stub",
+        "easylzma packed pe"
+      ],
+      "primary_skill": "ctf-reverse",
+      "reference": "ctf-reverse/references/atompepacker-lzma.md"
+    },
+    {
+      "id": "reverse-algebraic-vm-validator",
+      "signals": [
+        "custom vm odd multiplier rotate xor add",
+        "invert vm validator algebraically",
+        "vm modular inverse rol ror",
+        "bytecode compare immediate reversible transform",
+        "odd multiplier modulo 2^32 vm",
+        "straight-line bijective vm validator",
+        "custom vm rolling state decrypt"
+      ],
+      "primary_skill": "ctf-reverse",
+      "reference": "ctf-reverse/references/algebraic-vm-validator-inversion.md"
+    },
+    {
+      "id": "reverse-vm-pcode-patch",
+      "signals": [
+        "vmprotect pcode",
+        "vm p-code patch",
+        "vm tape patch",
+        "trace-preserving bytecode patch",
+        "patch only vm bytecode",
+        "same vm tape read trace"
+      ],
+      "primary_skill": "ctf-reverse",
+      "reference": "ctf-reverse/references/vmprotect-trace-preserving-pcode.md"
+    },
+    {
+      "id": "crypto-rsa",
+      "signals": [
+        "rsa cryptanalysis",
+        "rsa modulus",
+        "public exponent",
+        "ciphertext c"
+      ],
+      "primary_skill": "ctf-crypto",
+      "reference": "ctf-crypto/rsa-attacks.md"
+    },
+    {
+      "id": "crypto-hybrid-multiprime-rsa",
+      "signals": [
+        "multi-prime rsa low bits",
+        "n p q r partial factor leak",
+        "p q low bits plus sum congruence",
+        "ecm coppersmith cofactor",
+        "partial factor arithmetic progression",
+        "truncated hash xor fixed point rsa",
+        "multiple modular roots crt rsa",
+        "nth root per prime crt"
+      ],
+      "primary_skill": "ctf-crypto",
+      "reference": "ctf-crypto/references/hybrid-multiprime-rsa-recovery.md"
+    },
+    {
+      "id": "crypto-bounded-dh-dlp",
+      "signals": [
+        "bounded diffie hellman private exponent",
+        "small dh private exponent",
+        "bounded baby-step giant-step",
+        "interval discrete log",
+        "non-coprime bsgs",
+        "extended bsgs",
+        "exbsgs",
+        "gcd generator modulus",
+        "composite diffie hellman modulus",
+        "time-limited dh verification"
+      ],
+      "primary_skill": "ctf-crypto",
+      "reference": "ctf-crypto/references/bounded-dh-discrete-log.md"
+    },
+    {
+      "id": "crypto-lattice-lwe",
+      "signals": [
+        "lwe",
+        "lattice attack",
+        "lll",
+        "cvp",
+        "svp",
+        "hidden number problem"
+      ],
+      "primary_skill": "ctf-crypto",
+      "reference": "ctf-crypto/lattice-and-lwe.md"
+    },
+    {
+      "id": "crypto-nested-lcg",
+      "signals": [
+        "nested lcg",
+        "cascaded lcg",
+        "two lcgs",
+        "lcg-driven increment",
+        "lcg incremented by lcg",
+        "two secret moduli lcg"
+      ],
+      "primary_skill": "ctf-crypto",
+      "reference": "ctf-crypto/references/nested-lcg-kernel-recovery.md"
+    },
+    {
+      "id": "crypto-polynomial-interpolation",
+      "signals": [
+        "vandermonde",
+        "polynomial interpolation",
+        "huge evaluation points",
+        "nmod_poly_interpolate",
+        "million polynomial points"
+      ],
+      "primary_skill": "ctf-crypto",
+      "reference": "ctf-crypto/references/polynomial-interpolation.md"
+    },
+    {
+      "id": "forensics-memory",
+      "signals": [
+        "volatility",
+        "memory dump",
+        "ram dump",
+        "lime memory"
+      ],
+      "primary_skill": "ctf-forensics",
+      "reference": "ctf-forensics/references/memory-volatility.md"
+    },
+    {
+      "id": "forensics-pcap",
+      "signals": [
+        "pcap",
+        "pcapng",
+        "wireshark",
+        "tshark",
+        "tcp stream reconstruction"
+      ],
+      "primary_skill": "ctf-forensics",
+      "reference": "ctf-forensics/references/network-pcap.md"
+    },
+    {
+      "id": "forensics-ad-intrusion-pcap",
+      "signals": [
+        "active directory pcap",
+        "ad intrusion pcap",
+        "domain controller pcap",
+        "ldap simple bind pcap",
+        "ldap bind credential capture",
+        "useraccountcontrol dont_req_preauth",
+        "dont_req_preauth pcap",
+        "as-rep roast pcap",
+        "as-rep roasting pcap",
+        "kerberos as-req as-rep pcap",
+        "winrm wsman pcap",
+        "smb mimikatz transfer",
+        "powershell http staging pcap",
+        "ad attack chain reconstruction"
+      ],
+      "primary_skill": "ctf-forensics",
+      "reference": "ctf-forensics/references/ad-intrusion-pcap.md"
+    },
+    {
+      "id": "forensics-openzfs-encrypted-send",
+      "signals": [
+        "openzfs encrypted send stream",
+        "zfs encrypted send stream",
+        "zfs native encryption send stream",
+        "encrypted dmu file block",
+        "zfs wrapped key metadata",
+        "pbkdf2 aes-gcm zfs",
+        "dmu_ot_plain_file_contents encrypted",
+        "zfs send aes-256-gcm"
+      ],
+      "primary_skill": "ctf-forensics",
+      "reference": "ctf-forensics/references/openzfs-encrypted-send-stream.md"
+    },
+    {
+      "id": "forensics-rdp-bitmap-cache",
+      "signals": [
+        "rdp persistent bitmap cache",
+        "remote desktop bitmap cache",
+        "cache0000.bin",
+        "cache0001.bin",
+        "bitmapcachepersistenable",
+        "bmc-tools rdp",
+        "rdp cached bitmap tiles",
+        "remote-only image bitmap cache",
+        "rdp screen tile reconstruction",
+        "persistent bitmap caching"
+      ],
+      "primary_skill": "ctf-forensics",
+      "reference": "ctf-forensics/references/rdp-persistent-bitmap-cache.md"
+    },
+    {
+      "id": "forensics-browser",
+      "signals": [
+        "chromium history",
+        "chrome history",
+        "browser artifacts",
+        "chromium cookies"
+      ],
+      "primary_skill": "ctf-forensics",
+      "reference": "ctf-forensics/references/browser-artifacts.md"
+    },
+    {
+      "id": "forensics-sqlite",
+      "signals": [
+        "sqlite wal",
+        "sqlite freelist",
+        "wal file recovery",
+        "sqlite recovery"
+      ],
+      "primary_skill": "ctf-forensics",
+      "reference": "ctf-forensics/references/sqlite-forensics.md"
+    },
+    {
+      "id": "forensics-apple-dmg-udif",
+      "signals": [
+        "apple dmg",
+        "dmg udif",
+        "udif",
+        "koly",
+        "blkx",
+        "mish block map"
+      ],
+      "primary_skill": "ctf-forensics",
+      "reference": "ctf-forensics/references/apple-dmg-udif.md"
+    },
+    {
+      "id": "osint-geolocation",
+      "signals": [
+        "image geolocation",
+        "reverse image search",
+        "street view clue",
+        "identify location"
+      ],
+      "primary_skill": "ctf-osint",
+      "reference": "ctf-osint/geolocation-and-media.md"
+    },
+    {
+      "id": "malware-script-deobfuscation",
+      "signals": [
+        "obfuscated powershell",
+        "obfuscated javascript",
+        "malicious script",
+        "script deobfuscation"
+      ],
+      "primary_skill": "ctf-malware",
+      "reference": "ctf-malware/references/script-deobfuscation.md"
+    },
+    {
+      "id": "malware-ransomware",
+      "signals": [
+        "ransomware",
+        "ransom note",
+        "encrypted victim files",
+        "file encryption malware"
+      ],
+      "primary_skill": "ctf-malware",
+      "reference": "ctf-malware/references/ransomware-crypto.md"
+    },
+    {
+      "id": "misc-python-jail",
+      "signals": [
+        "python jail",
+        "pyjail",
+        "restricted eval",
+        "python sandbox escape",
+        "unique character eval budget",
+        "distinct character pyjail",
+        "len set payload jail",
+        "exception traceback exfiltration",
+        "filenotfounderror secret leak",
+        "eval result discarded traceback"
+      ],
+      "primary_skill": "ctf-misc",
+      "reference": "ctf-misc/pyjails.md"
+    },
+    {
+      "id": "misc-active-directory",
+      "signals": [
+        "active directory",
+        "bloodhound",
+        "kerberos",
+        "ad cs",
+        "kerberoast"
+      ],
+      "primary_skill": "ctf-misc",
+      "reference": "ctf-misc/references/active-directory.md"
+    },
+    {
+      "id": "boot2root-lifecycle",
+      "signals": [
+        "hack the box machine",
+        "htb machine",
+        "vulnhub",
+        "boot2root",
+        "root.txt",
+        "user.txt"
+      ],
+      "primary_skill": "ctf-boot2root",
+      "reference": "ctf-boot2root/references/lifecycle.md"
+    },
+    {
+      "id": "ai-ml-llm",
+      "signals": [
+        "llm prompt injection",
+        "prompt injection challenge",
+        "model extraction",
+        "adversarial ml",
+        "tool injection"
+      ],
+      "primary_skill": "ctf-ai-ml",
+      "reference": "ctf-ai-ml/llm-attacks.md"
+    },
+    {
+      "id": "writeup-final",
+      "signals": [
+        "final challenge writeup",
+        "ctf writeup",
+        "solution report"
+      ],
+      "primary_skill": "ctf-writeup",
+      "reference": null
+    },
+    {
+      "id": "skill-upgrade",
+      "signals": [
+        "upgrade skill",
+        "harvest writeup",
+        "ingest writeup",
+        "skill knowledge upgrade"
+      ],
+      "primary_skill": "ctf-skill-upgrade",
+      "reference": null
+    },
+    {
+      "id": "agent-maintenance",
+      "signals": [
+        "token optimization",
+        "context compression",
+        "context window optimization"
+      ],
+      "primary_skill": "agent-maintenance",
+      "reference": "agent-maintenance/references/token-efficiency.md"
+    }
   ]
 }
