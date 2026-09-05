@@ -148,56 +148,30 @@ def to_hex_str(s):
 
 ## Unique-Character Budget + Exception Exfiltration
 
-**Pattern:** A server evaluates attacker-controlled Python but constrains the **number of distinct source characters** rather than total payload length. The result of `eval()` may not be printed, while uncaught exceptions or a debug traceback are returned to the client.
-
-Treat these as two independent subproblems:
+**Pattern:** attacker-controlled Python reaches `eval()`, the filter limits the **number of distinct source characters** rather than total length, and the evaluated value is not directly printed. If uncaught exception text is reflected, solve syntax and output separately.
 
 ```text
-syntax budget
-  -> minimize |set(payload)|, not len(payload)
-output budget
-  -> turn the secret into data carried by an observable exception
+syntax: minimize |set(payload)|, not len(payload)
+output: move the secret into an observable exception argument
 ```
 
-### Count the real constraint
-
-Before optimizing, reproduce the exact metric:
-
-```python
-def distinct_chars(expr: str) -> int:
-    return len(set(expr))
-```
-
-A long expression can still fit a tiny unique-character budget when it heavily reuses the same digits, operators, delimiters and identifier letters. Do not waste effort minimizing total bytes unless a separate length cap exists.
-
-### Build blocked strings from reusable primitives
-
-If quoted strings or needed letters would exceed the budget, synthesize byte strings numerically with an already-allowed constructor such as `bytes()`:
-
-```python
-# Shape only; choose arithmetic forms that reuse the jail's cheap characters.
-name = (
-    bytes([n0]) +
-    bytes([n1]) +
-    bytes([n2])
-)
-```
-
-Optimize **alphabet reuse** across all byte values. Repeated arithmetic using a small digit/operator set can be cheaper than spelling new decimal literals or introducing `chr`, quotes, hex escapes, attributes, or additional identifiers.
-
-Always verify both:
+Reproduce the metric first:
 
 ```python
 assert len(set(payload)) <= budget
-# and, if applicable:
-assert len(payload) <= max_length
 ```
 
-### Use exceptions as an output channel
+A long expression can still fit a small alphabet. Reuse the same digits/operators aggressively; do not optimize byte length unless there is a separate length cap.
 
-When the evaluated value is discarded but exception text reaches the client, deliberately move the secret into an exception argument.
+When literals would introduce too many characters, synthesize strings from numeric bytes using already-cheap syntax:
 
-For file-reading jails where `open` and `next` are available, this composition is useful:
+```python
+name = bytes([n0]) + bytes([n1]) + bytes([n2])
+```
+
+Choose arithmetic forms for `n0`, `n1`, ... that reuse the existing digit/operator set. This is often cheaper in **unique characters** than quotes, hex escapes, `chr`, or spelling more identifiers.
+
+If file content can be read but return values are discarded, turn the secret into a filename error:
 
 ```python
 open(next(open(filename_expr)))
@@ -206,38 +180,24 @@ open(next(open(filename_expr)))
 Semantics:
 
 ```text
-open(filename_expr)   -> open target file
-next(file_object)     -> obtain one secret-bearing line
-open(secret_line)     -> interpret that line as a filename
-missing file          -> FileNotFoundError includes the filename
-traceback/error page  -> secret becomes observable
+open(target) -> next(file) returns a secret-bearing line
+             -> outer open(secret_line)
+             -> missing path raises FileNotFoundError
+             -> reflected traceback/error text carries the secret
 ```
 
-This does **not** require `.read()`, `print()`, string formatting, or direct return-value reflection.
+The general technique is **exception-as-output**: any operation whose exception embeds controlled data can become an exfiltration sink. Confirm the application actually reflects the exception detail; production error handlers often suppress it.
 
-Generalize the sink: any operation whose exception safely embeds attacker-controlled data can become an exfiltration channel, for example a missing filename, missing dictionary key, invalid integer text, or failed lookup. First confirm that the framework actually reflects that exception detail to the client.
-
-### Web-delivered eval jails
-
-If the jail is reached through an HTTP parameter, separate transport from primitive:
+For HTTP-delivered jails, keep ownership split cleanly:
 
 ```text
-HTTP endpoint -> Python eval/exec sink -> jail constraints -> exception oracle -> HTTP response
+HTTP route/debug response -> ctf-web
+eval/exec charset/jail logic -> ctf-misc/pyjails.md
 ```
 
-The jail logic belongs here; use `ctf-web` only for route/request/debug-response behavior. A Flask/Werkzeug debug traceback is especially valuable because uncaught exception arguments may be rendered verbatim, but do not assume debug mode without observing it.
+Common mistakes: minimizing total length instead of set cardinality; introducing new digits for every byte value; reaching a read primitive without an output channel; assuming `eval()` return values are rendered; or assuming debug tracebacks are enabled without observing them.
 
-### Failure modes
-
-- Minimizing payload length instead of distinct-character cardinality.
-- Introducing a new digit/letter for every ASCII value instead of reusing arithmetic.
-- Assuming `eval()` return values are reflected when the application discards them.
-- Reaching file read but having no output channel.
-- Depending on `.read()`/quotes/attribute access when `next(file)` and an exception sink are cheaper.
-- Assuming every production error page leaks exception arguments; many frameworks suppress them.
-- Forgetting newline behavior: `next(file)` may include a trailing newline, which can affect the second operation and traceback text.
-
-**Source:** generalized from the user-supplied Bahtera Siber `Titah Laju 2` writeup (2026-09-05). Challenge-specific host, flag and numeric construction constants are intentionally omitted.
+**Source:** generalized from the user-supplied Bahtera Siber `Titah Laju 2` writeup (2026-09-05). Challenge-specific host, flag and numeric constants are omitted.
 
 ---
 
