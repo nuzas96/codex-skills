@@ -406,6 +406,4 @@ not direct file/DB reads.
 | Admin pwd is redacted by HERMES_REDACT_SECRETS       | Section 7b — direct SQLite hash rewrite (dominant path)      |
 | DB is unreachable, bot profile is intact             | Section 7 — cookie DB decrypt (or skip and try Section 7a)   |
 
-The `deskmesh-actual-exploitability-2026.md` reference is the canonical
-worked example of how this technique would have closed the loop on the
-HackNyx CTF deskmesh challenge after CRLF / mXSS bootstrap failed.
+Use this technique when direct local WebDriver control is available and an intended browser bootstrap is empirically dead or unnecessary. Keep challenge-specific session history out of the permanent reference; preserve only the reusable WebDriver and browser-state methodology.
