@@ -298,7 +298,7 @@ Chain open redirects (`?redirect=`, `?next=`, `?url=`) with OAuth flows for toke
 
 Dangling CNAME → claim resource on external service (GitHub Pages, S3, Heroku). Use `subfinder` + `httpx` to enumerate, check fingerprints. See [auth-and-access.md](auth-and-access.md#subdomain-takeover).
 
-See [auth-and-access.md](auth-and-access.md) for access control bypasses, [auth-jwt.md](auth-jwt.md) for JWT/JWE attacks, and [auth-infra.md](auth-infra.md) for OAuth/SAML/CI-CD/infrastructure auth.
+See [auth-and-access.md](auth-and-access.md) for access control bypasses, [references/jwt.md](references/jwt.md) for JWT/JWE attacks, and [auth-infra.md](auth-infra.md) for OAuth/SAML/CI-CD/infrastructure auth.
 
 ## File Upload to RCE
 
