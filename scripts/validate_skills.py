@@ -120,6 +120,11 @@ def iter_skill_files(root: Path) -> Iterable[Path]:
         if ".git" not in path.parts:
             yield path
 
+def iter_markdown_files(root: Path) -> Iterable[Path]:
+    for path in sorted(root.rglob("*.md")):
+        if ".git" not in path.parts:
+            yield path
+
 
 def normalize_link_target(raw: str) -> str:
     target = raw.strip().strip("<>")
@@ -180,7 +185,6 @@ def validate_skill(path: Path, root: Path, max_lines: int, max_bytes: int) -> tu
     if byte_count > max_bytes:
         findings.append(Finding("WARN", path, f"router is {byte_count} bytes (target <= {max_bytes})"))
 
-    findings.extend(validate_markdown_links(path, text, root))
     return findings, skill_name
 
 
@@ -200,6 +204,7 @@ def main() -> int:
     findings: list[Finding] = []
     names: dict[str, list[Path]] = {}
     skills = list(iter_skill_files(root))
+    markdown_files = list(iter_markdown_files(root))
 
     if not skills:
         print("ERROR: no top-level */SKILL.md files found", file=sys.stderr)
@@ -210,6 +215,14 @@ def main() -> int:
         findings.extend(skill_findings)
         if name:
             names.setdefault(name, []).append(skill_file)
+
+    # Validate local relative links in every Markdown document, not only
+    # top-level SKILL.md routers. This catches stale links in focused
+    # references, broad handbooks, README/CATALOG, and migration/provenance
+    # documentation before they reach main.
+    for markdown_file in markdown_files:
+        text = markdown_file.read_text(encoding="utf-8", errors="replace")
+        findings.extend(validate_markdown_links(markdown_file, text, root))
 
     for name, paths in sorted(names.items()):
         if len(paths) > 1:
@@ -280,6 +293,7 @@ def main() -> int:
 
     print()
     print(f"Skills: {len(skills)}")
+    print(f"Markdown files checked: {len(markdown_files)}")
     print(f"Errors: {errors}")
     print(f"Warnings: {warnings}")
     print(f"Active legacy entrypoints: {len(LEGACY_TOP_LEVEL_SKILLS & top_level_skill_dirs)}")
