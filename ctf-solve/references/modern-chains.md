@@ -80,4 +80,4 @@ For a multi-stage chain:
 
 ## Historical source
 
-This workflow is derived from V1 `ctf-modern-chains`. Its four detailed reference files are being redistributed into their canonical V2 category owners during migration; the originals remain frozen in `archive/pre-restructure-20260823`.
+This workflow is derived from V1 `ctf-modern-chains`. Its detailed reusable material was redistributed into the canonical V2 category owners during the completed migration; the originals remain frozen in `archive/pre-restructure-20260823` as historical provenance.

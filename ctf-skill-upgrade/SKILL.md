@@ -198,7 +198,7 @@ For imported/adapted knowledge record at minimum:
 
 Do not silently strip third-party license notices from reusable scripts.
 
-During V2 migration, the frozen branch `archive/pre-restructure-20260823` is the authoritative provenance source for old specialist packages.
+For V1 provenance, the frozen branch `archive/pre-restructure-20260823` remains the authoritative historical source for old specialist packages.
 
 ## 9. Post-solve harvesting
 
@@ -226,7 +226,7 @@ Before considering an upgrade complete:
 6. verify scripts at least parse/help-run where practical;
 7. update catalog/provenance when structure changed.
 
-During V2 restructuring, do not merge into `main` until the migration validation plan passes.
+Historical V2 migration rule: the restructuring branch did not merge into `main` until the migration validation plan passed. For current upgrades, run the active repository and routing validation gates and merge only after CI passes.
 
 ## Upgrade completion report
 

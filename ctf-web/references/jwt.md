@@ -175,8 +175,8 @@ A 401/403 change can distinguish parsing, signature and authorization failures.
 
 ## Related references
 
-- General session/authz/IDOR -> `../auth-and-access.md` during migration, later canonical auth reference.
-- OAuth/OIDC trust flows -> `oauth-oidc.md` once migrated.
+- General session/authz/IDOR -> `../auth-and-access.md`.
+- OAuth/OIDC trust flows -> `oauth-oidc.md`.
 - SSRF caused by JKU/X5U fetch -> server-side/SSRF reference if network reach becomes primary.
 - Business-state replay -> business-logic reference.
 
