@@ -47,6 +47,7 @@
   {"case":"Ransomware crypto/config recovery","primary_skill":"ctf-malware","references":["ctf-malware/references/ransomware-crypto.md"]},
 
   {"case":"Python jail","primary_skill":"ctf-misc","references":["ctf-misc/pyjails.md"]},
+  {"case":"Python eval jail limits the number of distinct source characters; synthesize blocked strings from bytes/arithmetic using a reused alphabet, then exfiltrate a file-read result through reflected exception text when eval return values are not displayed","primary_skill":"ctf-misc","references":["ctf-misc/pyjails.md"]},
   {"case":"Active Directory BloodHound/Kerberos/AD CS","primary_skill":"ctf-misc","references":["ctf-misc/references/active-directory.md"]},
 
   {"case":"HTB/VulnHub full machine lifecycle","primary_skill":"ctf-boot2root","references":["ctf-boot2root/references/lifecycle.md"]},

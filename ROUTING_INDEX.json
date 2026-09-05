@@ -55,7 +55,7 @@
     {"id":"malware-script-deobfuscation","signals":["obfuscated powershell","obfuscated javascript","malicious script","script deobfuscation"],"primary_skill":"ctf-malware","reference":"ctf-malware/references/script-deobfuscation.md"},
     {"id":"malware-ransomware","signals":["ransomware","ransom note","encrypted victim files","file encryption malware"],"primary_skill":"ctf-malware","reference":"ctf-malware/references/ransomware-crypto.md"},
 
-    {"id":"misc-python-jail","signals":["python jail","pyjail","restricted eval","python sandbox escape"],"primary_skill":"ctf-misc","reference":"ctf-misc/pyjails.md"},
+    {"id":"misc-python-jail","signals":["python jail","pyjail","restricted eval","python sandbox escape","unique character eval budget","distinct character pyjail","len set payload jail","exception traceback exfiltration","filenotfounderror secret leak","eval result discarded traceback"],"primary_skill":"ctf-misc","reference":"ctf-misc/pyjails.md"},
     {"id":"misc-active-directory","signals":["active directory","bloodhound","kerberos","ad cs","kerberoast"],"primary_skill":"ctf-misc","reference":"ctf-misc/references/active-directory.md"},
 
     {"id":"boot2root-lifecycle","signals":["hack the box machine","htb machine","vulnhub","boot2root","root.txt","user.txt"],"primary_skill":"ctf-boot2root","reference":"ctf-boot2root/references/lifecycle.md"},

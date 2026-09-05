@@ -10,6 +10,7 @@
   - [Binary Search](#binary-search)
   - [Linear Search](#linear-search)
 - [Building Strings Without Concat](#building-strings-without-concat)
+- [Unique-Character Budget + Exception Exfiltration](#unique-character-budget--exception-exfiltration)
 - [Classic Escape Techniques](#classic-escape-techniques)
   - [Via Class Hierarchy](#via-class-hierarchy)
   - [Compile Bypass](#compile-bypass)
@@ -142,6 +143,61 @@ for i in range(flag_len):
 def to_hex_str(s):
     return "'" + ''.join(f'\\x{ord(c):02x}' for c in s) + "'"
 ```
+
+---
+
+## Unique-Character Budget + Exception Exfiltration
+
+**Pattern:** attacker-controlled Python reaches `eval()`, the filter limits the **number of distinct source characters** rather than total length, and the evaluated value is not directly printed. If uncaught exception text is reflected, solve syntax and output separately.
+
+```text
+syntax: minimize |set(payload)|, not len(payload)
+output: move the secret into an observable exception argument
+```
+
+Reproduce the metric first:
+
+```python
+assert len(set(payload)) <= budget
+```
+
+A long expression can still fit a small alphabet. Reuse the same digits/operators aggressively; do not optimize byte length unless there is a separate length cap.
+
+When literals would introduce too many characters, synthesize strings from numeric bytes using already-cheap syntax:
+
+```python
+name = bytes([n0]) + bytes([n1]) + bytes([n2])
+```
+
+Choose arithmetic forms for `n0`, `n1`, ... that reuse the existing digit/operator set. This is often cheaper in **unique characters** than quotes, hex escapes, `chr`, or spelling more identifiers.
+
+If file content can be read but return values are discarded, turn the secret into a filename error:
+
+```python
+open(next(open(filename_expr)))
+```
+
+Semantics:
+
+```text
+open(target) -> next(file) returns a secret-bearing line
+             -> outer open(secret_line)
+             -> missing path raises FileNotFoundError
+             -> reflected traceback/error text carries the secret
+```
+
+The general technique is **exception-as-output**: any operation whose exception embeds controlled data can become an exfiltration sink. Confirm the application actually reflects the exception detail; production error handlers often suppress it.
+
+For HTTP-delivered jails, keep ownership split cleanly:
+
+```text
+HTTP route/debug response -> ctf-web
+eval/exec charset/jail logic -> ctf-misc/pyjails.md
+```
+
+Common mistakes: minimizing total length instead of set cardinality; introducing new digits for every byte value; reaching a read primitive without an output channel; assuming `eval()` return values are rendered; or assuming debug tracebacks are enabled without observing them.
+
+**Source:** generalized from the user-supplied Bahtera Siber `Titah Laju 2` writeup (2026-09-05). Challenge-specific host, flag and numeric constants are omitted.
 
 ---
 
