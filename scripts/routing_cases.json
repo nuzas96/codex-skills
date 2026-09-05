@@ -1,334 +1,60 @@
 [
-  {
-    "case": "JWT/JWK web API",
-    "primary_skill": "ctf-web",
-    "references": [
-      "ctf-web/references/jwt.md"
-    ]
-  },
-  {
-    "case": "OAuth/OIDC callback flaw",
-    "primary_skill": "ctf-web",
-    "references": [
-      "ctf-web/references/oauth-oidc.md"
-    ]
-  },
-  {
-    "case": "SSTI template challenge",
-    "primary_skill": "ctf-web",
-    "references": [
-      "ctf-web/references/ssti.md"
-    ]
-  },
-  {
-    "case": "XXE XML parser challenge",
-    "primary_skill": "ctf-web",
-    "references": [
-      "ctf-web/references/xxe-xml.md"
-    ]
-  },
-  {
-    "case": "HTTP request smuggling",
-    "primary_skill": "ctf-web",
-    "references": [
-      "ctf-web/references/request-smuggling.md"
-    ]
-  },
-  {
-    "case": "Proxy rewrites script Content-Length to zero but still pipes body; browser response queue poisoning plus Service Worker audio Range 206/416 oracle",
-    "primary_skill": "ctf-web",
-    "references": [
-      "ctf-web/references/browser-response-desync-range-oracle.md"
-    ]
-  },
-  {
-    "case": "Cross-chain Soroban/Sui bridge where relayer attestation omits fee recipient and failed completion mutates a replayable release buffer",
-    "primary_skill": "ctf-web",
-    "references": [
-      "ctf-web/references/cross-chain-bridge-relayer.md"
-    ]
-  },
-  {
-    "case": "Web race condition",
-    "primary_skill": "ctf-web",
-    "references": [
-      "ctf-web/references/race-conditions.md"
-    ]
-  },
-  {
-    "case": "WebSocket state/auth challenge",
-    "primary_skill": "ctf-web",
-    "references": [
-      "ctf-web/references/websockets.md"
-    ]
-  },
-  {
-    "case": "WAF parser differential",
-    "primary_skill": "ctf-web",
-    "references": [
-      "ctf-web/references/waf-parser-differentials.md"
-    ]
-  },
-  {
-    "case": "Stack overflow ret2win",
-    "primary_skill": "ctf-pwn",
-    "references": [
-      "ctf-pwn/overflow-basics.md"
-    ]
-  },
-  {
-    "case": "OOB signed-byte comparator reveals lower/equal/higher; equality permits replacing that stack byte under a strict turn budget, so binary-search bytes and install a minimal read-to-BSS stack-pivot ROP bootstrap",
-    "primary_skill": "ctf-pwn",
-    "references": [
-      "ctf-pwn/references/comparator-oracle-byte-write-rop.md"
-    ]
-  },
-  {
-    "case": "Heap tcache/UAF",
-    "primary_skill": "ctf-pwn",
-    "references": [
-      "ctf-pwn/heap-techniques.md"
-    ]
-  },
-  {
-    "case": "Custom allocator object A overreads adjacent B metadata; B header has magic/size/flags plus an XOR-repairable integrity tag, so forge a larger valid size, use B's now-trusted edit length to cross C metadata, overwrite C callback, then trigger a target-derived setcontext/staged ROP path under seccomp",
-    "primary_skill": "ctf-pwn",
-    "references": [
-      "ctf-pwn/references/integrity-tagged-custom-allocator.md"
-    ]
-  },
-  {
-    "case": "Negative signed length wraps malloc small while narrower read stays huge in a tcache-off threaded ptmalloc service",
-    "primary_skill": "ctf-pwn",
-    "references": [
-      "ctf-pwn/references/ptmalloc-thread-arena-overflow.md"
-    ]
-  },
-  {
-    "case": "Format string exploit",
-    "primary_skill": "ctf-pwn",
-    "references": [
-      "ctf-pwn/format-string.md"
-    ]
-  },
-  {
-    "case": "Android APK/JADX reversing",
-    "primary_skill": "ctf-reverse",
-    "references": [
-      "ctf-reverse/references/android-apk-jadx.md"
-    ]
-  },
-  {
-    "case": ".NET/dnSpy reversing",
-    "primary_skill": "ctf-reverse",
-    "references": [
-      "ctf-reverse/references/dotnet-dnspy.md"
-    ]
-  },
-  {
-    "case": "Rust binary reversing",
-    "primary_skill": "ctf-reverse",
-    "references": [
-      "ctf-reverse/references/rust-binaries.md"
-    ]
-  },
-  {
-    "case": "Firmware/binwalk reversing",
-    "primary_skill": "ctf-reverse",
-    "references": [
-      "ctf-reverse/references/firmware-binwalk.md"
-    ]
-  },
-  {
-    "case": "AtomPePacker .ATOM LZMA-packed PE",
-    "primary_skill": "ctf-reverse",
-    "references": [
-      "ctf-reverse/references/atompepacker-lzma.md"
-    ]
-  },
-  {
-    "case": "Custom VM bytecode validator performs odd multiplication, XOR with rolling previous state, rotate and add before compare; invert each round algebraically and recompute post-validation rolling state",
-    "primary_skill": "ctf-reverse",
-    "references": [
-      "ctf-reverse/references/algebraic-vm-validator-inversion.md"
-    ]
-  },
-  {
-    "case": "VMProtect p-code/tape patch with identical VM handler and tape-read trace",
-    "primary_skill": "ctf-reverse",
-    "references": [
-      "ctf-reverse/references/vmprotect-trace-preserving-pcode.md"
-    ]
-  },
-  {
-    "case": "RSA cryptanalysis",
-    "primary_skill": "ctf-crypto",
-    "references": [
-      "ctf-crypto/rsa-attacks.md"
-    ]
-  },
-  {
-    "case": "Multi-prime RSA-like construction where low factor residues plus an auxiliary sum congruence feed ECM, Coppersmith on a cofactor, a short hash/XOR fixed point, and CRT modular-root enumeration",
-    "primary_skill": "ctf-crypto",
-    "references": [
-      "ctf-crypto/references/hybrid-multiprime-rsa-recovery.md"
-    ]
-  },
-  {
-    "case": "Diffie-Hellman-like service uses a small bounded private exponent; standard BSGS inverse fails because the composite modulus makes the generator non-coprime, so use bounded exBSGS or a verified coprime projection, then derive the shared secret on the original modulus and submit within the same timed session",
-    "primary_skill": "ctf-crypto",
-    "references": [
-      "ctf-crypto/references/bounded-dh-discrete-log.md"
-    ]
-  },
-  {
-    "case": "Lattice/LWE challenge",
-    "primary_skill": "ctf-crypto",
-    "references": [
-      "ctf-crypto/lattice-and-lwe.md"
-    ]
-  },
-  {
-    "case": "Nested/cascaded LCG with evolving LCG increment and secret moduli",
-    "primary_skill": "ctf-crypto",
-    "references": [
-      "ctf-crypto/references/nested-lcg-kernel-recovery.md"
-    ]
-  },
-  {
-    "case": "Huge Vandermonde polynomial interpolation",
-    "primary_skill": "ctf-crypto",
-    "references": [
-      "ctf-crypto/references/polynomial-interpolation.md"
-    ]
-  },
-  {
-    "case": "Windows RAM/Volatility",
-    "primary_skill": "ctf-forensics",
-    "references": [
-      "ctf-forensics/references/memory-volatility.md"
-    ]
-  },
-  {
-    "case": "PCAP/Wireshark reconstruction",
-    "primary_skill": "ctf-forensics",
-    "references": [
-      "ctf-forensics/references/network-pcap.md"
-    ]
-  },
-  {
-    "case": "Active Directory PCAP where LDAP Simple Bind/enumeration reveals a DONT_REQ_PREAUTH account, Kerberos AS-REQ/AS-REP activity is followed by WinRM, the victim pulls post-exploitation tooling over SMB, and PowerShell/HTTP staging must be correlated into an evidence-backed intrusion timeline",
-    "primary_skill": "ctf-forensics",
-    "references": [
-      "ctf-forensics/references/ad-intrusion-pcap.md"
-    ]
-  },
-  {
-    "case": "PCAP carrier reconstructs an encrypted OpenZFS send stream with native key metadata and an encrypted DMU file block",
-    "primary_skill": "ctf-forensics",
-    "references": [
-      "ctf-forensics/references/openzfs-encrypted-send-stream.md"
-    ]
-  },
-  {
-    "case": "Windows RDP client has persistent bitmap caching enabled and Cache000*.bin files; parse cached bitmap tiles, contact-sheet/cluster them, then reconstruct remote-only displayed content from edge and text continuity",
-    "primary_skill": "ctf-forensics",
-    "references": [
-      "ctf-forensics/references/rdp-persistent-bitmap-cache.md"
-    ]
-  },
-  {
-    "case": "Chromium browser artifacts",
-    "primary_skill": "ctf-forensics",
-    "references": [
-      "ctf-forensics/references/browser-artifacts.md"
-    ]
-  },
-  {
-    "case": "SQLite WAL/freelist recovery",
-    "primary_skill": "ctf-forensics",
-    "references": [
-      "ctf-forensics/references/sqlite-forensics.md"
-    ]
-  },
-  {
-    "case": "Apple DMG/UDIF blkx reconstruction",
-    "primary_skill": "ctf-forensics",
-    "references": [
-      "ctf-forensics/references/apple-dmg-udif.md"
-    ]
-  },
-  {
-    "case": "Image/location OSINT",
-    "primary_skill": "ctf-osint",
-    "references": [
-      "ctf-osint/geolocation-and-media.md"
-    ]
-  },
-  {
-    "case": "Obfuscated JavaScript/PowerShell malware",
-    "primary_skill": "ctf-malware",
-    "references": [
-      "ctf-malware/references/script-deobfuscation.md"
-    ]
-  },
-  {
-    "case": "Ransomware crypto/config recovery",
-    "primary_skill": "ctf-malware",
-    "references": [
-      "ctf-malware/references/ransomware-crypto.md"
-    ]
-  },
-  {
-    "case": "Python jail",
-    "primary_skill": "ctf-misc",
-    "references": [
-      "ctf-misc/pyjails.md"
-    ]
-  },
-  {
-    "case": "Python eval jail limits the number of distinct source characters; synthesize blocked strings from bytes/arithmetic using a reused alphabet, then exfiltrate a file-read result through reflected exception text when eval return values are not displayed",
-    "primary_skill": "ctf-misc",
-    "references": [
-      "ctf-misc/pyjails.md"
-    ]
-  },
-  {
-    "case": "Active Directory BloodHound/Kerberos/AD CS",
-    "primary_skill": "ctf-misc",
-    "references": [
-      "ctf-misc/references/active-directory.md"
-    ]
-  },
-  {
-    "case": "HTB/VulnHub full machine lifecycle",
-    "primary_skill": "ctf-boot2root",
-    "references": [
-      "ctf-boot2root/references/lifecycle.md"
-    ]
-  },
-  {
-    "case": "LLM prompt injection/agent challenge",
-    "primary_skill": "ctf-ai-ml",
-    "references": [
-      "ctf-ai-ml/llm-attacks.md"
-    ]
-  },
-  {
-    "case": "Final challenge writeup",
-    "primary_skill": "ctf-writeup",
-    "references": []
-  },
-  {
-    "case": "Ingest a new public writeup into skill knowledge",
-    "primary_skill": "ctf-skill-upgrade",
-    "references": []
-  },
-  {
-    "case": "Token/context optimization workflow",
-    "primary_skill": "agent-maintenance",
-    "references": [
-      "agent-maintenance/references/token-efficiency.md"
-    ]
-  }
+  {"case":"JWT/JWK web API","primary_skill":"ctf-web","references":["ctf-web/references/jwt.md"]},
+  {"case":"OAuth/OIDC callback flaw","primary_skill":"ctf-web","references":["ctf-web/references/oauth-oidc.md"]},
+  {"case":"SSTI template challenge","primary_skill":"ctf-web","references":["ctf-web/references/ssti.md"]},
+  {"case":"XXE XML parser challenge","primary_skill":"ctf-web","references":["ctf-web/references/xxe-xml.md"]},
+  {"case":"HTTP request smuggling","primary_skill":"ctf-web","references":["ctf-web/references/request-smuggling.md"]},
+  {"case":"Proxy rewrites script Content-Length to zero but still pipes body; browser response queue poisoning plus Service Worker audio Range 206/416 oracle","primary_skill":"ctf-web","references":["ctf-web/references/browser-response-desync-range-oracle.md"]},
+  {"case":"Cross-chain Soroban/Sui bridge where relayer attestation omits fee recipient and failed completion mutates a replayable release buffer","primary_skill":"ctf-web","references":["ctf-web/references/cross-chain-bridge-relayer.md"]},
+  {"case":"Web race condition","primary_skill":"ctf-web","references":["ctf-web/references/race-conditions.md"]},
+  {"case":"WebSocket state/auth challenge","primary_skill":"ctf-web","references":["ctf-web/references/websockets.md"]},
+  {"case":"WAF parser differential","primary_skill":"ctf-web","references":["ctf-web/references/waf-parser-differentials.md"]},
+
+  {"case":"Stack overflow ret2win","primary_skill":"ctf-pwn","references":["ctf-pwn/overflow-basics.md"]},
+  {"case":"OOB signed-byte comparator reveals lower/equal/higher; equality permits replacing that stack byte under a strict turn budget, so binary-search bytes and install a minimal read-to-BSS stack-pivot ROP bootstrap","primary_skill":"ctf-pwn","references":["ctf-pwn/references/comparator-oracle-byte-write-rop.md"]},
+  {"case":"Heap tcache/UAF","primary_skill":"ctf-pwn","references":["ctf-pwn/heap-techniques.md"]},
+  {"case":"Custom allocator object A overreads adjacent B metadata; B header has magic/size/flags plus an XOR-repairable integrity tag, so forge a larger valid size, use B's now-trusted edit length to cross C metadata, overwrite C callback, then trigger a target-derived setcontext/staged ROP path under seccomp","primary_skill":"ctf-pwn","references":["ctf-pwn/references/integrity-tagged-custom-allocator.md"]},
+  {"case":"Negative signed length wraps malloc small while narrower read stays huge in a tcache-off threaded ptmalloc service","primary_skill":"ctf-pwn","references":["ctf-pwn/references/ptmalloc-thread-arena-overflow.md"]},
+  {"case":"Format string exploit","primary_skill":"ctf-pwn","references":["ctf-pwn/format-string.md"]},
+
+  {"case":"Android APK/JADX reversing","primary_skill":"ctf-reverse","references":["ctf-reverse/references/android-apk-jadx.md"]},
+  {"case":".NET/dnSpy reversing","primary_skill":"ctf-reverse","references":["ctf-reverse/references/dotnet-dnspy.md"]},
+  {"case":"Rust binary reversing","primary_skill":"ctf-reverse","references":["ctf-reverse/references/rust-binaries.md"]},
+  {"case":"Firmware/binwalk reversing","primary_skill":"ctf-reverse","references":["ctf-reverse/references/firmware-binwalk.md"]},
+  {"case":"AtomPePacker .ATOM LZMA-packed PE","primary_skill":"ctf-reverse","references":["ctf-reverse/references/atompepacker-lzma.md"]},
+  {"case":"Custom VM bytecode validator performs odd multiplication, XOR with rolling previous state, rotate and add before compare; invert each round algebraically and recompute post-validation rolling state","primary_skill":"ctf-reverse","references":["ctf-reverse/references/algebraic-vm-validator-inversion.md"]},
+  {"case":"VMProtect p-code/tape patch with identical VM handler and tape-read trace","primary_skill":"ctf-reverse","references":["ctf-reverse/references/vmprotect-trace-preserving-pcode.md"]},
+
+  {"case":"RSA cryptanalysis","primary_skill":"ctf-crypto","references":["ctf-crypto/rsa-attacks.md"]},
+  {"case":"Multi-prime RSA-like construction where low factor residues plus an auxiliary sum congruence feed ECM, Coppersmith on a cofactor, a short hash/XOR fixed point, and CRT modular-root enumeration","primary_skill":"ctf-crypto","references":["ctf-crypto/references/hybrid-multiprime-rsa-recovery.md"]},
+  {"case":"Diffie-Hellman-like service uses a small bounded private exponent; standard BSGS inverse fails because the composite modulus makes the generator non-coprime, so use bounded exBSGS or a verified coprime projection, then derive the shared secret on the original modulus and submit within the same timed session","primary_skill":"ctf-crypto","references":["ctf-crypto/references/bounded-dh-discrete-log.md"]},
+  {"case":"Lattice/LWE challenge","primary_skill":"ctf-crypto","references":["ctf-crypto/lattice-and-lwe.md"]},
+  {"case":"Nested/cascaded LCG with evolving LCG increment and secret moduli","primary_skill":"ctf-crypto","references":["ctf-crypto/references/nested-lcg-kernel-recovery.md"]},
+  {"case":"Huge Vandermonde polynomial interpolation","primary_skill":"ctf-crypto","references":["ctf-crypto/references/polynomial-interpolation.md"]},
+
+  {"case":"Windows RAM/Volatility","primary_skill":"ctf-forensics","references":["ctf-forensics/references/memory-volatility.md"]},
+  {"case":"PCAP/Wireshark reconstruction","primary_skill":"ctf-forensics","references":["ctf-forensics/references/network-pcap.md"]},
+  {"case":"Active Directory PCAP where LDAP Simple Bind/enumeration reveals a DONT_REQ_PREAUTH account, Kerberos AS-REQ/AS-REP activity is followed by WinRM, the victim pulls post-exploitation tooling over SMB, and PowerShell/HTTP staging must be correlated into an evidence-backed intrusion timeline","primary_skill":"ctf-forensics","references":["ctf-forensics/references/ad-intrusion-pcap.md"]},
+  {"case":"PCAP carrier reconstructs an encrypted OpenZFS send stream with native key metadata and an encrypted DMU file block","primary_skill":"ctf-forensics","references":["ctf-forensics/references/openzfs-encrypted-send-stream.md"]},
+  {"case":"Windows RDP client has persistent bitmap caching enabled and Cache000*.bin files; parse cached bitmap tiles, contact-sheet/cluster them, then reconstruct remote-only displayed content from edge and text continuity","primary_skill":"ctf-forensics","references":["ctf-forensics/references/rdp-persistent-bitmap-cache.md"]},
+  {"case":"Chromium browser artifacts","primary_skill":"ctf-forensics","references":["ctf-forensics/references/browser-artifacts.md"]},
+  {"case":"SQLite WAL/freelist recovery","primary_skill":"ctf-forensics","references":["ctf-forensics/references/sqlite-forensics.md"]},
+  {"case":"Apple DMG/UDIF blkx reconstruction","primary_skill":"ctf-forensics","references":["ctf-forensics/references/apple-dmg-udif.md"]},
+
+  {"case":"Image/location OSINT","primary_skill":"ctf-osint","references":["ctf-osint/geolocation-and-media.md"]},
+
+  {"case":"Obfuscated JavaScript/PowerShell malware","primary_skill":"ctf-malware","references":["ctf-malware/references/script-deobfuscation.md"]},
+  {"case":"Ransomware crypto/config recovery","primary_skill":"ctf-malware","references":["ctf-malware/references/ransomware-crypto.md"]},
+
+  {"case":"Python jail","primary_skill":"ctf-misc","references":["ctf-misc/pyjails.md"]},
+  {"case":"Python eval jail limits the number of distinct source characters; synthesize blocked strings from bytes/arithmetic using a reused alphabet, then exfiltrate a file-read result through reflected exception text when eval return values are not displayed","primary_skill":"ctf-misc","references":["ctf-misc/pyjails.md"]},
+  {"case":"Active Directory BloodHound/Kerberos/AD CS","primary_skill":"ctf-misc","references":["ctf-misc/references/active-directory.md"]},
+
+  {"case":"HTB/VulnHub full machine lifecycle","primary_skill":"ctf-boot2root","references":["ctf-boot2root/references/lifecycle.md"]},
+
+  {"case":"LLM prompt injection/agent challenge","primary_skill":"ctf-ai-ml","references":["ctf-ai-ml/llm-attacks.md"]},
+
+  {"case":"Final challenge writeup","primary_skill":"ctf-writeup","references":[]},
+  {"case":"Ingest a new public writeup into skill knowledge","primary_skill":"ctf-skill-upgrade","references":[]},
+  {"case":"Token/context optimization workflow","primary_skill":"agent-maintenance","references":["agent-maintenance/references/token-efficiency.md"]}
 ]
