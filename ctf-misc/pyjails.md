@@ -10,6 +10,7 @@
   - [Binary Search](#binary-search)
   - [Linear Search](#linear-search)
 - [Building Strings Without Concat](#building-strings-without-concat)
+- [Unique-Character Budget + Exception Exfiltration](#unique-character-budget--exception-exfiltration)
 - [Classic Escape Techniques](#classic-escape-techniques)
   - [Via Class Hierarchy](#via-class-hierarchy)
   - [Compile Bypass](#compile-bypass)
@@ -142,6 +143,101 @@ for i in range(flag_len):
 def to_hex_str(s):
     return "'" + ''.join(f'\\x{ord(c):02x}' for c in s) + "'"
 ```
+
+---
+
+## Unique-Character Budget + Exception Exfiltration
+
+**Pattern:** A server evaluates attacker-controlled Python but constrains the **number of distinct source characters** rather than total payload length. The result of `eval()` may not be printed, while uncaught exceptions or a debug traceback are returned to the client.
+
+Treat these as two independent subproblems:
+
+```text
+syntax budget
+  -> minimize |set(payload)|, not len(payload)
+output budget
+  -> turn the secret into data carried by an observable exception
+```
+
+### Count the real constraint
+
+Before optimizing, reproduce the exact metric:
+
+```python
+def distinct_chars(expr: str) -> int:
+    return len(set(expr))
+```
+
+A long expression can still fit a tiny unique-character budget when it heavily reuses the same digits, operators, delimiters and identifier letters. Do not waste effort minimizing total bytes unless a separate length cap exists.
+
+### Build blocked strings from reusable primitives
+
+If quoted strings or needed letters would exceed the budget, synthesize byte strings numerically with an already-allowed constructor such as `bytes()`:
+
+```python
+# Shape only; choose arithmetic forms that reuse the jail's cheap characters.
+name = (
+    bytes([n0]) +
+    bytes([n1]) +
+    bytes([n2])
+)
+```
+
+Optimize **alphabet reuse** across all byte values. Repeated arithmetic using a small digit/operator set can be cheaper than spelling new decimal literals or introducing `chr`, quotes, hex escapes, attributes, or additional identifiers.
+
+Always verify both:
+
+```python
+assert len(set(payload)) <= budget
+# and, if applicable:
+assert len(payload) <= max_length
+```
+
+### Use exceptions as an output channel
+
+When the evaluated value is discarded but exception text reaches the client, deliberately move the secret into an exception argument.
+
+For file-reading jails where `open` and `next` are available, this composition is useful:
+
+```python
+open(next(open(filename_expr)))
+```
+
+Semantics:
+
+```text
+open(filename_expr)   -> open target file
+next(file_object)     -> obtain one secret-bearing line
+open(secret_line)     -> interpret that line as a filename
+missing file          -> FileNotFoundError includes the filename
+traceback/error page  -> secret becomes observable
+```
+
+This does **not** require `.read()`, `print()`, string formatting, or direct return-value reflection.
+
+Generalize the sink: any operation whose exception safely embeds attacker-controlled data can become an exfiltration channel, for example a missing filename, missing dictionary key, invalid integer text, or failed lookup. First confirm that the framework actually reflects that exception detail to the client.
+
+### Web-delivered eval jails
+
+If the jail is reached through an HTTP parameter, separate transport from primitive:
+
+```text
+HTTP endpoint -> Python eval/exec sink -> jail constraints -> exception oracle -> HTTP response
+```
+
+The jail logic belongs here; use `ctf-web` only for route/request/debug-response behavior. A Flask/Werkzeug debug traceback is especially valuable because uncaught exception arguments may be rendered verbatim, but do not assume debug mode without observing it.
+
+### Failure modes
+
+- Minimizing payload length instead of distinct-character cardinality.
+- Introducing a new digit/letter for every ASCII value instead of reusing arithmetic.
+- Assuming `eval()` return values are reflected when the application discards them.
+- Reaching file read but having no output channel.
+- Depending on `.read()`/quotes/attribute access when `next(file)` and an exception sink are cheaper.
+- Assuming every production error page leaks exception arguments; many frameworks suppress them.
+- Forgetting newline behavior: `next(file)` may include a trailing newline, which can affect the second operation and traceback text.
+
+**Source:** generalized from the user-supplied Bahtera Siber `Titah Laju 2` writeup (2026-09-05). Challenge-specific host, flag and numeric construction constants are intentionally omitted.
 
 ---
 
