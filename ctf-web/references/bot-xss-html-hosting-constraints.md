@@ -125,7 +125,7 @@ Use `webhook.site` as a free canary (anonymous, no auth):
 3. Submit to `/bot`
 4. Refresh webhook.site in browser — if the bot hit, you see the bot's IP, HeadlessChrome version, and Sec-Fetch-Mode=navigate.
 
-For programmatic canary checking, you can use the `webhook.site/token` endpoint to get a token that lets you set a custom response body — but the API key (saved in memory as `WEBHOOK_TOKEN`) is required. Without it, the anonymous UUID endpoint has rate limits.
+If a canary service also exposes an API, verify its current authentication and rate-limit requirements at solve time. Do not assume an anonymous logging endpoint can also serve a custom exploit response.
 
 The proof you need is the callback itself: record the bot's request, browser/user-agent evidence when available, and the exact submitted URL. Do not carry one challenge's host, instance, or session result into the permanent technique reference.
 
