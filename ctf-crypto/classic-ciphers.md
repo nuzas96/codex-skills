@@ -309,6 +309,8 @@ def decrypt(keystream, target_ct):
 
 ## OTP Key Reuse / Many-Time Pad XOR (BYPASS CTF 2025)
 
+Focused reuse-recovery route: [references/keystream-reuse.md](references/keystream-reuse.md).
+
 **Pattern (Once More Unto the Same Wind):** Two ciphertexts encrypted with the same OTP key. Known plaintext for one message enables recovery of the other.
 
 **XOR property:** `C1 XOR C2 = P1 XOR P2` (key cancels). When one plaintext (P1) is known, recover the other: `P2 = C1 XOR C2 XOR P1`.
