@@ -23,7 +23,8 @@ Use `ctf-solve` for workspace/progress/stuck-recovery. This skill selects the sm
 |---|---|---|
 | Caesar/Vigenere/substitution/transposition/classical | `classic-ciphers.md` | `historical.md` |
 | AES/ECB/CBC/CFB/GCM, padding/MAC/oracle | `modern-ciphers.md` | `modern-ciphers-2.md`, `modern-ciphers-3.md` |
-| XOR/RC4/LFSR/stream reuse | `stream-ciphers.md` | `prng.md` |
+| AES-CTR repeated nonce / reused stream keystream / two-time pad | `references/keystream-reuse.md` | `modern-ciphers.md`, `classic-ciphers.md` |
+| XOR/RC4/LFSR/custom stream construction | `stream-ciphers.md` | `prng.md` |
 | RSA textbook/weak parameters/common attacks | `rsa-attacks.md` | `rsa-attacks-2.md` |
 | RSA partial-key/small-root/LLL/Boneh-Durfee | `references/rsa-lll-patterns.md` | `lattice-and-lwe.md` |
 | multi-prime RSA-like modulus + factor low bits + auxiliary congruence + cheap factor peeling + Coppersmith/root-tree inversion | `references/hybrid-multiprime-rsa-recovery.md` | `references/rsa-lll-patterns.md`, `advanced-math.md` |
