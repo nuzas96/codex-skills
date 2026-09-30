@@ -309,7 +309,7 @@
         "reused keystream"
       ],
       "primary_skill": "ctf-crypto",
-      "reference": "ctf-crypto/classic-ciphers.md"
+      "reference": "ctf-crypto/references/keystream-reuse.md"
     },
     {
       "id": "crypto-rsa",
