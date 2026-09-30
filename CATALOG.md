@@ -108,7 +108,8 @@ Canonical owner: `ctf-crypto`
 |---|---|
 | classical ciphers | `ctf-crypto/classic-ciphers.md` |
 | AES/block modes/MAC/padding oracle | `ctf-crypto/modern-ciphers*.md` |
-| stream/XOR/RC4/LFSR | `ctf-crypto/stream-ciphers.md` |
+| AES-CTR nonce reuse / two-time-pad style reuse | `ctf-crypto/classic-ciphers.md` + `modern-ciphers.md` |
+| stream/XOR/RC4/LFSR constructions | `ctf-crypto/stream-ciphers.md` |
 | RSA | `ctf-crypto/rsa-attacks.md`, `rsa-attacks-2.md` |
 | Coppersmith / Boneh-Durfee / RSA LLL | `ctf-crypto/references/rsa-lll-patterns.md` |
 | ECC | `ctf-crypto/ecc-attacks.md` |
