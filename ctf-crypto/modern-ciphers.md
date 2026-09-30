@@ -185,6 +185,8 @@ def decrypt_with_derived_key(s_bytes, wrapped_nonce, ciphertext, aes_nonce, tag,
 
 ## AES-GCM Nonce Reuse / Forbidden Attack
 
+Focused reuse-recovery route: [references/keystream-reuse.md](references/keystream-reuse.md).
+
 AES-GCM (Galois/Counter Mode) combines AES-CTR encryption with a GHASH polynomial authentication tag. Reusing a nonce with the same key is catastrophic -- it enables both plaintext recovery AND authentication key recovery.
 
 **CTR keystream reuse:** Same nonce = same keystream. XOR two ciphertexts to cancel the keystream: `C1 XOR C2 = P1 XOR P2`. With known plaintext in one message, recover the other.
