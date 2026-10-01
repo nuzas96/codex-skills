@@ -120,6 +120,20 @@ For ID tokens verify:
 
 JWT/JWKS implementation bugs are owned by `references/jwt.md`; use this reference for protocol-level identity binding.
 
+### Multiple trusted issuers / providers
+
+When the application accepts more than one OIDC issuer/provider, do not assume their verifier policy is symmetric.
+
+Build a provider matrix and record for each issuer:
+
+- is the issuer merely allowlisted or cryptographically pinned?
+- where does its verification key/certificate come from?
+- is `kid`, `jwk`, `jku`, `x5u`, or `x5c` trusted differently?
+- are audience/scope/subject rules identical?
+- does a forged key/certificate fail for one issuer but reach a later verifier stage for another?
+
+Treat each issuer as a separate trust binding until evidence proves the implementation shares the same validation path and key policy. A secure/pinned provider can coexist with a weaker allowlisted provider; one negative test must not collapse the whole multi-issuer hypothesis.
+
 ## Account linking / email trust
 
 High-value CTF patterns:
