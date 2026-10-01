@@ -23,7 +23,7 @@ This file is a **router, not an encyclopedia**. Use `ctf-solve` for workspace, p
 |---|---|---|
 | SQL syntax/error/order/DB state | `sql-injection.md` | `field-notes.md` |
 | Mongo/NoSQL operators, object-vs-string input, regex/$where oracle | `references/nosql-injection.md` | `server-side-advanced-4.md` |
-| JWT/JWE/JWKS/kid/jku/x5u | `references/jwt.md` | `auth-and-access.md` |
+| JWT/JWE/JWKS/kid/jku/x5u/x5c | `references/jwt.md` | `auth-and-access.md` |
 | OAuth/OIDC/SSO/PKCE/state/redirect URI | `references/oauth-oidc.md` | `auth-and-access.md`, `auth-infra.md` |
 | Login/session/IDOR/BOLA/role/object authorization | `auth-and-access.md` | `auth-and-access-2.md` |
 | SSTI/template expression/rendering | `references/ssti.md` | relevant `server-side*.md` only after engine fingerprint |
