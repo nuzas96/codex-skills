@@ -32,6 +32,7 @@ Use `ctf-solve` for workspace/progress/stuck-recovery. This skill selects the sm
 | ECC/DLP/singular/small subgroup | `ecc-attacks.md` | `advanced-math.md` |
 | MT/LCG/xorshift/seed/state recovery | `prng.md` | `prng-attacks.md` |
 | nested/cascaded LCG, LCG-driven increment, two secret moduli, ordinary LCG recovery fails | `references/nested-lcg-kernel-recovery.md` | `prng.md`, `lattice-and-lwe.md` |
+| subset-sum/knapsack/Merkle-Hellman/low-density binary subset | `lattice-and-lwe.md` | `advanced-math.md` |
 | lattice, HNP, LWE, CVP/SVP | `lattice-and-lwe.md` | `advanced-math.md` |
 | polynomial interpolation, Vandermonde recovery, huge evaluation sets | `references/polynomial-interpolation.md` | `advanced-math.md` |
 | ZKP/signature/protocol/solver-heavy | `zkp-and-advanced.md` | matching math/cipher reference |
