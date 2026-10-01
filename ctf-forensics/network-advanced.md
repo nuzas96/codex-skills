@@ -58,6 +58,8 @@ print(data.decode(errors='replace'))
 
 **Key insight:** When identical packets appear on a single interface with only two practical interval values, it's almost certainly binary encoding via timing. The content is noise — the signal is in the gaps. Filter by interface and count unique intervals first.
 
+**Multiple-class variant:** if traffic splits into classes by TTL, source port family, interface, flags, length, or another metadata field, compute timing distributions independently for each class before assigning one as signal and one as decoy. A rare class may be noise while the larger class carries the timing stream; another class may carry only the key/control information. If a supposedly benign class yields structured key-like metadata, revisit the class assignment immediately and decode timing on that class before trying more arbitrary transforms.
+
 **Scale tip:** Large PCAPs (millions of packets) often have the signal in a tiny subset. Triage with `tshark -q -z io,phs` to find which interface has the fewest packets — that's likely the data carrier.
 
 ---
