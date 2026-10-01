@@ -474,33 +474,86 @@ Use it when:
 - the hidden vector is binary
 - direct meet-in-the-middle is still too large
 
-Skeleton:
+### Preferred binary-centered embedding
+
+For a genuinely binary low-density instance, start with an embedding that makes the valid subset itself an unusually short vector.
+
+For weights `a_i`, target `t`, and binary indicators `x_i ∈ {0,1}`, use rows:
+
+```text
+[2e_i | 2a_i]       for i = 0..n-1
+[1 ... 1 | 2t]
+```
+
+Then the linear combination
+
+```text
+sum(x_i * row_i) - final_row
+```
+
+has first `n` coordinates in `{-1,+1}` and final coordinate `0` exactly when the subset sum is correct. That gives LLL/BKZ a much stronger binary short-vector signal than a raw `I | a` embedding.
+
+Minimal Sage form:
 
 ```python
 from sage.all import Matrix, ZZ
 
-def knapsack_lattice(weights, target):
+def binary_knapsack_lattice(weights, target):
     n = len(weights)
-    M = Matrix(ZZ, n + 1, n + 1)
-    for i in range(n):
-        M[i, i] = 1
-        M[i, n] = weights[i]
-    M[n, n] = -target
-    return M
+    rows = []
+    for i, a in enumerate(weights):
+        row = [0] * (n + 1)
+        row[i] = 2
+        row[n] = 2 * a
+        rows.append(row)
+    rows.append([1] * n + [2 * target])
+    return Matrix(ZZ, rows)
 ```
 
-Then:
+After reduction, test rows and their negations for:
 
-- run `LLL`
-- look for a row whose last coordinate is `0`
-- check whether the remaining coordinates are in `{0,1}` or `{−1,0,1}`
+```text
+last coordinate == 0
+first n coordinates all in {-1,+1}
+x_i = (coord_i + 1) // 2
+```
 
-**Key insight:** the lattice is built so that the correct subset produces a vector with an abnormally small final coordinate. In easy CTF instances, that vector survives reduction.
+Then **recompute the original weighted sum exactly** before decoding bits. Never trust a lattice-looking row without this check.
+
+### Reduction strategy
+
+Use a staged strategy rather than immediately switching problem classes:
+
+1. run LLL on the binary-centered embedding;
+2. extract and exactly verify any recovered target;
+3. for missed targets, try modest BKZ first, commonly block sizes around 20–30 for CTF-scale dimensions;
+4. preserve each independently verified target solution instead of expecting one reduction run to recover every block;
+5. if reduction quality varies, try deterministic basis/coordinate permutations or equivalent orientation variants and keep only exact verified subsets;
+6. only after these fail should you fall back to heavier CVP, SAT/SMT, meet-in-the-middle, or challenge-specific plaintext constraints.
+
+LLL/BKZ behavior can be sensitive to basis ordering and reduction parameters even when the underlying lattice is equivalent. Treat such variants as search over reduction trajectories, not as different cryptanalytic assumptions.
+
+### Density triage
+
+A useful first estimate is:
+
+```text
+density ≈ n / log2(max(a_i))
+```
+
+Very low density is a strong signal that direct lattice reduction may work. Use this only as a heuristic; always test the actual embedding and verify candidates exactly.
+
+### Legacy/simple embedding
+
+The simpler `(I | weights; 0 | -target)` construction can still be useful for experimentation or reduced-dimension residual problems, but do not treat failure of direct row recovery from that basis as evidence that the knapsack is not lattice-solvable.
+
+**Key insight:** for binary low-density subset sum, the `{-1,+1}` centered embedding should be an early default because it explicitly encodes the binary constraint into short-vector geometry.
 
 ---
 
 ## Common Failure Modes
 
+- **Weak binary embedding:** a raw `I | weights` basis may not expose the subset directly; try the binary-centered `2I` / all-ones embedding before abandoning the lattice route.
 - **Wrong scaling:** one coordinate dominates the basis and hides the short vector.
 - **Wrong centering:** values should be mapped to `[-q/2, q/2]`, not kept in `[0, q)`.
 - **Wrong orientation:** rows vs columns are swapped.
@@ -517,6 +570,7 @@ Then:
 - Is there a bounded term that should make one vector much shorter than random?
 - Did I try centering coefficients?
 - Did I test both row/column conventions?
+- For binary subset sum, did I try the binary-centered `{-1,+1}` embedding and exact candidate verification?
 - Did I try `LLL` first before building something more exotic?
 - If `LLL` almost works, did I try `BKZ` or Babai?
 - If the instance is polynomial-based, did I first flatten it into coefficient vectors?
