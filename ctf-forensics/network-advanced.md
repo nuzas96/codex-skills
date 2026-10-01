@@ -60,6 +60,8 @@ print(data.decode(errors='replace'))
 
 **Multiple-class variant:** if traffic splits into classes by TTL, source port family, interface, flags, length, or another metadata field, compute timing distributions independently for each class before assigning one as signal and one as decoy. A rare class may be noise while the larger class carries the timing stream; another class may carry only the key/control information. If a supposedly benign class yields structured key-like metadata, revisit the class assignment immediately and decode timing on that class before trying more arbitrary transforms.
 
+**Important ordering detail:** for each candidate class, use `filtered = [p for p in packets if class_predicate(p)]`, then compute `filtered[i+1].time - filtered[i].time`. Do **not** compute gaps on the full packet sequence and merely label transitions by TTL/class afterward. Interleaved decoys subdivide the true carrier-to-carrier delay and smear a clean two-cluster timing alphabet into misleading short gaps.
+
 **Scale tip:** Large PCAPs (millions of packets) often have the signal in a tiny subset. Triage with `tshark -q -z io,phs` to find which interface has the fewest packets — that's likely the data carrier.
 
 ---
