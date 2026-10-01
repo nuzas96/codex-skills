@@ -48,6 +48,8 @@ Export timestamps and plot/difference inter-packet intervals. A binary/covert ti
 
 If later evidence reveals structured text/key material in the class previously treated as cover/decoy, explicitly reopen the classifier and rerun timing/metadata extraction on that class before continuing deeper transforms.
 
+**Filter-before-difference rule:** when decoys/noise are interleaved with candidate signal packets, first select one candidate class, sort that filtered subset by capture time, and only then compute consecutive timestamp differences. Do not infer the signal from raw full-stream gaps labelled by the current/next packet class; an inserted decoy splits one real signal interval into several smaller gaps and can destroy the expected timing clusters.
+
 ### Encoded/custom protocol
 
 Infer framing from repeated lengths/magic/commands. Save stream bytes and write a small parser. If encryption appears, move only the crypto step to `ctf-crypto` after framing is understood.
