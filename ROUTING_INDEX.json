@@ -437,6 +437,22 @@
       "reference": "ctf-forensics/references/office-documents.md"
     },
     {
+      "id": "forensics-network-covert",
+      "signals": [
+        "timing channel",
+        "covert channel",
+        "packet timing",
+        "inter-arrival time",
+        "identical packet payload",
+        "ttl classes",
+        "source port metadata",
+        "tcp flag covert channel",
+        "packet metadata encoding"
+      ],
+      "primary_skill": "ctf-forensics",
+      "reference": "ctf-forensics/network-advanced.md"
+    },
+    {
       "id": "forensics-ad-intrusion-pcap",
       "signals": [
         "active directory pcap",
