@@ -11,7 +11,7 @@ Canonical owner for JWT/JWE token weaknesses in V2. Load this when the web chall
 
 Decode the protected header and claims **without assuming verification**. Record:
 
-- `alg`, `typ`, `kid`, `jwk`, `jku`, `x5u`;
+- `alg`, `typ`, `kid`, `jwk`, `jku`, `x5u`, `x5c`;
 - `iss`, `aud`, `sub`, `exp`, `nbf`, roles/admin/balance/state claims;
 - where the verifier obtains its key;
 - whether the application trusts claims for authorization/state decisions.
@@ -66,7 +66,24 @@ If the verifier accepts a public JWK supplied inside the token header, generate 
 
 Confirm whether `kid` or expected key type/algorithm must match an existing value.
 
-### 5. Remote key URLs: `jku` / `x5u`
+### 5. Embedded `x5c` / token-carried certificate trust
+
+If the verifier reads a certificate directly from the JWT header and then uses that certificate's public key for signature verification, the security question is whether the certificate/key is independently bound to the claimed issuer.
+
+Workflow:
+
+1. identify whether `x5c` is required and which certificate in the array is used;
+2. determine whether the verifier pins a certificate/key/fingerprint for each trusted issuer;
+3. when multiple issuers/providers are accepted, test the trust rule **independently per issuer**;
+4. build a small matrix: `claimed issuer × embedded certificate/key × observed verifier result`;
+5. do not generalize a certificate-mismatch result from one trusted issuer to every other trusted issuer;
+6. only after key acceptance is proven, modify the minimum authorization claim/scope needed.
+
+A common design error is an asymmetric trust configuration: several issuers are allowlisted, but only a subset have their signing certificate/key pinned. In that case a token carrying an attacker-controlled `x5c` may be rejected for one issuer yet accepted for another.
+
+Also test certificate-array ordering only when the verifier behavior suggests it matters. Record whether trust checks and signature verification use the same element.
+
+### 6. Remote key URLs: `jku` / `x5u`
 
 These headers can turn token verification into a key-fetch trust problem.
 
@@ -84,7 +101,7 @@ Host only the minimal expected JWKS/certificate structure and prove the server f
 
 Treat this as a potential SSRF boundary as well, but keep JWT as the primary owner until internal-network access becomes the actual flag path.
 
-### 6. `kid` injection / key lookup abuse
+### 7. `kid` injection / key lookup abuse
 
 Determine how `kid` is resolved:
 
@@ -97,7 +114,7 @@ map/dictionary lookup -> collisions/default-key behavior
 
 Historical CTF patterns include using predictable empty or host files as HMAC key material, but verify the target's exact lookup code. Do not assume `/dev/null` or path traversal is available.
 
-### 7. Weak symmetric secret
+### 8. Weak symmetric secret
 
 If the token genuinely uses HS256/HS384/HS512 with a human/config-derived secret, extract the token and test a targeted wordlist before large cracking jobs.
 
@@ -107,7 +124,7 @@ hashcat -m 16500 jwt.txt wordlist.txt
 
 Use leaked config, challenge theme and source strings to build a high-signal candidate list first.
 
-### 8. Replay / stale token state
+### 9. Replay / stale token state
 
 A correctly signed token can still be vulnerable if mutable business state is trusted from old claims.
 
@@ -121,7 +138,7 @@ Test whether replaying an older valid token restores:
 
 The important question is whether the server cross-checks current authoritative state.
 
-### 9. JWE
+### 10. JWE
 
 JWE provides encryption, not automatically authorization semantics. If the server accepts any claims it can decrypt and exposes the encryption public key, determine whether an attacker can construct a new encrypted token with arbitrary claims.
 
@@ -172,6 +189,8 @@ For every token variant, keep the request otherwise identical and record:
 - whether the route reached authorization/business logic.
 
 A 401/403 change can distinguish parsing, signature and authorization failures.
+
+For multi-provider deployments, keep failures scoped to the exact issuer/key pair tested. A rejection under provider A does not prove provider B uses the same pinning or key-selection rule.
 
 ## Related references
 
