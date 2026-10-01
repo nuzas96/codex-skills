@@ -37,6 +37,17 @@ Look for long/high-entropy labels, unusual query volume, sequential subdomains, 
 
 Export timestamps and plot/difference inter-packet intervals. A binary/covert timing channel often appears as distinct latency clusters. Avoid reading timing bits by eye for large captures.
 
+**Escalation trigger:** if payloads are identical/boring while packet timing or metadata classes (for example TTL, source port, flags, length, IPID, interface) carry the only variation, load `../network-advanced.md` before spending multiple rounds inventing transforms in the generic PCAP path.
+
+**Classifier discipline:** do not assume the rare or visually unusual packet class is the data carrier. Compare every plausible class symmetrically:
+- packet count and order;
+- inter-arrival gap distribution;
+- metadata value distribution;
+- repeated/structured values;
+- whether one class acts as key/control/decoy for another.
+
+If later evidence reveals structured text/key material in the class previously treated as cover/decoy, explicitly reopen the classifier and rerun timing/metadata extraction on that class before continuing deeper transforms.
+
 ### Encoded/custom protocol
 
 Infer framing from repeated lengths/magic/commands. Save stream bytes and write a small parser. If encryption appears, move only the crypto step to `ctf-crypto` after framing is understood.
