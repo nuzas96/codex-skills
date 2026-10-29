@@ -43,6 +43,7 @@ objdump -d ./chall 2>/dev/null | head
 | Rust binary | `references/rust-binaries.md` | `languages-compiled.md` |
 | Go binary | `languages-compiled.md` | `golang-malware-rev.md` |
 | firmware / embedded filesystem | `references/firmware-binwalk.md` | `platforms-hardware.md`, `ctf-forensics` if recovery dominates |
+| AVR firmware with repeated GPIO/LED writes or serial-like pin output | `references/avr-gpio-static-recovery.md` | MCU-specific datasheet; bounded emulation only when static control flow cannot resolve timing/polarity |
 | Android IPC / mobile TLS runtime checks | `references/mobile-app-security.md` | Android/iOS platform ref |
 | WASM/game/platform target | `platforms.md` | `platforms-hardware.md` |
 | custom VM validator with straight-line add/XOR/rotate/odd-multiply transforms and known compare constants | `references/algebraic-vm-validator-inversion.md` | `patterns-ctf.md`; emulation/symbolic refs only if a lossy core remains |

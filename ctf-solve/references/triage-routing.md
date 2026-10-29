@@ -80,6 +80,12 @@ Prefer paths with:
 
 A remembered writeup pattern is a hypothesis, not evidence that the target is identical.
 
+## Competing hypotheses
+
+When two or more plausible paths fit the observations, keep them as short candidates rather than committing to the most elaborate story. For each, record (1) the concrete clue, (2) the cheapest test that separates it from alternatives, (3) what new information a positive or negative result would provide, (4) expected time/tool cost, and (5) an explicit disconfirming result. Run high-information, reversible tests early. Re-rank after every result; stop repeating a branch when its predicted evidence is absent. Do not discard a technically credible but expensive path solely because a cheaper path exists: test the cheap path first, then return to the credible path if the evidence supports it or the cheap path is ruled out.
+
+Include directly observable output channels in this comparison when the artifact suggests them: GPIO/LED state, UART, display or framebuffer, files, network responses, and protocol output. Their presence is a clue to test, not evidence that the challenge necessarily hides an easier solution there.
+
 ## CTF platform note
 
 If a CTF platform API is relevant, identify it first. Do not request credentials/tokens unless an API workflow is actually useful. Keep platform navigation separate from exploit logic.
