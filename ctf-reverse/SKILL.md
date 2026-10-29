@@ -16,6 +16,8 @@ Use `ctf-solve` for lifecycle/progress. This skill owns program/platform semanti
 5. Patch only nuisance behavior needed to expose semantics.
 6. Automate recovered transformations after understanding them.
 
+For ELF ABI, available emulator/debugger/disassembler, protections, dynamic-loader and Ghidra availability, use the deterministic report in [references/tool-readiness.md](references/tool-readiness.md) before starting heavyweight analysis.
+
 ```bash
 file ./chall
 strings -a -n 5 ./chall | head -200
@@ -27,6 +29,7 @@ objdump -d ./chall 2>/dev/null | head
 
 | Evidence / blocker | Load first | Add only if needed |
 |---|---|---|
+| ELF architecture / local tool or emulator readiness | `references/tool-readiness.md` | generic native / decompiler ref |
 | generic native / decompiler | `references/ghidra-native.md` | `tools.md`, `patterns.md` |
 | AtomPePacker / `.ATOM` / `PP64Stub` / EasyLZMA | `references/atompepacker-lzma.md` | `tools-dynamic.md` only if offline recovery fails |
 | debugger/runtime tracing | `tools-dynamic.md` | `patterns-runtime.md` |

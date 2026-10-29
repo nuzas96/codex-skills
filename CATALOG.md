@@ -85,6 +85,7 @@ Canonical owner: `ctf-reverse`
 
 | Technique | Route |
 |---|---|
+| ELF architecture / deterministic tool readiness | `ctf-reverse/references/tool-readiness.md` |
 | generic native/Ghidra | `ctf-reverse/references/ghidra-native.md` |
 | debugger/dynamic | `ctf-reverse/tools-dynamic.md` |
 | emulation | `ctf-reverse/tools-emulation.md` |
