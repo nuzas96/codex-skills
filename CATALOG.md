@@ -141,6 +141,7 @@ Canonical owner: `ctf-forensics`
 | Linux/application artifacts | `ctf-forensics/linux-forensics.md` |
 | USB/HID/Bluetooth | `ctf-forensics/peripheral-capture.md` |
 | signals/hardware | `ctf-forensics/signals-and-hardware.md` |
+| Rez `VECTOR:ICON` / Haiku `ncif` vector icon | `ctf-forensics/references/legacy-vector-icons.md` |
 | 3D/CAD/G-code | `ctf-forensics/3d-printing.md` |
 
 ## OSINT

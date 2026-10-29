@@ -45,6 +45,7 @@ binwalk suspect 2>/dev/null
 | PCAP/PCAPNG/general protocol | `references/network-pcap.md` | `network-advanced.md` |
 | timing/covert/SMB/DNS/advanced network | `network-advanced.md` | `references/network-pcap.md` |
 | USB/HID/Bluetooth/peripheral capture | `peripheral-capture.md` | network ref |
+| Rez `VECTOR:ICON`, `6E636966` / `ncif`, Haiku vector icons | `references/legacy-vector-icons.md` | parser/source inspection if the renderer rejects the stream |
 | general stego / hidden media data | `references/stego-detection.md` | `steganography.md`, `stego-image.md` |
 | image-specific JPEG/PNG/BMP/palette/bit-plane | `stego-image.md` | `stego-advanced.md` |
 | audio/video/SSTV/FFT/advanced media | `stego-advanced.md` | `stego-advanced-2.md`, signals ref |
