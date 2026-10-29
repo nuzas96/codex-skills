@@ -141,7 +141,7 @@ def inspect_binary(binary: Path, probe_ghidra: bool = False, include_versions: b
     if checksec:
         # Pwntools may contact PyPI unless its update check is disabled. Isolate
         # its config/cache so this diagnostic stays deterministic and offline.
-        with tempfile.TemporaryDirectory(prefix="ctf-reverse-checksec-", dir="/var/tmp") as home:
+        with tempfile.TemporaryDirectory(prefix="ctf-reverse-checksec-") as home:
             home_path = Path(home)
             (home_path / ".pwn.conf").write_text("[update]\ninterval=never\n")
             env = {**os.environ, "HOME": home, "XDG_CACHE_HOME": str(home_path / ".cache"),
@@ -157,7 +157,7 @@ def inspect_binary(binary: Path, probe_ghidra: bool = False, include_versions: b
         else:
             # Check launcher readiness without creating a project or importing
             # the target; keep any first-run Java/Ghidra state out of /tmp/home.
-            with tempfile.TemporaryDirectory(prefix="ctf-reverse-ghidra-", dir="/var/tmp") as home:
+            with tempfile.TemporaryDirectory(prefix="ctf-reverse-ghidra-") as home:
                 env = {**os.environ, "HOME": home, "XDG_CONFIG_HOME": str(Path(home) / ".config"),
                        "XDG_CACHE_HOME": str(Path(home) / ".cache")}
                 probe = run([headless, "-help"], timeout=timeout, env=env)

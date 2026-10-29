@@ -19,7 +19,7 @@ class ReverseReadinessTests(unittest.TestCase):
         cls.linker = shutil.which("ld")
         if not cls.assembler or not cls.linker or not shutil.which("readelf"):
             raise unittest.SkipTest("binutils are required for the benign ELF32 fixture")
-        cls.temp = tempfile.TemporaryDirectory(prefix="ctf-reverse-readiness-", dir="/var/tmp")
+        cls.temp = tempfile.TemporaryDirectory(prefix="ctf-reverse-readiness-")
         cls.root = Path(cls.temp.name)
         source = cls.root / "hello.s"
         source.write_text(
@@ -58,6 +58,8 @@ class ReverseReadinessTests(unittest.TestCase):
         self.assertFalse(report["execution"]["native_compatibility_confirmed"])
         self.assertEqual(report["execution"]["recommended_qemu"], "qemu-i386")
         self.assertGreater(report["report_elapsed_ms"], 0)
+        if report["tools"]["checksec"]:
+            self.assertEqual(report["protections"]["status"], 0, report["protections"]["output"])
 
     def test_nonexistent_target_fails_clearly(self):
         with self.assertRaisesRegex(ValueError, "regular file"):
