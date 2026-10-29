@@ -30,6 +30,8 @@ readelf -lW ./chall | grep -E 'INTERP|GNU_STACK|GNU_RELRO'
 
 Treat `ldd` and debugger results from the analysis host as local-runtime observations only. For a service or container target, record the ELF architecture/ABI, `PT_INTERP`, `DT_NEEDED`, and the actual target loader/libc from supplied files or the service image before using offsets. A same-named system `libc.so.6` is not evidence of a match. Derive offsets only from a target-matched libc; when a target leak is available, calculate the base from that symbol and check it against another independent leak or target mapping/build identity. Page alignment is a useful rejection check, not proof of identity. If a matching libc is unavailable, use a target-derived resolver such as DynELF only when the leak primitive supports its reads, or consider `ret2dlresolve` only when the binary's loader state and exploit constraints support it. Confirm important behavior against the service runtime; local debugger behavior alone does not establish target behavior.
 
+Sources: [GNU readelf documentation](https://sourceware.org/binutils/docs/binutils.html), [Linux dynamic linker manual](https://man7.org/linux/man-pages/man8/ld.so.8.html), and [pwntools DynELF documentation](https://docs.pwntools.com/en/stable/dynelf.html).
+
 ## Technique router
 
 | Primitive / signal | Load first | Add only if needed |
