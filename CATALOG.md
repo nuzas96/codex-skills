@@ -143,6 +143,7 @@ Canonical owner: `ctf-forensics`
 | USB/HID/Bluetooth | `ctf-forensics/peripheral-capture.md` |
 | signals/hardware | `ctf-forensics/signals-and-hardware.md` |
 | Rez `VECTOR:ICON` / Haiku `ncif` vector icon | `ctf-forensics/references/legacy-vector-icons.md` |
+| ASCII-art / FIGlet-style text recovered from artifacts | `ctf-forensics/references/ascii-art-text-recovery.md` |
 | 3D/CAD/G-code | `ctf-forensics/3d-printing.md` |
 
 ## OSINT
