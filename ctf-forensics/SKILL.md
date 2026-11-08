@@ -119,6 +119,8 @@ Start structural:
 
 Do not run every stego tool against every file. For custom bit extraction, explicitly record traversal order, channel, bit position and byte endianness.
 
+For JPEGs with a duplicate EOI followed by Base64 records, or a clue naming Free File Camouflage, load [references/free-file-camouflage.md](references/free-file-camouflage.md) before trying speculative cipher families.
+
 ## PDF / nested containers
 
 Treat an unusually large/odd document as a possible carrier. Enumerate PDF objects/streams/attachments and incremental revisions before relying on visual rendering. At every extracted layer verify magic before choosing the next parser.
