@@ -82,11 +82,11 @@ Do not scan the whole local skill tree when the index already supplies an exact 
 3. **Choose one primary category.** Load only the matching locally installed `ctf-*` skill.
 4. **Test before over-documenting.** On a new challenge, the first useful action should be an actual discriminating test, not documentation or scaffold generation.
 5. **Search local knowledge when it helps the active path.** Grep local category references for challenge name/author, exact versions, CVE/GHSA and suspected primitive. Do not let broad reference search postpone an obvious cheap test.
-6. **Run evidence-first iterations.** Hypothesis -> smallest discriminating test -> evidence -> update progress -> next ranked path.
+6. **Run evidence-first iterations.** Hypothesis -> smallest discriminating test -> evidence -> update progress -> next ranked path. If multiple explanations remain credible with different predicted observations, the same explanation fails repeated discriminating tests, or 2-3 iterations produce no new evidence, use only [Competing hypotheses](references/triage-routing.md#competing-hypotheses) before choosing the next branch. Compare each live path's clue, separating observation, test cost and disconfirming result; try the cheapest informative reversible test first, while retaining a credible expensive path if cheaper paths are ruled out. When one evidence-supported path is clear, test it directly without this review.
 7. **Persist important evidence.** After solving has begun, append every important finding to the progress log. Detailed entries are fine; speed optimization applies only to pre-test startup overhead. See [references/progress.md](references/progress.md).
 8. **Pivot only on evidence.** Add another category only when a concrete primitive requires it. For unusual adjacent-layer mismatches, use [references/modern-chains.md](references/modern-chains.md).
 9. **Before defeat, recover systematically.** Run [references/stuck-recovery.md](references/stuck-recovery.md) before saying the challenge is blocked or unsolved.
-10. **Validate the final artifact.** Confirm source/path, reproducibility, uniqueness and expected flag format; do not report obvious decoys as solved.
+10. **Complete and validate the answer.** If meaningful evidence is recovered but no justified exact candidate exists, use [Evidence to answer](references/triage-routing.md#evidence-to-answer). A clearly recovered flag-shaped value can take the fast path: check its provenance and required format, then report only the strongest validation level actually reached. Do not report obvious decoys as solved.
 11. **Write up after solve.** Use `ctf-writeup` once the flag or required final answer is verified.
 
 ## Workspace growth rule

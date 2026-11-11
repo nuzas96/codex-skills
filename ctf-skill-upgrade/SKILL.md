@@ -78,6 +78,8 @@ The novelty bar is not "new challenge name". It is "new reusable recognition/exp
 
 Prefer technique-dense sources over huge omnibus repositories.
 
+For systematic multi-challenge research, use the [CTF Research Intake](research-intake/README.md) pool, pinning and prioritization workflow. Keep DEVELOPMENT, REGRESSION and HELD-OUT records separate; do not place untouched evaluation material in research sessions.
+
 ### Repository triage
 
 Before reading deeply:

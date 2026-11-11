@@ -109,3 +109,14 @@ strings -a suspect.bin | grep -Ei '[A-Za-z0-9_]+\{[^}]+\}'
 ```
 
 Record the exact source path/offset/request that produced the final candidate.
+
+## Evidence to answer
+
+Use this short procedure when a meaningful primitive, plaintext, artifact or intermediate result has been recovered but it does not yet justify one exact final answer. Skip reconstruction when a clear flag is directly present in the intended source; perform the ordinary quick provenance/format check instead.
+
+1. Preserve the raw evidence and its path, offset, request or extraction step. Decide what it is before transforming it: a literal flag string is an **observed string**, while decoded, reordered or otherwise derived content is only an **inferred/reconstructed candidate**.
+2. Apply only transformations supported by challenge code, metadata, format, checksums or a concrete artifact clue. For non-obvious text, binary, image or multi-layer output, write down the exact byte/bit order, encoding, framing and layer sequence. Use a small deterministic script or local fixture when that makes the reconstruction reproducible; verify intermediate lengths, magic, checksums, round trips or other available invariants.
+3. Validate the exact candidate against independent local structure or semantics when available. A plausible phrase or expected flag format alone is not validation. Mark it **locally validated** only when a reproducible local predicate supports the exact candidate.
+4. Mark it **accepted by an independent verifier** only after an actual challenge/platform verifier accepts it. Submit only an evidence-justified candidate through the authorized flow; never vary guessed formats or suffixes to use private verifier feedback as a search oracle. If no independent verifier is available, say so and report the strongest lower status without implying acceptance.
+
+Keep the status explicit in progress: `observed string` -> `inferred/reconstructed candidate` -> `locally validated` -> `accepted by independent verifier`. These describe evidence strength, not automatic sequential requirements: record only the stages actually supported.
