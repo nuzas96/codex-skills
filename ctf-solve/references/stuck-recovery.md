@@ -112,6 +112,10 @@ Do not ask the user vague questions that could have been answered through availa
 
 ## Anti-patterns
 
+### Safe-in-isolation trap
+
+When multiple layers consume the same attacker-controlled value, a negative test at one layer does not reject the end-to-end path. Before closing the branch, trace a harmless marker from the raw input through each transformation to the suspected sink. Compare the value before/after normalization, decoding, authorization, query construction, and filesystem handling. For web request-to-file paths, use [`ctf-web/references/cross-layer-request-to-file.md`](../../ctf-web/references/cross-layer-request-to-file.md). Record the first boundary where the observed value differs from the prediction; test the composition only after the individual transformations are understood.
+
 ### Payload-variant loop
 
 Trying ten syntactic variants of the same blocked primitive is not ten paths. After a few controlled variants prove the class is blocked, switch primitive class.

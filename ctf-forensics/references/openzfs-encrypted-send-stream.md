@@ -132,40 +132,20 @@ The exact separators or field labels vary, but the recovery discipline is stable
 5. concatenate in numeric order;
 6. verify the full-object hash if available.
 
-Generic skeleton:
+For extracted byte fragments, use the bounded standard-library helper after determining the fragment order from explicit indexes or evidence. Its JSON manifest has a `total`, `chunks` array (`index`, manifest-relative `path`, optional per-fragment `sha256`), and optional whole-object `sha256`. The helper rejects missing/duplicate indexes, conflicting hashes, path escapes, incomplete input, and oversized output. It reports unverified reconstruction when no digest is available; that output is not independently validated.
 
-```python
-import base64
-import hashlib
-
-chunks = {}
-expected_total = None
-
-for payload in recovered_payloads:
-    magic, index_s, total_s, digest_field, encoded = payload.split("|", 4)
-    index = int(index_s)
-    total = int(total_s)
-    chunk = base64.b64decode(encoded)
-    expected = digest_field.split(":")[-1].lower()
-
-    if hashlib.sha256(chunk).hexdigest() != expected:
-        raise ValueError(f"bad chunk {index}")
-
-    if expected_total is None:
-        expected_total = total
-    elif total != expected_total:
-        raise ValueError("inconsistent total")
-
-    if index in chunks and chunks[index] != chunk:
-        raise ValueError(f"conflicting duplicate {index}")
-    chunks[index] = chunk
-
-missing = set(range(expected_total)) - chunks.keys()
-if missing:
-    raise ValueError(f"missing chunks: {sorted(missing)}")
-
-blob = b"".join(chunks[i] for i in range(expected_total))
+```json
+{
+  "total": 2,
+  "chunks": [
+    {"index": 1, "path": "part-b.bin", "sha256": "<64 hex characters>"},
+    {"index": 0, "path": "part-a.bin", "sha256": "<64 hex characters>"}
+  ],
+  "sha256": "<optional whole-object SHA-256>"
+}
 ```
+
+Run it with `python3 "$HOME/.codex/skills/ctf-forensics/scripts/reassemble_fragments.py" manifest.json reconstructed.bin`. Entries may appear in any manifest order; output follows `index`, never filename or discovery order. Decode transport encodings per fragment before listing the resulting files. The helper does not infer missing bytes or order.
 
 ### Negative knowledge
 

@@ -60,7 +60,7 @@ USB HID, Bluetooth and MIDI packets may require device/report reconstruction rat
 
 ## Object Extraction
 
-`tshark --export-objects` works for supported protocols but validate extracted files by magic and hashes. For unsupported/custom transfers, reconstruct the correct stream and strip protocol framing manually.
+`tshark --export-objects` works for supported protocols but validate extracted files by magic and hashes. If a custom transfer yields explicitly indexed fragments, decode each fragment separately, preserve its observed index, and use [`scripts/reassemble_fragments.py`](../scripts/reassemble_fragments.py) with a manifest rather than ordering by filename or capture discovery. The helper verifies supplied fragment/whole-object hashes and bounds output; without a digest it labels the result unverified. For unsupported/custom transfers, reconstruct the correct stream and strip protocol framing manually.
 
 ## TLS
 

@@ -58,7 +58,7 @@ for off in range(start, end, RECORD.size):
 
 The layout above is only a template. Derive the real record format from the target.
 
-Cross-check parsed fields against dispatcher code. For example, an opcode believed to be `load immediate` should visibly index the same destination field and read the same immediate width in native code.
+Cross-check parsed fields against dispatcher code. For example, an opcode believed to be `load immediate` should visibly index the same destination field and read the same immediate width in native code. Keep answer representation separate from VM inversion: when the recovered bytes require a clue-supported encoding or fixed-width word order, use `ctf-solve`'s explicit `evidence_transform.py` pipeline and an independent digest if available; do not try byte orders until something looks printable.
 
 ## 2. Lift only the flag-relevant VM semantics
 

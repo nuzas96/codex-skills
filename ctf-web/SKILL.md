@@ -42,6 +42,7 @@ This file is a **router, not an encyclopedia**. Use `ctf-solve` for workspace, p
 | DOMPurify/mXSS claim | `references/dompurify-3.3.1-mxss-verification.md` | exact-browser harness |
 | Prototype pollution/Node merge/gadget | `references/prototype-pollution.md` | `node-and-prototype.md`, hard-pattern refs |
 | Request smuggling/desync/proxy framing | `references/request-smuggling.md` | `ctf-solve/references/modern-chains.md` |
+| Raw request-target -> proxy rewrite/PATH_INFO -> signed parser -> SQL field selector -> filesystem listing/serve chain | `references/cross-layer-request-to-file.md` | `ctf-solve/references/modern-chains.md` |
 | WAF/filter blocks a proven primitive | `references/waf-parser-differentials.md` | underlying technique reference |
 | Cache poisoning/deception/cache-key mismatch | `references/cache-attacks.md` | browser or parser ref for the resulting sink |
 | Race/TOCTOU/concurrent state transition | `references/race-conditions.md` | `references/business-logic.md` |
@@ -99,6 +100,8 @@ raw request
 
 Look for disagreement in request boundaries, decode count, headers, URL/path normalization, Host, cache key, method, body/content type or duplicated parameters. Also inspect **response** framing whenever an intermediary rewrites `Content-Length`/`Transfer-Encoding` while still streaming an upstream body. If the bug lives between adjacent layers, use `ctf-solve/references/modern-chains.md`.
 
+If a signed route, proxy rewrite, query builder, or file sink looks safe by itself but the full path crosses several parsers, use [cross-layer request-to-file chains](references/cross-layer-request-to-file.md) before rejecting the path.
+
 ## Evidence-first web loop
 
 For each hypothesis record:
@@ -128,9 +131,10 @@ Only directory-fuzz when source/JS/routes do not expose the surface directly. Tr
 
 ```text
 scripts/jwt_analyze.py
+scripts/route_inventory.py
 ```
 
-Helpers accelerate testing; they do not prove exploitability. Save exact successful/failed evidence to `PROGRESS.md` through `ctf-solve`.
+Run `python3 "$HOME/.codex/skills/ctf-web/scripts/route_inventory.py" .` early for a local Flask/FastAPI, Django URLconf, Express or Fastify source tree. It indexes literal route declarations with file/line locations so handlers can be inspected before fuzzing. It is intentionally not a complete router parser: trace mounts, dynamic routes, handlers, middleware and authorization checks manually. A listed route is not proof of reachability or a vulnerability. Helpers accelerate testing; they do not prove exploitability. Save exact successful/failed evidence to `PROGRESS.md` through `ctf-solve`.
 
 ## Cross-category pivots
 

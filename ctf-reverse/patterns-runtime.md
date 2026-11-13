@@ -8,6 +8,7 @@ For static reversing patterns (custom VMs, anti-debug, self-modifying code, LLVM
 - [Malware Anti-Analysis Bypass via Patching](#malware-anti-analysis-bypass-via-patching)
 - [Multi-Stage Shellcode Loaders](#multi-stage-shellcode-loaders)
 - [Timing Side-Channel Attack](#timing-side-channel-attack)
+- [Stateful Runtime Function-Pointer Tables](#stateful-runtime-function-pointer-tables)
 - [Multi-Thread Anti-Debug with Decoy + Signal Handler Mixed Boolean-Arithmetic (ApoorvCTF 2026)](#multi-thread-anti-debug-with-decoy--signal-handler-mixed-boolean-arithmetic-apoorvctf-2026)
 - [INT3 Patch + Coredump Brute-Force Oracle (Pwn2Win 2016)](#int3-patch--coredump-brute-force-oracle-pwn2win-2016)
 - [Signal Handler Chain + LD_PRELOAD Oracle (Nuit du Hack 2016)](#signal-handler-chain--ld_preload-oracle-nuit-du-hack-2016)
@@ -91,6 +92,31 @@ for pos in range(flag_length):
         io.close()
     flag += best_char
 ```
+
+---
+
+## Stateful Runtime Function-Pointer Tables
+
+**Pattern:** A checker dispatches each input position through a writable function-pointer table, and a privileged helper, JIT, signal path, or runtime callback changes that table between checks. One memory snapshot can decode a plausible but stale candidate.
+
+**Recognize:**
+- An indirect call loads its target through a global table, often after a position permutation.
+- The table is writable or populated after startup; repeated observations or successive calls resolve to different targets.
+- Static checker functions may each contain simple byte comparisons even though the active target order is only known at runtime.
+
+**Solve workflow:**
+1. Trace the exact indirect call site and identify the live input index, table index, target pointer, and argument register immediately before each call.
+2. Break on that call site on every iteration. Decode the active target for that iteration (for example, inspect its compare immediate) and associate it with the current input position. Do not reuse the first table snapshot unless repeated observations prove the table is stable.
+3. If the program must advance to expose later states, set only the call argument or input byte needed for that iteration, then single-step over the indirect call and continue tracing. Keep such instrumentation separate from the candidate itself.
+4. Reassemble the position-ordered bytes, then run the exact candidate through a fresh, unmodified process. A forced successful trace proves the observed per-call bytes, but alone does not prove that a normal invocation accepts the candidate.
+5. Repeat a fresh-run comparison when targets depend on PID, timing, ASLR, host state, or helper scheduling. Record any state dependence before treating the recovered bytes as a stable flag.
+
+**Pitfalls:**
+- A table snapshot may be correct for the first position and stale by the next position.
+- Rewriting an argument buffer after the byte has already been loaded leaves the old value in the argument register; update the register or stop before the load.
+- A checker printing `Correct` establishes acceptance only for that run. Do not infer that a separate flag was printed or that a per-run candidate is stable without a normal-run check.
+
+**Source:** Generalized from *JITFP* (picoCTF 2026, syreal), solved 2026-11-12. The reusable lesson is per-call tracing of a rotating checker table; no challenge constants or flag are retained here.
 
 ---
 

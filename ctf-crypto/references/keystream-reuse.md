@@ -32,6 +32,8 @@ This proves keystream reuse, but it does **not** by itself reveal either plainte
 6. Extend only cribs that produce mutually plausible plaintext on both sides. Record rejected cribs so the solve does not loop.
 7. Validate recovered plaintext against the original ciphertext relation before treating it as real.
 
+If the evidence yields bytes whose representation is unclear, keep cryptanalysis and answer formatting separate. Use `ctf-solve`'s explicit `evidence_transform.py` only for transformations justified by serialization or artifact evidence (for example, fixed-width word byte order); an expected digest can reject a wrong representation. Do not enumerate byte orders or flag wrappers and treat printability as proof.
+
 ## Flag-format discipline
 
 A known flag format such as `CTF{...}` can be used as a **constraint or scoring signal**, not as replacement plaintext.
